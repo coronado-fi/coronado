@@ -1,19 +1,44 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado import Address
 from coronado import CardAccount
 from coronado import CardAccountIdentifier
 from coronado import CardProgram
 from coronado import CoronadoMalformedObject
-from coronado import OfferActivations
-from coronado.testobjects import TEST_CARD_ACCOUNT_DICT
-from coronado.testobjects import TEST_CARD_ACCOUNT_IDENTIFIER_DICT
-from coronado.testobjects import TEST_CARD_ACCOUNT_IDENTIFIER_JSON
-from coronado.testobjects import TEST_CARD_ACCOUNT_JSON
-from coronado.testobjects import TEST_CARD_PROGRAM_DICT
-from coronado.testobjects import TEST_CARD_PROGRAM_JSON
-from coronado.testobjects import TEST_OFFER_ACTIVATIONS_DICT
-from coronado.testobjects import TEST_OFFER_ACTIVATIONS_JSON
+from coronado import MerchantCategoryCode
+from coronado import MerchantLocation
+from coronado import Offer
+from coronado import OfferActivation
+from coronado import OfferDisplayRules
+from coronado import Publisher
+from coronado import Reward
+from coronado import Transaction
+from coronado import TripleObject
+from coronado.baseobjects import BASE_ADDRESS_DICT
+from coronado.baseobjects import BASE_ADDRESS_JSON
+from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
+from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
+from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_JSON
+from coronado.baseobjects import BASE_CARD_ACCOUNT_JSON
+from coronado.baseobjects import BASE_CARD_PROGRAM_DICT
+from coronado.baseobjects import BASE_CARD_PROGRAM_JSON
+from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_JSON
+from coronado.baseobjects import BASE_MERCHANT_LOCATION_DICT
+from coronado.baseobjects import BASE_MERCHANT_LOCATION_JSON
+from coronado.baseobjects import BASE_OFFER_ACTIVATION_DICT
+from coronado.baseobjects import BASE_OFFER_ACTIVATION_JSON
+from coronado.baseobjects import BASE_OFFER_DICT
+from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_DICT
+from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_JSON
+from coronado.baseobjects import BASE_OFFER_JSON
+from coronado.baseobjects import BASE_PUBLISHER_DICT
+from coronado.baseobjects import BASE_PUBLISHER_JSON
+from coronado.baseobjects import BASE_REWARD_DICT
+from coronado.baseobjects import BASE_REWARD_JSON
+from coronado.baseobjects import BASE_TRANSACTION_DICT
+from coronado.baseobjects import BASE_TRANSACTION_JSON
 
 import pytest
 
@@ -36,12 +61,27 @@ def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = Non
         assert x.__dict__[testKey] == pDict[controlKey]
 
 
+def test_TripleObject():
+    x = TripleObject(BASE_PUBLISHER_DICT)
+    y = x.listAttributes()
+
+    assert y
+
+
 def test_APIObjectsInstantiation():
-    _createAndAssertObject(CardAccount, TEST_CARD_ACCOUNT_JSON, TEST_CARD_ACCOUNT_DICT, 'objID', 'id')
-    _createAndAssertObject(CardAccountIdentifier, TEST_CARD_ACCOUNT_IDENTIFIER_JSON, TEST_CARD_ACCOUNT_IDENTIFIER_DICT, 'cardProgramExternalID', 'card_program_external_id')
-    _createAndAssertObject(CardProgram, TEST_CARD_PROGRAM_JSON, TEST_CARD_PROGRAM_DICT, 'publisherID', 'publisher_id')
-    _createAndAssertObject(OfferActivations, TEST_OFFER_ACTIVATIONS_JSON, TEST_OFFER_ACTIVATIONS_DICT) 
+    _createAndAssertObject(Address, BASE_ADDRESS_JSON, BASE_ADDRESS_DICT, 'completeAddress', 'complete_address')
+    _createAndAssertObject(CardAccount, BASE_CARD_ACCOUNT_JSON, BASE_CARD_ACCOUNT_DICT, 'objID', 'id')
+    _createAndAssertObject(CardAccountIdentifier, BASE_CARD_ACCOUNT_IDENTIFIER_JSON, BASE_CARD_ACCOUNT_IDENTIFIER_DICT, 'cardProgramExternalID', 'card_program_external_id')
+    _createAndAssertObject(CardProgram, BASE_CARD_PROGRAM_JSON, BASE_CARD_PROGRAM_DICT, 'publisherID', 'publisher_id')
+    _createAndAssertObject(MerchantCategoryCode, BASE_MERCHANT_CATEGORY_CODE_JSON, BASE_MERCHANT_CATEGORY_CODE_DICT, 'description', 'description')
+    _createAndAssertObject(MerchantLocation, BASE_MERCHANT_LOCATION_JSON, BASE_MERCHANT_LOCATION_DICT, 'isOnline', 'is_online')
+    _createAndAssertObject(Offer, BASE_OFFER_JSON, BASE_OFFER_DICT, 'activationRequired', 'activation_required')
+    _createAndAssertObject(OfferActivation, BASE_OFFER_ACTIVATION_JSON, BASE_OFFER_ACTIVATION_DICT) 
+    _createAndAssertObject(OfferDisplayRules, BASE_OFFER_DISPLAY_RULES_JSON, BASE_OFFER_DISPLAY_RULES_DICT, 'action', 'action')
+    _createAndAssertObject(Publisher, BASE_PUBLISHER_JSON, BASE_PUBLISHER_DICT, 'assumedName', 'assumed_name')
+    _createAndAssertObject(Reward, BASE_REWARD_JSON, BASE_REWARD_DICT, 'merchantName', 'merchant_name')
+    _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
 
 
-# test_APIObjectsInstantiation()
+test_TripleObject()
 

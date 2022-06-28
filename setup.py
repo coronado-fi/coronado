@@ -37,7 +37,7 @@ if '__main__' == __name__:
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.9",
         ],
-        description                   = 'triple - ingress tools',
+        description                   = 'Coronado - triple API Python wrapper and reference implementation',
 #         entry_points                  = {
 #                                     'console_scripts': {
 #                                         'coronado=coronado:main',

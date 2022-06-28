@@ -25,6 +25,8 @@ def camelCaseOf(aString: str) -> str:
         cleanStr = ''
         for element in elements:
             v = element if element.isupper() else element.title()
+            if v == 'Mid':
+                v = 'MID'
             cleanStr = ' '.join([cleanStr, v])
         cleanStr = cleanStr.strip().replace(' ', '')
         if elements[0].isupper():
@@ -55,6 +57,9 @@ def tripleKeysToCamelCase(d: dict):
             v = 'objID'
         elif 'Id' in v and 'Ident' not in v and 'Idio' not in v:
             v = v.replace('Id', 'ID')
+        elif v == 'mid':
+            v = 'aMID'
+
         keysTable[k] = v
 
     result = dict()

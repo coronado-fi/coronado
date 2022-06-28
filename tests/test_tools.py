@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 
-from coronado.testobjects import TEST_CARD_ACCOUNT_DICT
+from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.tools import camelCaseOf
 from coronado.tools import tripleKeysToCamelCase
 
@@ -34,8 +34,10 @@ def test_camelCaseOf():
 
 
 def test_tripleKeysToCamelCase():
-    d = deepcopy(TEST_CARD_ACCOUNT_DICT)
+    d = deepcopy(BASE_CARD_ACCOUNT_DICT)
     d['user_identity'] = 'secret'
+    d['processor_mid'] = 4269
+    d['mid'] = 6942
 
     x = tripleKeysToCamelCase(d)
 
@@ -43,4 +45,5 @@ def test_tripleKeysToCamelCase():
     assert 'updatedAt' in x
     assert 'cardProgramID' in x
     assert 'userIdentity' in x
+    assert 'processorMID' in x
 

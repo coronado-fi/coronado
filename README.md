@@ -1,4 +1,4 @@
-% coronado(3) Version 1.0.0 | triple API Python wrapper
+% coronado(3) Version 1.0.1 | triple API Python wrapper
 
 
 Name
@@ -19,17 +19,15 @@ UNDER CONSTRUCTION
 Description
 ===========
 
-Lorem ipsum, dolot sit hamet;
+Reference implementation wrapper for the triple API.  All wrappers are
+implemented under the umbrella project Coronado, can can be viewed on-line at:
 
-- More lorem
-- Less ipsum
-- I'm sure you understand
+- https://github.com/coronado-fi
+- https://coronado.fi - under construction
 
 Use of this API requires credentials issued by tripleup.com and access to an S3
 bucket provided by them.  Your client engagement manager can assist you in
 setting up access.
-
-_Italics are also supported in pandoc for man pages._
 
 
 Installation
@@ -74,5 +72,5 @@ numo LLC and triple LLC, <coronado.project AT numo.com>
 
 See also
 ========
-Lorem ipsum and more dolot without sit, hamet.
+Section left intentionally blank for release 1.0.0
 
