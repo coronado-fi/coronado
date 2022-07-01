@@ -17,6 +17,8 @@ from coronado import Publisher
 from coronado import Reward
 from coronado import Transaction
 from coronado import TripleObject
+from coronado.auth import Auth
+from coronado.auth import Scopes
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -44,8 +46,15 @@ from coronado.baseobjects import BASE_TRANSACTION_JSON
 
 import pytest
 
+import coronado.auth as auth
+
 
 # *** constants ***
+
+
+# *** globals ***
+
+_config = auth.loadConfig()
 
 
 # --- tests ---
@@ -75,13 +84,13 @@ def test_TripleObjectMissingAttrError():
     del(x['assumed_name'])
 
     try:
-        y = Publisher(x)
+        Publisher(x)
     except CoronadoMalformedObjectError as e:
         assert str(e) == "attribute {'assumedName'} missing during instantiation"
 
     del(x['address'])
     with pytest.raises(CoronadoMalformedObjectError) as e:
-        y = Publisher(x)
+        Publisher(x)
         assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation" 
 
 
@@ -98,4 +107,15 @@ def test_APIObjectsInstantiation():
     _createAndAssertObject(Publisher, BASE_PUBLISHER_JSON, BASE_PUBLISHER_DICT, 'assumedName', 'assumed_name')
     _createAndAssertObject(Reward, BASE_REWARD_JSON, BASE_REWARD_DICT, 'merchantName', 'merchant_name')
     _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
+
+
+def test_CardAccount():
+    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+
+    CardAccount.list(_config['serviceURL'], auth)
+
+    x = auth
+
+
+test_CardAccount()
 

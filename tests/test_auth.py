@@ -1,13 +1,14 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAuthAPIError
+from coronado.auth import CoronadoAuthTokenAPIError
+from coronado.auth import EXPIRATION_OFFSET
 from coronado.auth import Auth
 from coronado.auth import Scopes
 from coronado.auth import emptyConfig
 from coronado.auth import loadConfig
 
-import copy
+import time
 
 import pytest
 
@@ -35,18 +36,31 @@ def test_emptyConfig():
     assert 'token' in config
 
 
+_config = loadConfig()
+
+
 def test_Auth():
-    config = loadConfig()
-
-    a = Auth(config['tokenURL'], clientID = config['clientID'], clientSecret = config['secret'], scope = Scopes.CONTENT_PROVIDERS)
-    a = Auth(config['tokenURL'], clientID = config['clientID'], clientSecret = config['secret'], scope = Scopes.PORTFOLIOS)
+    Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS)
+    Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
     # TODO:  fix this grant
-    # a = Auth(config['tokenURL'], clientID = config['clientID'], clientSecret = config['secret'], scope = Scopes.PUBLISHERS)
-    a = Auth(config['tokenURL'], clientID = config['clientID'], clientSecret = config['secret'], scope = Scopes.VIEW_OFFERS)
+    # Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+    Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
 
-    with pytest.raises(CoronadoAuthAPIError):
-        Auth(config['tokenURL'], clientID = config['clientID'], clientSecret = config['secret'], scope = Scopes.NA)
+    with pytest.raises(CoronadoAuthTokenAPIError):
+        Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.NA)
 
 
-# test_Auth()
+def test_Auth_expired_token():
+    a = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS)
+    oldToken = a.token
+    time.sleep(2)
+    newToken = a.token
+    assert oldToken == newToken
+
+    b = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS, expirationOffset = EXPIRATION_OFFSET)
+    oldTokenStr = b._tokenString
+    time.sleep(2)
+    newTokenStr = b.token
+
+    assert oldTokenStr != newTokenStr
 

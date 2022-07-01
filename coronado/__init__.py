@@ -3,6 +3,7 @@
 
 from copy import deepcopy
 
+from coronado.auth import Auth
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
@@ -19,10 +20,14 @@ from coronado.tools import tripleKeysToCamelCase
 
 import json
 
+import requests
+
 
 # *** constants ***
 
 __VERSION__ = '1.0.4'
+
+API_URL = 'https://api.sandbox.tripleup.dev'
 
 
 
@@ -32,14 +37,6 @@ class CoronadoMalformedObjectError(Exception):
     """
     Raised when instantiating a Coronado object fails.  May also include
     a string describing the cause of the exception.
-    """
-    pass
-
-
-class CoronadoAuthAPIError(Exception):
-    """
-    Raised when there is a problem with the authentication/authorization API.
-    An information string is also available.
     """
     pass
 
@@ -126,6 +123,13 @@ class CardAccount(TripleObject):
         requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
 
         self.assertAll(requiredAttributes)
+
+
+    @classmethod
+    def list(klass : object, serviceURL = None, auth = None):
+        endpoint = ''.join([serviceURL, '/card-accounts']) # URL fix later
+
+        x = endpoint
 
 
 class CardProgram(TripleObject):
