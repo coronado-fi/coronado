@@ -102,6 +102,7 @@ test: ALWAYS
 	pip install -r requirements.txt
 	pip install -e .
 	pytest -v ./tests/test_$(PACKAGE).py
+	pytest -v ./tests/test_auth.py
 	pytest -v ./tests/test_tools.py
 	pip uninstall -y $(PACKAGE)==$(VERSION) || true
 	rm -Rfv $$(find $(PACKAGE)/ | awk '/__pycache__$$/')

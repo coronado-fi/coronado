@@ -1,11 +1,13 @@
 # vim: set fileencoding=utf-8:
 
 
+from copy import deepcopy
+
 from coronado import Address
 from coronado import CardAccount
 from coronado import CardAccountIdentifier
 from coronado import CardProgram
-from coronado import CoronadoMalformedObject
+from coronado import CoronadoMalformedObjectError
 from coronado import MerchantCategoryCode
 from coronado import MerchantLocation
 from coronado import Offer
@@ -15,6 +17,8 @@ from coronado import Publisher
 from coronado import Reward
 from coronado import Transaction
 from coronado import TripleObject
+from coronado.auth import Auth
+from coronado.auth import Scopes
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -42,14 +46,21 @@ from coronado.baseobjects import BASE_TRANSACTION_JSON
 
 import pytest
 
+import coronado.auth as auth
+
 
 # *** constants ***
+
+
+# *** globals ***
+
+_config = auth.loadConfig()
 
 
 # --- tests ---
 
 def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = None):
-    with pytest.raises(CoronadoMalformedObject):
+    with pytest.raises(CoronadoMalformedObjectError):
         klass(42)
 
     x = klass(pJSON)
@@ -65,7 +76,22 @@ def test_TripleObject():
     x = TripleObject(BASE_PUBLISHER_DICT)
     y = x.listAttributes()
 
-    assert y
+    assert 'portfolioManagerID' in y.keys()
+
+
+def test_TripleObjectMissingAttrError():
+    x = deepcopy(BASE_PUBLISHER_DICT)
+    del(x['assumed_name'])
+
+    try:
+        Publisher(x)
+    except CoronadoMalformedObjectError as e:
+        assert str(e) == "attribute {'assumedName'} missing during instantiation"
+
+    del(x['address'])
+    with pytest.raises(CoronadoMalformedObjectError) as e:
+        Publisher(x)
+        assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation" 
 
 
 def test_APIObjectsInstantiation():
@@ -83,5 +109,13 @@ def test_APIObjectsInstantiation():
     _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
 
 
-test_TripleObject()
+def test_CardAccount():
+    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+
+    CardAccount.list(_config['serviceURL'], auth)
+
+    x = auth
+
+
+test_CardAccount()
 

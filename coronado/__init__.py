@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 
-from coronado.tools import tripleKeysToCamelCase
+from coronado.auth import Auth
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
@@ -16,22 +16,35 @@ from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_DICT
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 from coronado.baseobjects import BASE_REWARD_DICT
 from coronado.baseobjects import BASE_TRANSACTION_DICT
+from coronado.tools import tripleKeysToCamelCase
 
 import json
+
+import requests
 
 
 # *** constants ***
 
-__VERSION__ = '1.0.2'
+__VERSION__ = '1.0.4'
+
+API_URL = 'https://api.sandbox.tripleup.dev'
+
 
 
 # +++ classes and objects +++
 
-class CoronadoMalformedObject(Exception):
+class CoronadoMalformedObjectError(Exception):
+    """
+    Raised when instantiating a Coronado object fails.  May also include
+    a string describing the cause of the exception.
+    """
     pass
 
 
 class TripleObject(object):
+    """
+    Abstract class ancestor to all the triple API objects.
+    """
     # +++ public +++
 
     def __init__(self, obj = None):
@@ -40,7 +53,7 @@ class TripleObject(object):
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         else:
-            raise CoronadoMalformedObject
+            raise CoronadoMalformedObjectError
 
         d = tripleKeysToCamelCase(d)
 
@@ -52,9 +65,23 @@ class TripleObject(object):
 
 
     def assertAll(self, requiredAttributes: list) -> bool:
-        attributes = self.__dict__.keys()
-        if not all(attribute in attributes for attribute in requiredAttributes):
-            raise CoronadoMalformedObject("missing attributes during instantiation")
+        """
+        Asserts that all the attributes listed in the requiredAttributes list of
+        attribute names are presein the final object.  Coronado/triple objects 
+        are built from JSON inputs which may or may not include all required
+        attributes.  This method ensures they do.
+
+        Arguments:
+            requiresAttributes - a list or tuple of string names
+        
+        Raises:
+            CoronadoMalformedObjectError if one or more attributes are missing.
+        """
+        if requiredAttributes:
+            attributes = self.__dict__.keys()
+            if not all(attribute in attributes for attribute in requiredAttributes):
+                missing = set(requiredAttributes)-set(attributes)
+                raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
     def listAttributes(self) -> dict:
@@ -76,7 +103,7 @@ class Address(TripleObject):
     def __init__(self, obj = BASE_ADDRESS_DICT):
         TripleObject.__init__(self, obj)
 
-        requiredAttributes = ['completeAddress', ]
+        requiredAttributes = [ 'completeAddress', ]
 
         self.assertAll(requiredAttributes)
 
@@ -97,6 +124,30 @@ class CardAccount(TripleObject):
         requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
 
         self.assertAll(requiredAttributes)
+
+
+    @classmethod
+    def list(klass : object, serviceURL = None, auth = None) -> list:
+        """
+        Return a list of all card accounts.
+
+        Arguments
+        ---------
+        serviceURL : str
+            The URL for the triple service API
+        auth : coronado.auth.Auth
+            An Auth object with a valid OAuth2 token
+
+        Returns
+        -------
+        A list of CardAccount objects
+        """
+        endpoint = '/'.join([serviceURL, 'partner/card-accounts']) # URL fix later
+        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        response = requests.request('GET', endpoint, headers = headers)
+        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+
+        return result
 
 
 class CardProgram(TripleObject):
