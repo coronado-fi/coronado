@@ -1,11 +1,13 @@
 # vim: set fileencoding=utf-8:
 
 
+from copy import deepcopy
+
 from coronado import Address
 from coronado import CardAccount
 from coronado import CardAccountIdentifier
 from coronado import CardProgram
-from coronado import CoronadoMalformedObject
+from coronado import CoronadoMalformedObjectError
 from coronado import MerchantCategoryCode
 from coronado import MerchantLocation
 from coronado import Offer
@@ -49,7 +51,7 @@ import pytest
 # --- tests ---
 
 def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = None):
-    with pytest.raises(CoronadoMalformedObject):
+    with pytest.raises(CoronadoMalformedObjectError):
         klass(42)
 
     x = klass(pJSON)
@@ -65,7 +67,22 @@ def test_TripleObject():
     x = TripleObject(BASE_PUBLISHER_DICT)
     y = x.listAttributes()
 
-    assert y
+    assert 'portfolioManagerID' in y.keys()
+
+
+def test_TripleObjectMissingAttrError():
+    x = deepcopy(BASE_PUBLISHER_DICT)
+    del(x['assumed_name'])
+
+    try:
+        y = Publisher(x)
+    except CoronadoMalformedObjectError as e:
+        assert str(e) == "attribute {'assumedName'} missing during instantiation"
+
+    del(x['address'])
+    with pytest.raises(CoronadoMalformedObjectError) as e:
+        y = Publisher(x)
+        assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation" 
 
 
 def test_APIObjectsInstantiation():
@@ -81,7 +98,4 @@ def test_APIObjectsInstantiation():
     _createAndAssertObject(Publisher, BASE_PUBLISHER_JSON, BASE_PUBLISHER_DICT, 'assumedName', 'assumed_name')
     _createAndAssertObject(Reward, BASE_REWARD_JSON, BASE_REWARD_DICT, 'merchantName', 'merchant_name')
     _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
-
-
-test_TripleObject()
 

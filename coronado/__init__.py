@@ -3,7 +3,6 @@
 
 from copy import deepcopy
 
-from coronado.tools import tripleKeysToCamelCase
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
@@ -16,22 +15,39 @@ from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_DICT
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 from coronado.baseobjects import BASE_REWARD_DICT
 from coronado.baseobjects import BASE_TRANSACTION_DICT
+from coronado.tools import tripleKeysToCamelCase
 
 import json
 
 
 # *** constants ***
 
-__VERSION__ = '1.0.2'
+__VERSION__ = '1.0.4'
+
 
 
 # +++ classes and objects +++
 
-class CoronadoMalformedObject(Exception):
+class CoronadoMalformedObjectError(Exception):
+    """
+    Raised when instantiating a Coronado object fails.  May also include
+    a string describing the cause of the exception.
+    """
+    pass
+
+
+class CoronadoAuthAPIError(Exception):
+    """
+    Raised when there is a problem with the authentication/authorization API.
+    An information string is also available.
+    """
     pass
 
 
 class TripleObject(object):
+    """
+    Abstract class ancestor to all the triple API objects.
+    """
     # +++ public +++
 
     def __init__(self, obj = None):
@@ -40,7 +56,7 @@ class TripleObject(object):
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         else:
-            raise CoronadoMalformedObject
+            raise CoronadoMalformedObjectError
 
         d = tripleKeysToCamelCase(d)
 
@@ -52,9 +68,22 @@ class TripleObject(object):
 
 
     def assertAll(self, requiredAttributes: list) -> bool:
+        """
+        Asserts that all the attributes listed in the requiredAttributes list of
+        attribute names are presein the final object.  Coronado/triple objects 
+        are built from JSON inputs which may or may not include all required
+        attributes.  This method ensures they do.
+
+        Arguments:
+            requiresAttributes - a list or tuple of string names
+        
+        Raises:
+            CoronadoMalformedObjectError if one or more attributes are missing.
+        """
         attributes = self.__dict__.keys()
         if not all(attribute in attributes for attribute in requiredAttributes):
-            raise CoronadoMalformedObject("missing attributes during instantiation")
+            missing = set(requiredAttributes)-set(attributes)
+            raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
     def listAttributes(self) -> dict:
@@ -76,7 +105,7 @@ class Address(TripleObject):
     def __init__(self, obj = BASE_ADDRESS_DICT):
         TripleObject.__init__(self, obj)
 
-        requiredAttributes = ['completeAddress', ]
+        requiredAttributes = [ 'completeAddress', ]
 
         self.assertAll(requiredAttributes)
 

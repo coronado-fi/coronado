@@ -213,7 +213,6 @@ outputs.json
 **/.aws/*
 **/.saml2aws
 **/.wget-hsts
-**/coronado
 **/coronado-js
 **/manpages/*
 **data/*
