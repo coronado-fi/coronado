@@ -77,10 +77,11 @@ class TripleObject(object):
         Raises:
             CoronadoMalformedObjectError if one or more attributes are missing.
         """
-        attributes = self.__dict__.keys()
-        if not all(attribute in attributes for attribute in requiredAttributes):
-            missing = set(requiredAttributes)-set(attributes)
-            raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
+        if requiredAttributes:
+            attributes = self.__dict__.keys()
+            if not all(attribute in attributes for attribute in requiredAttributes):
+                missing = set(requiredAttributes)-set(attributes)
+                raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
     def listAttributes(self) -> dict:
@@ -126,10 +127,27 @@ class CardAccount(TripleObject):
 
 
     @classmethod
-    def list(klass : object, serviceURL = None, auth = None):
-        endpoint = ''.join([serviceURL, '/card-accounts']) # URL fix later
+    def list(klass : object, serviceURL = None, auth = None) -> list:
+        """
+        Return a list of all card accounts.
 
-        x = endpoint
+        Arguments
+        ---------
+        serviceURL : str
+            The URL for the triple service API
+        auth : coronado.auth.Auth
+            An Auth object with a valid OAuth2 token
+
+        Returns
+        -------
+        A list of CardAccount objects
+        """
+        endpoint = '/'.join([serviceURL, 'partner/card-accounts']) # URL fix later
+        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        response = requests.request('GET', endpoint, headers = headers)
+        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+
+        return result
 
 
 class CardProgram(TripleObject):

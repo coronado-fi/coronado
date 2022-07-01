@@ -8,6 +8,7 @@ from coronado.auth import Scopes
 from coronado.auth import emptyConfig
 from coronado.auth import loadConfig
 
+import json
 import time
 
 import pytest
@@ -42,8 +43,7 @@ _config = loadConfig()
 def test_Auth():
     Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS)
     Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
-    # TODO:  fix this grant
-    # Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+    Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
     Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
 
     with pytest.raises(CoronadoAuthTokenAPIError):
@@ -58,9 +58,20 @@ def test_Auth_expired_token():
     assert oldToken == newToken
 
     b = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS, expirationOffset = EXPIRATION_OFFSET)
-    oldTokenStr = b._tokenString
-    time.sleep(2)
-    newTokenStr = b.token
+    oldToken = b._token
+    assert oldToken != b.token
 
-    assert oldTokenStr != newTokenStr
+
+def test_Auth_accessToken():
+    a = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS)
+    control = json.loads(a.tokenPayload)['access_token']
+
+    assert a.token == control
+
+
+def test_Auth_tokenType():
+    a = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.CONTENT_PROVIDERS)
+    control = json.loads(a.tokenPayload)['token_type']
+
+    assert a.tokenType == control
 

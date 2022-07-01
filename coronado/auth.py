@@ -90,7 +90,7 @@ class Scopes(enum.Enum):
 
 
 class Auth(object):
-    def _getToken(self) -> str:
+    def _getTokenPayload(self) -> str:
         scopeStr = encoder.quote(self._scope.value)
         payload = { 'grant_type': 'client_credentials', 'scope': scopeStr, }
         credentials = (self._clientID, self._clientSecret)
@@ -104,14 +104,14 @@ class Auth(object):
 
 
     def _setState(self, expirationOffset = None):
-        d = json.loads(self._token)
+        d = json.loads(self._tokenPayload)
 
         deltaSeconds = expirationOffset if expirationOffset else d['expires_in']
 
         now = round(datetime.now().timestamp())
         self._expirationTime = round(now+deltaSeconds)
-        self._tokenString = d['access_token']
-        self._tokenType = d['token_type'] # TODO: Decide if we want to keep this or deprecate it
+        self._token = d['access_token']
+        self._tokenType = d['token_type']
 
 
     # --------------------
@@ -148,13 +148,13 @@ class Auth(object):
         self._clientSecret = clientSecret
         self._scope = scope
 
-        self._token = self._getToken()
+        self._tokenPayload = self._getTokenPayload()
 
         self._setState(expirationOffset)
 
 
     @property
-    def token(self) -> str:
+    def tokenPayload(self) -> str:
         """
         Returns the current access token associated with the receiver.  The
         property is guaranteed to never return an expired token.  The underlying
@@ -169,8 +169,42 @@ class Auth(object):
         now = round(datetime.now().timestamp())
         delta = self._expirationTime-now
         if delta < 0:
-            self._token = self._getToken()
+            self._tokenPayload = self._getTokenPayload()
             self._setState()
 
+        return self._tokenPayload
+
+
+    @property
+    def token(self) -> str:
+        """
+        Return the current access token by itself.  Auth objects have a JWT
+        representation internally, which includes the actual access token in
+        one of its attributes.  This property returns that access token
+        sans all the rest of the JWT JSON structure.
+
+        Returns
+        -------
+            A token string
+        """
+        self.tokenPayload
+
         return self._token
+
+
+    @property
+    def tokenType(self) -> str:
+        """
+        Return the current token type by itself.  Auth objects have a JWT
+        representation internally, which includes the actual access token in
+        one of its attributes.  This property returns that token type
+        attribute sans all the rest of the JWT JSON structure.
+
+        Returns
+        -------
+            A token type string
+        """
+        self.tokenPayload
+
+        return self._tokenType
 
