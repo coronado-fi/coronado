@@ -1,0 +1,59 @@
+#!/bin/bash
+# vim: set fileencoding=utf-8:
+
+# Dev support script for selecting the correct configuration for development and
+# unit tests vs integration exercises.  The base configuration file names have 
+# the form:
+#
+# config-$client.json
+#
+# The config.json file should be:
+# 
+# Linux:
+#
+#       $HOME/.config/coronado/config.json -> config-whatever.json
+#
+# macOS:
+#
+#       $HOME/Application Support/coronado/config.json -> config-whatever.json
+#
+# Run chconf without arguments to see the available configuation files, run 
+# chconf clientName to switch the configuraiton file.
+#
+# Example:
+#
+#       Set the configuration file to test against the default coronado setup:
+#
+#       chconf coronado
+#
+# If the confFile doesn't exist then the symlink will point to nothing and the
+# actual configuration will throw an exception in the Auth object.
+
+
+# --- constants ---
+
+CONF_PATH="$HOME/.config/coronado"
+
+
+die() {
+    echo "$1"
+    exit "$2"
+} # die
+
+
+# *** main ***
+
+client="$1"
+
+if [[ -z "$client" ]]
+then
+    ls -lA "$CONF_PATH" 
+    exit 0
+fi
+
+confFile="$CONF_PATH/config-$client.json"
+confLink="$CONF_PATH/config.json"
+
+rm -f "$confLink"
+ln -s "$confFile" "$confLink"
+
