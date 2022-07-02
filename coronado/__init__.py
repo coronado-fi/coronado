@@ -182,7 +182,9 @@ class CardAccount(TripleObject):
         endpoint = '/'.join([serviceURL, 'partner/card-accounts']) # URL fix later
         headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
         response = requests.request('POST', endpoint, headers = headers, data = accountSpec)
-        x = response
+        
+        if response.status_code != 200:
+            raise CoronadoMalformedObjectError(response.text)
 
         return None
 

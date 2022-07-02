@@ -1,0 +1,63 @@
+# (c) Copyright 2022 by the Lucyfer Contributors
+
+# vim: set fileencoding=utf-8:
+
+
+version: '3'
+
+# IMPORTANT:
+# By convention, Lucyfer service names must always be a pastiche of the
+# container name, underscore, and the word service:
+#
+# Container   Service
+# ---------   -------
+# lucyfer     lucyfer_service
+# kallisto    kaliisto_service
+#
+# lucy resolves the service name based on the container/component that the user
+# wishes to run when the $container command line argument is used.
+
+services:
+    lucyfer_service:
+        container_name: 'lucyfer'
+        cpus: 4
+#         depends_on:
+#             - kallisto_service
+        environment:
+            DEVPI_HOST             : '${DEVPI_HOST}'
+            GRANT_SUDO             : 'yes'
+            JUPYTER_LAB_ENABLE     : 'yes'
+            PIP_TRUSTED_HOST       : '${PIP_TRUSTED_HOST}'
+        image: '${LUCYFER_IMAGE}'
+        mem_reservation: 4G
+        ports:
+            # *****************************************************************
+            # Important:  the IP address binding depends on the host's 
+            # configuration.  Binding to specific IP addresses on macOS doesn't
+            # work, but it works fine under Linux.  This needs to be resolved 
+            # throuth a target configuration manager later.  The lo interface
+            # works across all operating systems but may open vulnerabililities
+            # or affect the firewall configuration under Linux.
+            # *****************************************************************
+            # - 127.0.0.1:8805:8888
+            # For LAN availability:
+            - '${LUCYFER_PORT}:8888'
+        privileged: true
+        user: 'root:${JUPYTER_LAB_GID}'
+        volumes:
+            - '${LUCYFER_WORKSPACE}:/home/jovyan'
+
+    kallisto_service:
+        container_name: 'kallisto'
+        environment:
+            BLAZEGRAPH_UID: '${BLAZEGRAPH_UID}'
+            BLAZEGRAPH_GID: '${BLAZEGRAPH_GID}'
+        # TODO:  Parameterize the image:
+        image: '${KALLISTO_IMAGE}'
+        ports:
+            # - '127.0.0.1:8809:9999'
+            - '0.0.0.0:${KALLISTO_PORT}:9999'
+        privileged: true
+        volumes:
+            - '${KALLISTO_DATA}:/var/blazegraph/data'
+
