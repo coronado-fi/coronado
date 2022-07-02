@@ -3,7 +3,6 @@
 
 from copy import deepcopy
 
-from coronado.auth import Auth
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
@@ -18,6 +17,7 @@ from coronado.baseobjects import BASE_REWARD_DICT
 from coronado.baseobjects import BASE_TRANSACTION_DICT
 from coronado.tools import tripleKeysToCamelCase
 
+import enum
 import json
 
 import requests
@@ -39,6 +39,16 @@ class CoronadoMalformedObjectError(Exception):
     a string describing the cause of the exception.
     """
     pass
+
+
+class CardAccountStatus(enum.Enum):
+    """
+    Account status object.
+    See:  https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount
+    """
+    CLOSED = 'CLOSED'
+    ENROLLED = 'ENROLLED'
+    NOT_ENROLLED = 'NOT_ENROLLED'
 
 
 class TripleObject(object):
@@ -148,6 +158,67 @@ class CardAccount(TripleObject):
         result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
 
         return result
+
+
+    @classmethod
+    def create(klass, accountSpec : dict, serviceURL = None, auth = None) -> object:
+        """
+        Create a new CardAccount object resource.
+
+        Arguments
+        ---------
+        accountSpec : dict
+            A dictionary with the required camel_case (fugly) fields defined in
+            https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount 
+        serviceURL : str
+            The URL for the triple service API
+        auth : coronado.auth.Auth
+            An Auth object with a valid OAuth2 token
+
+        """
+        if not accountSpec:
+            raise CoronadoMalformedObjectError
+
+        endpoint = '/'.join([serviceURL, 'partner/card-accounts']) # URL fix later
+        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        response = requests.request('POST', endpoint, headers = headers, data = accountSpec)
+        x = response
+
+        return None
+
+
+    @classmethod
+    def byID(klass, accountID : str, serviceURL = None, auth = None) -> object:
+        """
+        Return the card account associated with accountID.
+
+        Arguments
+        ---------
+        accountID : str
+            The account ID associated with the resource to fetch
+        serviceURL : str
+            The URL for the triple service API
+        auth : coronado.auth.Auth
+            An Auth object with a valid OAuth2 token
+
+        Returns
+        -------
+            The CardAccount object associated with accountID or None
+        """
+        endpoint = '/'.join([serviceURL, 'partner/card-accounts/%s' % accountID]) # URL fix later
+        # TODO:  Refactor this in a separate private class method:
+        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        response = requests.request('GET', endpoint, headers = headers)
+        # result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+        if response.status_code == 404:
+            result = None
+        else:
+            # TODO:  no data there, can't test yet
+            pass
+
+        return result
+
+
 
 
 class CardProgram(TripleObject):
