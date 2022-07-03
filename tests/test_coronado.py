@@ -11,7 +11,6 @@ from coronado import MerchantLocation
 from coronado import Offer
 from coronado import OfferActivation
 from coronado import OfferDisplayRules
-from coronado import Publisher
 from coronado import Reward
 from coronado import Transaction
 from coronado import TripleObject
@@ -41,6 +40,7 @@ from coronado.baseobjects import BASE_REWARD_JSON
 from coronado.baseobjects import BASE_TRANSACTION_DICT
 from coronado.baseobjects import BASE_TRANSACTION_JSON
 from coronado.cardprog import CardProgram
+from coronado.publisher import Publisher
 
 import pytest
 
