@@ -4,10 +4,7 @@
 from copy import deepcopy
 
 from coronado import Address
-from coronado import CardAccount
 from coronado import CardAccountIdentifier
-from coronado import CardAccountStatus
-from coronado import CardProgram
 from coronado import CoronadoMalformedObjectError
 from coronado import MerchantCategoryCode
 from coronado import MerchantLocation
@@ -18,8 +15,7 @@ from coronado import Publisher
 from coronado import Reward
 from coronado import Transaction
 from coronado import TripleObject
-from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.account import CardAccount
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -44,6 +40,7 @@ from coronado.baseobjects import BASE_REWARD_DICT
 from coronado.baseobjects import BASE_REWARD_JSON
 from coronado.baseobjects import BASE_TRANSACTION_DICT
 from coronado.baseobjects import BASE_TRANSACTION_JSON
+from coronado.cardprog import CardProgram
 
 import pytest
 
@@ -109,47 +106,4 @@ def test_APIObjectsInstantiation():
     _createAndAssertObject(Reward, BASE_REWARD_JSON, BASE_REWARD_DICT, 'merchantName', 'merchant_name')
     _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
 
-
-def test_CardAccount_list():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
-
-    accounts = CardAccount.list(_config['serviceURL'], auth)
-
-    assert isinstance(accounts, list)
-
-    account = accounts[0]
-    assert isinstance(account, TripleObject)
-    assert account.objID
-
-
-def test_CardAccount_create():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
-    accountSpec = {
-        'card_progream_external_id': 'RebatesNation24',
-        'external_id': 'PNC-card-69',
-        'status': CardAccountStatus.ENROLLED.value,
-        'publisher_external_id': 'PNCBANK',
-    }
-
-    with pytest.raises(CoronadoMalformedObjectError):
-        CardAccount.create(None, _config['serviceURL'], auth)
-    
-    account = CardAccount.create(accountSpec, _config['serviceURL'], auth)
-
-    assert account
-    
-
-
-def test_CardAccount_byID():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
-    accountID = 'bogusID'
-
-    account = CardAccount.byID(_config['serviceURL'], accountID, auth)
-
-    assert not account
-    
-
-
-test_CardAccount_create()
-# test_CardAccount_byID()
 
