@@ -3,9 +3,7 @@
 
 from copy import deepcopy
 
-from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
-from coronado.baseobjects import BASE_CARD_PROGRAM_DICT
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.baseobjects import BASE_MERCHANT_LOCATION_DICT
 from coronado.baseobjects import BASE_OFFER_ACTIVATION_DICT
@@ -93,15 +91,6 @@ class TripleObject(object):
         result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
 
         return result
-
-
-class Address(TripleObject):
-    def __init__(self, obj = BASE_ADDRESS_DICT):
-        TripleObject.__init__(self, obj)
-
-        requiredAttributes = [ 'completeAddress', ]
-
-        self.assertAll(requiredAttributes)
 
 
 class CardAccountIdentifier(TripleObject):

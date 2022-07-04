@@ -18,3 +18,20 @@ class Publisher(TripleObject):
 
         self.assertAll(requiredAttributes)
 
+
+    @classmethod
+    def create(klass, publisherSpec : dict, serviceURL = None, auth = None) -> object:
+        """
+        """
+        if not publisherSpec:
+            raise CoronadoMalformedObjectError
+
+        endpoint = '/'.join([serviceURL, 'partner/publishers']) # URL fix later
+        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        response = requests.request('POST', endpoint, headers = headers, json = publisherSpec)
+        
+        if response.status_code != 200:
+            raise CoronadoMalformedObjectError(response.text)
+
+        return None
+

@@ -3,7 +3,6 @@
 
 from copy import deepcopy
 
-from coronado import Address
 from coronado import CardAccountIdentifier
 from coronado import CoronadoMalformedObjectError
 from coronado import MerchantCategoryCode
@@ -15,6 +14,7 @@ from coronado import Reward
 from coronado import Transaction
 from coronado import TripleObject
 from coronado.account import CardAccount
+from coronado.address import Address
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -93,7 +93,7 @@ def test_TripleObjectMissingAttrError():
 
 
 def test_APIObjectsInstantiation():
-    _createAndAssertObject(Address, BASE_ADDRESS_JSON, BASE_ADDRESS_DICT, 'completeAddress', 'complete_address')
+    _createAndAssertObject(Address, BASE_ADDRESS_JSON, BASE_ADDRESS_DICT, 'countryCode', 'country_code')
     _createAndAssertObject(CardAccount, BASE_CARD_ACCOUNT_JSON, BASE_CARD_ACCOUNT_DICT, 'objID', 'id')
     _createAndAssertObject(CardAccountIdentifier, BASE_CARD_ACCOUNT_IDENTIFIER_JSON, BASE_CARD_ACCOUNT_IDENTIFIER_DICT, 'cardProgramExternalID', 'card_program_external_id')
     _createAndAssertObject(CardProgram, BASE_CARD_PROGRAM_JSON, BASE_CARD_PROGRAM_DICT, 'publisherID', 'publisher_id')
