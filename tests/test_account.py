@@ -16,14 +16,13 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
 # *** tests ***
 
 def test_CardAccount_list():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
-
-    accounts = CardAccount.list(_config['serviceURL'], auth)
+    accounts = CardAccount.list(_config['serviceURL'], _auth)
 
     assert isinstance(accounts, list)
 
@@ -33,7 +32,6 @@ def test_CardAccount_list():
 
 
 def test_CardAccount_create():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
     accountSpec = {
         'card_program_external_id': 'rebates-nation-24',
         # TODO:  file bug for Matt
@@ -46,9 +44,9 @@ def test_CardAccount_create():
     }
 
     with pytest.raises(CoronadoMalformedObjectError):
-        CardAccount.create(None, _config['serviceURL'], auth)
+        CardAccount.create(None, _config['serviceURL'], _auth)
     
-    account = CardAccount.create(accountSpec, _config['serviceURL'], auth)
+    account = CardAccount.create(accountSpec, _config['serviceURL'], _auth)
 
     assert account
     # TODO:  finish the implementation; handle 422, other errors
@@ -56,10 +54,9 @@ def test_CardAccount_create():
 
 
 def test_CardAccount_byID():
-    auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
     accountID = 'bogusID'
 
-    account = CardAccount.byID(_config['serviceURL'], accountID, auth)
+    account = CardAccount.byID(_config['serviceURL'], accountID, _auth)
 
     assert not account
     

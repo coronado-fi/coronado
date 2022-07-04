@@ -21,20 +21,51 @@ class Address(TripleObject):
 
 
     @property
-    def complete(self):
+    def complete(self) -> str:
+        """
+        Return the receiver as a human-readable, multi-line complete address.
+        Output format:
+
+            line1\n
+            line2\n
+            locality, province, postalCode
+
+        Return
+        ------
+            A string representation of the address.
+        """
         completeAddress = '\n'.join([
             self.line1,
-            self.line2,
+            # TODO:  remove this comment and uncomment after fixing the
+            # 500 raised during object creation.
+            # self.line2,
             '%s, %s %s' % (self.locality, self.province, self.postalCode), ])
 
         return completeAddress
         
 
-    def inSnakeCaseJSON(self):
+    def inSnakeCaseJSON(self) -> str:
+        """
+        Return a JSON representation of the receiver with the attributes
+        written in snake_case format.
+
+        Return
+        ------
+            A string with a JSON representation of the receiver.
+
+        """
         return json.dumps(self.asSnakeCaseDictionary())
 
 
     def asSnakeCaseDictionary(self):
+        """
+        Return a dict representation of the receiver with the attributes 
+        written in snake_case format.
+
+        Return
+        ------
+            A dict representation of the receiver.
+        """
         result = {
             'complete_address': self.complete,
             'country_code': self.countryCode,

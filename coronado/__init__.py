@@ -35,10 +35,36 @@ class CoronadoMalformedObjectError(Exception):
     pass
 
 
+class CoronadoAPIError(Exception):
+    """
+    Raised when the API server fails for some reason (HTTP status 5xx)
+    and it's unrecoverable.  This error most often means that the
+    service itself is misconfigured, is down, or has a serious bug.
+    Printing the reason code will display as much information about why
+    the service failed as it is available from the API system.
+    """
+
+
+class CoronadoUnprocessableObjectError(Exception):
+    """
+    Raised when instantiating a Coronado object fails because the object
+    is well-formed but contains semantic or object representation errors.
+    """
+    pass
+
+
 class TripleObject(object):
     """
     Abstract class ancestor to all the triple API objects.
     """
+    # +++ class variables ++
+
+    serviceURL = None
+    auth = None
+
+
+    # +++ implementation +++
+
     # +++ public +++
 
     def __init__(self, obj = None):

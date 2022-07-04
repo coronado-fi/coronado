@@ -19,7 +19,7 @@ _validAddress = Address({
     'countryCode': 'US',
     'latitude': 37.802821,
     'line1': '1233 Francisco Street',
-    'line2': 'Suite 202',
+    # 'line2': 'Suite 202',
     'locality': 'San Francisco',
     'longitude': -122.425486,
     'postalCode': '94123',

@@ -107,3 +107,18 @@ def test_APIObjectsInstantiation():
     _createAndAssertObject(Transaction, BASE_TRANSACTION_JSON, BASE_TRANSACTION_DICT, 'transactionType', 'transaction_type')
 
 
+def test_TripleObject_classVariables():
+    # Uninitialized
+    assert Address.serviceURL == CardAccount.serviceURL
+    assert Address.auth == CardAccount.auth
+
+    # Initialize one of them
+    Address.serviceURL = 'https://example.com'
+    Address.auth = { 'bogus': '42', }
+
+    assert Address.serviceURL != CardAccount.serviceURL
+    assert Address.auth != CardAccount.auth
+
+
+test_TripleObject_classVariables()
+
