@@ -3,11 +3,7 @@
 
 from copy import deepcopy
 
-from coronado.auth import Auth
-from coronado.baseobjects import BASE_ADDRESS_DICT
-from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
-from coronado.baseobjects import BASE_CARD_PROGRAM_DICT
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.baseobjects import BASE_MERCHANT_LOCATION_DICT
 from coronado.baseobjects import BASE_OFFER_ACTIVATION_DICT
@@ -19,8 +15,6 @@ from coronado.baseobjects import BASE_TRANSACTION_DICT
 from coronado.tools import tripleKeysToCamelCase
 
 import json
-
-import requests
 
 
 # *** constants ***
@@ -41,10 +35,36 @@ class CoronadoMalformedObjectError(Exception):
     pass
 
 
+class CoronadoAPIError(Exception):
+    """
+    Raised when the API server fails for some reason (HTTP status 5xx)
+    and it's unrecoverable.  This error most often means that the
+    service itself is misconfigured, is down, or has a serious bug.
+    Printing the reason code will display as much information about why
+    the service failed as it is available from the API system.
+    """
+
+
+class CoronadoUnprocessableObjectError(Exception):
+    """
+    Raised when instantiating a Coronado object fails because the object
+    is well-formed but contains semantic or object representation errors.
+    """
+    pass
+
+
 class TripleObject(object):
     """
     Abstract class ancestor to all the triple API objects.
     """
+    # +++ class variables ++
+
+    serviceURL = None
+    auth = None
+
+
+    # +++ implementation +++
+
     # +++ public +++
 
     def __init__(self, obj = None):
@@ -99,62 +119,11 @@ class TripleObject(object):
         return result
 
 
-class Address(TripleObject):
-    def __init__(self, obj = BASE_ADDRESS_DICT):
-        TripleObject.__init__(self, obj)
-
-        requiredAttributes = [ 'completeAddress', ]
-
-        self.assertAll(requiredAttributes)
-
-
 class CardAccountIdentifier(TripleObject):
     def __init__(self, obj = BASE_CARD_ACCOUNT_IDENTIFIER_DICT):
         TripleObject.__init__(self, obj)
 
         requiredAttributes = ['cardProgramExternalID', ]
-
-        self.assertAll(requiredAttributes)
-
-
-class CardAccount(TripleObject):
-    def __init__(self, obj = BASE_CARD_ACCOUNT_DICT):
-        TripleObject.__init__(self, obj)
-
-        requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
-
-        self.assertAll(requiredAttributes)
-
-
-    @classmethod
-    def list(klass : object, serviceURL = None, auth = None) -> list:
-        """
-        Return a list of all card accounts.
-
-        Arguments
-        ---------
-        serviceURL : str
-            The URL for the triple service API
-        auth : coronado.auth.Auth
-            An Auth object with a valid OAuth2 token
-
-        Returns
-        -------
-        A list of CardAccount objects
-        """
-        endpoint = '/'.join([serviceURL, 'partner/card-accounts']) # URL fix later
-        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
-        response = requests.request('GET', endpoint, headers = headers)
-        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
-
-        return result
-
-
-class CardProgram(TripleObject):
-    def __init__(self, obj = BASE_CARD_PROGRAM_DICT):
-        TripleObject.__init__(self, obj)
-
-        requiredAttributes = ['externalID', 'name', 'programCurrency', ]
 
         self.assertAll(requiredAttributes)
 

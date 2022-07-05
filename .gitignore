@@ -206,6 +206,7 @@ outputs.json
 **dummy.*
 **swp
 **.python_history
+lucy
 
 
 # triple-graph-prototype
@@ -225,4 +226,5 @@ outputs.json
 
 # Experiments
 **/numo-prod-NERF-20220525.txt
+test.json
 
