@@ -20,14 +20,14 @@ class CardProgram(TripleObject):
 
 
     @classmethod
-    def create(klass, programSpec : dict, serviceURL = None, auth = None) -> object:
+    def create(klass, programSpec : dict) -> object:
         """
         """
         if not programSpec:
             raise CoronadoMalformedObjectError
 
-        endpoint = '/'.join([serviceURL, 'partner/card-programs']) # URL fix later
-        headers = { 'Authorization': ' '.join([ auth.tokenType, auth.token, ]) }
+        endpoint = '/'.join([CardProgram.serviceURL, 'partner/card-programs']) # URL fix later
+        headers = { 'Authorization': ' '.join([ CardProgram.auth.tokenType, CardProgram.auth.token, ]) }
         response = requests.request('POST', endpoint, headers = headers, json = programSpec)
         
         if response.status_code != 200:

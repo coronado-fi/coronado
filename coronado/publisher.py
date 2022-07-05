@@ -1,11 +1,11 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoAPIError
+from coronado import CoronadoMalformedObjectError
+from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_PUBLISHER_DICT
-from coronado import CoronadoUnprocessableObjectError
 
 import json
 
@@ -42,6 +42,15 @@ class Publisher(TripleObject):
         Returns
         -------
             A new Publisher instance
+
+        Raises
+        ------
+        CoronadoUnprocessableObjectError
+            When the payload syntax is correct but the semantics are invalid
+        CoronadoAPIError
+            When the service endpoint has an error (500 series)
+        CoronadoMalformedObjectError
+            When the payload syntax and/or semantics are incorrect, or otherwise the method fails
         """
         if not pubSpec:
             raise CoronadoMalformedObjectError

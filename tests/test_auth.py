@@ -25,7 +25,6 @@ def test_loadConfig():
     assert isinstance(config, dict)
     assert 'clientID' in config
     assert 'clientName' in config
-    assert 'token' in config
 
 
 def test_emptyConfig():
@@ -34,7 +33,6 @@ def test_emptyConfig():
     assert isinstance(config, dict)
     assert 'clientID' in config
     assert 'clientName' in config
-    assert 'token' in config
 
 
 _config = loadConfig()

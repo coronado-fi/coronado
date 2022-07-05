@@ -27,7 +27,6 @@ class Address(TripleObject):
         Output format:
 
             line1\n
-            line2\n
             locality, province, postalCode
 
         Return

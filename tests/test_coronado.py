@@ -120,5 +120,5 @@ def test_TripleObject_classVariables():
     assert Address.auth != CardAccount.auth
 
 
-test_TripleObject_classVariables()
+# test_TripleObject_classVariables()
 
