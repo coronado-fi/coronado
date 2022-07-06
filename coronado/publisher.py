@@ -3,6 +3,7 @@
 
 from coronado import CoronadoAPIError
 from coronado import CoronadoMalformedObjectError
+from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_PUBLISHER_DICT
@@ -56,19 +57,18 @@ class Publisher(TripleObject):
             raise CoronadoMalformedObjectError
 
         endpoint = '/'.join([Publisher.serviceURL, _SERVICE_PATH]) # URL fix later
-        headers = { 'Authorization': ' '.join([ Publisher.auth.tokenType, Publisher.auth.token, ]) }
-        response = requests.request('POST', endpoint, headers = headers, json = pubSpec)
+        response = requests.request('POST', endpoint, headers = Publisher.headers, json = pubSpec)
         
         if response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
-            
-        if response.status_code >= 500:
+        elif response.status_code >= 500:
             raise CoronadoAPIError(response.text)
+        elif response.status_code == 201:
+            publisher = Publisher(str(response.text))
+        else:
+            raise CoronadoUnexpectedError(response.text)
 
-        if response.status_code != 200:
-            raise CoronadoMalformedObjectError(response.text)
-
-        return None
+        return publisher
 
 
     @classmethod
@@ -81,8 +81,7 @@ class Publisher(TripleObject):
         A list of Publisher objects
         """
         endpoint = '/'.join([Publisher.serviceURL, _SERVICE_PATH]) # URL fix later
-        headers = { 'Authorization': ' '.join([ Publisher.auth.tokenType, Publisher.auth.token, ]) }
-        response = requests.request('GET', endpoint, headers = headers)
+        response = requests.request('GET', endpoint, headers = Publisher.headers)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
 
         return result
@@ -103,16 +102,14 @@ class Publisher(TripleObject):
             The Publisher object associated with pubID or None
         """
         endpoint = '/'.join([Publisher.serviceURL, '%s/%s' % (_SERVICE_PATH, pubID)]) # URL fix later
-        # TODO:  Refactor this in a separate private class method:
-        headers = { 'Authorization': ' '.join([ Publisher.auth.tokenType, Publisher.auth.token, ]) }
-        response = requests.request('GET', endpoint, headers = headers)
-        # result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
+        response = requests.request('GET', endpoint, headers = Publisher.headers)
 
         if response.status_code == 404:
             result = None
+        elif response.status_code == 200:
+            result = Publisher(response.content.decode())
         else:
-            # TODO:  no data there, can't test yet
-            pass
+            raise CoronadoAPIError(response.text)
 
         return result
 
@@ -139,10 +136,7 @@ class Publisher(TripleObject):
             if the pubID isn't associated with an existing resource.
         """
         endpoint = '/'.join([Publisher.serviceURL, '%s/%s' % (_SERVICE_PATH, pubID)]) # URL fix later
-        # TODO:  Refactor this in a separate private class method:
-        headers = { 'Authorization': ' '.join([ Publisher.auth.tokenType, Publisher.auth.token, ]) }
-        response = requests.request('PATCH', endpoint, headers = headers, json = payload)
-        # result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
+        response = requests.request('PATCH', endpoint, headers = Publisher.headers, json = payload)
 
         if response.status_code == 404:
             result = None

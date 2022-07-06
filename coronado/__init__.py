@@ -19,13 +19,24 @@ import json
 
 # *** constants ***
 
-__VERSION__ = '1.0.4'
+__VERSION__ = '1.0.5'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
+CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
 
 
 
 # +++ classes and objects +++
+
+class CoronadoAPIError(Exception):
+    """
+    Raised when the API server fails for some reason (HTTP status 5xx)
+    and it's unrecoverable.  This error most often means that the
+    service itself is misconfigured, is down, or has a serious bug.
+    Printing the reason code will display as much information about why
+    the service failed as it is available from the API system.
+    """
+
 
 class CoronadoMalformedObjectError(Exception):
     """
@@ -35,13 +46,11 @@ class CoronadoMalformedObjectError(Exception):
     pass
 
 
-class CoronadoAPIError(Exception):
+class CoronadoUnexpectedError(Exception):
     """
-    Raised when the API server fails for some reason (HTTP status 5xx)
-    and it's unrecoverable.  This error most often means that the
-    service itself is misconfigured, is down, or has a serious bug.
-    Printing the reason code will display as much information about why
-    the service failed as it is available from the API system.
+    Raised when performning a Coronado API call that results in an
+    unknown, unexpected, undocumented, weird AF error that nobody knows
+    how it happened.
     """
 
 
@@ -59,8 +68,8 @@ class TripleObject(object):
     """
     # +++ class variables ++
 
-    serviceURL = None
     auth = None
+    serviceURL = None
 
 
     # +++ implementation +++
@@ -82,6 +91,24 @@ class TripleObject(object):
                 setattr(self, key, [TripleObject(x) if isinstance(x, dict) else x for x in value])
             else:
                 setattr(self, key, TripleObject(value) if isinstance(value, dict) else value)
+
+
+    @classmethod
+    def initialize(klass, serviceURL : str, auth : object):
+        """
+        Initialize the class to use an appropriate service URL or authentication
+        object.
+
+        Arguments
+        ---------
+        serviceURL
+            A string with an https locator pointing at the service top level URL
+        auth
+            An instance of Auth configured to use the the serviceURL within the
+            defined scope
+        """
+        klass.serviceURL = serviceURL
+        klass.auth = auth
 
 
     def assertAll(self, requiredAttributes: list) -> bool:
@@ -117,6 +144,15 @@ class TripleObject(object):
         result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
 
         return result
+    
+
+    @classmethod
+    @property
+    def headers(klass):
+        return {
+            'Authorization': ' '.join([ klass.auth.tokenType, klass.auth.token, ]),
+            'User-Agent': CORONADO_USER_AGENT,
+        }
 
 
 class CardAccountIdentifier(TripleObject):

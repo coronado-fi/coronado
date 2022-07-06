@@ -79,3 +79,14 @@ class Address(TripleObject):
 
         return result
 
+
+    def __str__(self) -> str:
+        return '%s\n%s\n%s, %s %s %s' % (
+            self.line1,
+            self.line2,
+            self.locality,
+            self.province,
+            self.postalCode,
+            self.countryCode,
+        )
+

@@ -1,4 +1,4 @@
-% coronado(3) Version 1.0.4 | triple API Python wrapper
+% coronado(3) Version 1.0.5 | triple API Python wrapper
 
 
 Name

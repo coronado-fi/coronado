@@ -44,3 +44,8 @@ def test_Address_inSnakeCaseJSON():
 
     assert result['complete_address'] == COMPLETE_ADDRESS
 
+
+def test___str__():
+    control = '1233 Francisco Street\nSuite 202\nSan Francisco, CA 94123 US'
+    assert str(_validAddress) == control
+
