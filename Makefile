@@ -9,6 +9,7 @@ BUILD=./build
 # DEVPI_USER=$(shell cat ./devpi-user.txt)
 DIST=./dist
 MANPAGES=./manpages
+MAN_SECTION=5
 PACKAGE=$(shell cat package.txt)
 REQUIREMENTS=requirements.txt
 VERSION=$(shell echo "from $(PACKAGE) import __VERSION__; print(__VERSION__)" | python)
@@ -59,7 +60,7 @@ local:
 manpage:
 	mkdir -p $(MANPAGES)
 	t=$$(mktemp) && awk -v "v=$(VERSION)" '/^%/ { $$4 = v; print; next; } { print; }' README.md > "$$t" && cat "$$t" > README.md && rm -f "$$t"
-	pandoc --standalone --to man README.md -o $(MANPAGES)/$(PACKAGE).3
+	pandoc --standalone --to man README.md -o $(MANPAGES)/$(PACKAGE).$(MAN_SECTION)
 
 
 nuke: ALWAYS
