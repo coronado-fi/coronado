@@ -15,6 +15,8 @@ from coronado import Transaction
 from coronado import TripleObject
 from coronado.account import CardAccount
 from coronado.address import Address
+from coronado.auth import Auth
+from coronado.auth import Scopes
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -53,6 +55,7 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
 # --- tests ---
@@ -75,6 +78,9 @@ def test_TripleObject():
     y = x.listAttributes()
 
     assert 'portfolioManagerID' in y.keys()
+
+    z = Publisher(x)
+    assert isinstance(z, Publisher)
 
 
 def test_TripleObjectMissingAttrError():
@@ -120,5 +126,20 @@ def test_TripleObject_classVariables():
     assert Address.auth != CardAccount.auth
 
 
-# test_TripleObject_classVariables()
+def test_TripleObject_initialize():
+    TripleObject.initialize(_config['serviceURL'], _auth)
+
+    assert TripleObject.serviceURL == _config['serviceURL']
+    assert 'python-coronado' in TripleObject.headers['User-Agent'] 
+
+
+def test_TripleObject_headers():
+    # Must follow test_TripleObject_initialize() to work; it uses
+    # the class variables.
+
+    h = TripleObject.headers
+
+    assert isinstance(h, dict)
+    assert 'Authorization' in h
+    assert 'User-Agent' in h
 

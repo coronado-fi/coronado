@@ -8,7 +8,7 @@ import json
 
 # --- constants ---
 
-COMPLETE_ADDRESS = '1233 Francisco Street\nSan Francisco, CA 94123'
+COMPLETE_ADDRESS = '1233 Francisco Street Suite 202\nSan Francisco, CA 94123'
 
 
 # +++ tests +++
@@ -43,4 +43,9 @@ def test_Address_inSnakeCaseJSON():
     result = json.loads(_validAddress.inSnakeCaseJSON())
 
     assert result['complete_address'] == COMPLETE_ADDRESS
+
+
+def test___str__():
+    control = '1233 Francisco Street\nSuite 202\nSan Francisco, CA 94123 US'
+    assert str(_validAddress) == control
 
