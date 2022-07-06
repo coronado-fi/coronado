@@ -6,7 +6,7 @@ Name
 
 **coronado** - Python wrapper for the triple API.  The triple API enables
 partners to integrate with the triple platform.  The full API documentation is
-available from https://api.partners.dev.tripleupdev.com/docs
+available from https://api.tripleup.dev/docs
 
 
 Synopsis
