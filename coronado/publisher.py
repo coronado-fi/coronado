@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoAPIError
+from coronado import CoronadoDuplicatesDisallowed
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
@@ -59,12 +60,14 @@ class Publisher(TripleObject):
         endpoint = '/'.join([Publisher.serviceURL, _SERVICE_PATH]) # URL fix later
         response = requests.request('POST', endpoint, headers = Publisher.headers, json = pubSpec)
         
-        if response.status_code == 422:
+        if response.status_code == 201:
+            publisher = Publisher(str(response.text))
+        elif response.status_code == 409:
+            raise CoronadoDuplicatesDisallowed(response.text)
+        elif response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
         elif response.status_code >= 500:
             raise CoronadoAPIError(response.text)
-        elif response.status_code == 201:
-            publisher = Publisher(str(response.text))
         else:
             raise CoronadoUnexpectedError(response.text)
 
@@ -140,6 +143,8 @@ class Publisher(TripleObject):
 
         if response.status_code == 404:
             result = None
+        elif response.status_code == 200:
+            result = Publisher(response.content.decode())
         else:
             raise CoronadoAPIError(response.text)
 

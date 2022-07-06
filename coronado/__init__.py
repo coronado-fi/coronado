@@ -37,6 +37,15 @@ class CoronadoAPIError(Exception):
     the service failed as it is available from the API system.
     """
 
+class CoronadoDuplicatesDisallowed(Exception):
+    """
+    Raised when trying to create a Coronado/triple object based on an
+    object spec that already exists (e.g. the externalID for the object
+    is already registered with the service, or its assumed name is
+    duplicated).
+    """
+
+
 
 class CoronadoMalformedObjectError(Exception):
     """
@@ -81,6 +90,8 @@ class TripleObject(object):
             d = json.loads(obj)
         elif isinstance(obj, dict):
             d = deepcopy(obj)
+        elif isinstance(obj, TripleObject):
+            d = deepcopy(obj.__dict__)
         else:
             raise CoronadoMalformedObjectError
 

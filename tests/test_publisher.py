@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoAPIError
+from coronado import CoronadoDuplicatesDisallowed
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.address import Address
@@ -73,11 +74,6 @@ def test_Publisher_create():
         Publisher.create(pubSpec)
 
 
-@pytest.mark.skip('failed - underlying service has issues that need to be solved first')
-def test_publisher_createDuplicateFail():
-    pass
-
-
 def test_Publisher_list():
     result = Publisher.list()
 
@@ -96,12 +92,43 @@ def test_Publisher_byID():
     assert not Publisher.byID('bogus')
 
 
-@pytest.mark.skip('failed - underlying service has issues that need to be solved first')
+def test_publisher_createDuplicateFail():
+    p = Publisher.byID(4)
+    address = Address(p.address)
+    pubSpec = {
+        'address': address.asSnakeCaseDictionary(),
+        'assumed_name': p.assumedName,
+        'external_id': p.externalID,
+        'revenue_share': p.revenueShare,
+    }
+
+    with pytest.raises(CoronadoDuplicatesDisallowed):
+        Publisher.create(pubSpec)
+        
+
 def test_Publisher_updateWith():
     address = _address.asSnakeCaseDictionary()
-    address['postal_code'] = '99999'
 
-    result = Publisher.updateWith(4, address)
+    control = 'OOO Kukla'
+    orgName = Publisher.byID(4).assumedName
+    payload = { 'assumed_name' : control, 'address': address, }
+    result = Publisher.updateWith(4, payload)
+    assert result.assumedName == control
 
-    assert result
+    # Reset:
+    payload['assumed_name'] = orgName
+    Publisher.updateWith(4, payload)
+
+# TODO:  implement these tests after the underlying bug is fixed:
+#     orgAddress = result.address
+#     x = orgAddress.line2
+#     control = 'Suite 303'
+#     address['line2'] = control
+#     payload = { 'address': address, }
+#     result = Publisher.updateWith(4, address)
+#     assert result.address.postalCode == control
+# 
+#     # Reset
+#     payload['address'] = orgAddress
+#     Publisher.updateWith(4, payload)
 

@@ -79,6 +79,9 @@ def test_TripleObject():
 
     assert 'portfolioManagerID' in y.keys()
 
+    z = Publisher(x)
+    assert isinstance(z, Publisher)
+
 
 def test_TripleObjectMissingAttrError():
     x = deepcopy(BASE_PUBLISHER_DICT)
