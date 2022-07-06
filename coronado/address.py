@@ -34,10 +34,7 @@ class Address(TripleObject):
             A string representation of the address.
         """
         completeAddress = '\n'.join([
-            self.line1,
-            # TODO:  remove this comment and uncomment after fixing the
-            # 500 raised during object creation.
-            # self.line2,
+            ('%s %s' % (self.line1, self.line2)).strip(),
             '%s, %s %s' % (self.locality, self.province, self.postalCode), ])
 
         return completeAddress

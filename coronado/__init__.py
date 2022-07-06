@@ -19,7 +19,7 @@ import json
 
 # *** constants ***
 
-__VERSION__ = '1.0.5'
+__VERSION__ = '1.0.6'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__

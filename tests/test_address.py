@@ -8,7 +8,7 @@ import json
 
 # --- constants ---
 
-COMPLETE_ADDRESS = '1233 Francisco Street\nSan Francisco, CA 94123'
+COMPLETE_ADDRESS = '1233 Francisco Street Suite 202\nSan Francisco, CA 94123'
 
 
 # +++ tests +++
