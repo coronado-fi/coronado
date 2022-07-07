@@ -2,7 +2,7 @@
 
 
 from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowed
+from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.address import Address
@@ -103,7 +103,7 @@ def test_publisher_createDuplicateFail():
         'revenue_share': p.revenueShare,
     }
 
-    with pytest.raises(CoronadoDuplicatesDisallowed):
+    with pytest.raises(CoronadoDuplicatesDisallowedError):
         Publisher.create(pubSpec)
         
 

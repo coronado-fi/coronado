@@ -1,6 +1,8 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado import CoronadoDuplicatesDisallowedError
+from coronado import CoronadoUnprocessableObjectError
 from coronado import CoronadoMalformedObjectError
 from coronado.auth import Auth
 from coronado.auth import Scopes
@@ -11,6 +13,13 @@ import uuid
 import pytest
 
 import coronado.auth as auth
+
+
+# +++ constants +++
+
+KNOWN_PROG_ID = '2'
+KNOWN_PROG_EXT_ID = 'prog-66'
+KNOWN_PUB_EXTERNAL_ID = '4269'
 
 
 # *** globals ***
@@ -24,24 +33,58 @@ CardProgram.initialize(_config['serviceURL'], _auth)
 
 # +++ tests +++
 
-@pytest.mark.skip('failed - underlying service has issues that need to be solved first')
 def test_CardProgram_create():
     progSpec = {
         # TODO:  Verify the that the camelCase converter deals with BINs 
         'card_bins': [ '425907', '511642', '486010', ],
-        'external_id': 'prog-66',
+        'external_id': 'prog-%s' % uuid.uuid4().hex,
         'name': 'Mojito Rewards %s' % uuid.uuid4().hex,
         'program_currency': 'USD',
-        'publisher_external_id': 4,
+        'publisher_external_id': KNOWN_PUB_EXTERNAL_ID,
     }
     
+    program = CardProgram.create(progSpec)
+    assert program
+
     with pytest.raises(CoronadoMalformedObjectError):
         CardProgram.create(None)
 
-    program = CardProgram.create(progSpec)
+    progSpec['external_id'] = KNOWN_PROG_EXT_ID
+    with pytest.raises(CoronadoDuplicatesDisallowedError):
+        CardProgram.create(progSpec)
 
-    assert program
+    progSpec['external_id'] = '****'
+    with pytest.raises(CoronadoUnprocessableObjectError):
+        CardProgram.create(progSpec)
 
 
-test_CardProgram_create()
+
+def test_CardProgram_list():
+    result = CardProgram.list()
+
+    assert len(result)
+
+    program = result[0]
+    assert program.objID
+
+
+def test_CardProgram_byID():
+    result = CardProgram.byID(KNOWN_PROG_ID)
+    assert isinstance(result, CardProgram)
+
+    assert not CardProgram.byID({ 'bogus': 'test'})
+    assert not CardProgram.byID(None)
+    assert not CardProgram.byID('bogus')
+
+
+def test_CardProgram_updateWith():
+    control = 'OOO Kukla'
+    orgName = CardProgram.byID(KNOWN_PROG_ID).name
+    payload = { 'name' : control, }
+    result = CardProgram.updateWith(KNOWN_PROG_ID, payload)
+    assert result.name == control
+
+    # Reset:
+    payload['name'] = orgName
+    CardProgram.updateWith(KNOWN_PROG_ID, payload)
 
