@@ -19,7 +19,8 @@ import coronado.auth as auth
 
 # *** constants ***
 
-KNOWN_PUB_ID = 4
+KNOWN_PUB_ID = '4'
+KNOWN_ASSUMED_NAME = 'Kukla Enterprises, Inc.'
 
 
 # *** globals ***
@@ -93,7 +94,7 @@ def test_Publisher_byID():
 
 
 def test_publisher_createDuplicateFail():
-    p = Publisher.byID(4)
+    p = Publisher.byID(KNOWN_PUB_ID)
     address = Address(p.address)
     pubSpec = {
         'address': address.asSnakeCaseDictionary(),
@@ -110,14 +111,14 @@ def test_Publisher_updateWith():
     address = _address.asSnakeCaseDictionary()
 
     control = 'OOO Kukla'
-    orgName = Publisher.byID(4).assumedName
+    orgName = Publisher.byID(KNOWN_PUB_ID).assumedName
     payload = { 'assumed_name' : control, 'address': address, }
-    result = Publisher.updateWith(4, payload)
+    result = Publisher.updateWith(KNOWN_PUB_ID, payload)
     assert result.assumedName == control
 
     # Reset:
     payload['assumed_name'] = orgName
-    Publisher.updateWith(4, payload)
+    Publisher.updateWith(KNOWN_PUB_ID, payload)
 
 # TODO:  implement these tests after the underlying bug is fixed:
 #     orgAddress = result.address
@@ -125,10 +126,14 @@ def test_Publisher_updateWith():
 #     control = 'Suite 303'
 #     address['line2'] = control
 #     payload = { 'address': address, }
-#     result = Publisher.updateWith(4, address)
+#     result = Publisher.updateWith(KNOWN_PUB_ID, address)
 #     assert result.address.postalCode == control
 # 
 #     # Reset
 #     payload['address'] = orgAddress
 #     Publisher.updateWith(4, payload)
+
+
+def test_Publisher_instanceByID():
+    assert Publisher(KNOWN_PUB_ID).assumedName == KNOWN_ASSUMED_NAME
 
