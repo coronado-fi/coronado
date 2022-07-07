@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado import CoronadoAPIError
 from coronado import CoronadoMalformedObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_CARD_PROGRAM_DICT
@@ -27,11 +28,12 @@ class CardProgram(TripleObject):
             raise CoronadoMalformedObjectError
 
         endpoint = '/'.join([CardProgram.serviceURL, 'partner/card-programs']) # URL fix later
-        headers = { 'Authorization': ' '.join([ CardProgram.auth.tokenType, CardProgram.auth.token, ]) }
-        response = requests.request('POST', endpoint, headers = headers, json = programSpec)
+        response = requests.request('POST', endpoint, headers = CardProgram.headers, json = programSpec)
         
-        if response.status_code != 200:
+        if response.status_code == 422:
             raise CoronadoMalformedObjectError(response.text)
+        else:
+            raise CoronadoAPIError(response.text)
 
         return None
 

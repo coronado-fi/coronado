@@ -6,6 +6,8 @@ from coronado.auth import Auth
 from coronado.auth import Scopes
 from coronado.cardprog import CardProgram
 
+import uuid
+
 import pytest
 
 import coronado.auth as auth
@@ -17,8 +19,7 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
-CardProgram.serviceURL = _config['serviceURL']
-CardProgram.auth = _auth
+CardProgram.initialize(_config['serviceURL'], _auth)
 
 
 # +++ tests +++
@@ -29,9 +30,9 @@ def test_CardProgram_create():
         # TODO:  Verify the that the camelCase converter deals with BINs 
         'card_bins': [ '425907', '511642', '486010', ],
         'external_id': 'prog-66',
-        'name': 'Mojito Rewards',
+        'name': 'Mojito Rewards %s' % uuid.uuid4().hex,
         'program_currency': 'USD',
-        'publisher_external_id': 'pncbank',
+        'publisher_external_id': 4,
     }
     
     with pytest.raises(CoronadoMalformedObjectError):
@@ -42,5 +43,5 @@ def test_CardProgram_create():
     assert program
 
 
-# test_CardProgram_create()
+test_CardProgram_create()
 

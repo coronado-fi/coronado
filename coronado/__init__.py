@@ -87,7 +87,10 @@ class TripleObject(object):
 
     def __init__(self, obj = None):
         if isinstance(obj, str):
-            d = json.loads(obj)
+            if '{' in obj:
+                d = json.loads(obj)
+            else:  # ValueError JSON test is untenable
+                d = self.__class__.byID(obj).__dict__
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         elif isinstance(obj, TripleObject):
@@ -164,6 +167,29 @@ class TripleObject(object):
             'Authorization': ' '.join([ klass.auth.tokenType, klass.auth.token, ]),
             'User-Agent': CORONADO_USER_AGENT,
         }
+
+
+    # TODO:  Determine if the create(), list(), byID(), etc. methods need to be
+    #        declared as abstract here, and/or if they have common return codes
+    #        that we could leverage for implementation.  We won't know for sure
+    #        until there is more than one working business object.  There may be
+    #        enough commonality to float that behavior to the abstract parent
+    #        class.
+    @classmethod
+    def byID(klass, objID : str) -> object:
+        """
+        Return the triple object associated with objID.
+
+        Arguments
+        ---------
+        objID : str
+            The object ID associated with the resource to fetch
+
+        Returns
+        -------
+            The object associated with objID or None
+        """
+        raise NotImplementedError # because abstract
 
 
 class CardAccountIdentifier(TripleObject):
