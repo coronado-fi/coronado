@@ -1,0 +1,10 @@
+{% extends "default/module.html.jinja2" %}
+
+{% block favicon %}
+    <link rel="icon" type="image/png" href="https://assets.website-files.com/6287e9b993a42a7dcb001b99/628bc3aee64e1c6c0f5e3863_Triple%20favicon.png"/>
+{% endblock %}
+
+{% block nav_footer %}
+    <footer>Coronado - the triple API wrapper version {{ env["VERSION"] | default("1.0") }}</footer>
+{% endblock %}
+
