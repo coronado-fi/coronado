@@ -31,6 +31,10 @@ class CardProgram(TripleObject):
     Card accounts may not move between card programs, and cannot be represented
     in more than one card program at a time.
     """
+
+    requiredAttributes = ['externalID', 'name', 'programCurrency', ]
+
+
     def __init__(self, obj = BASE_CARD_PROGRAM_DICT):
         """
         Create a new instance of a card program.  `obj` must correspond to a
@@ -57,10 +61,6 @@ class CardProgram(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = ['externalID', 'name', 'programCurrency', ]
-
-        self.assertAll(requiredAttributes)
 
 
     @classmethod

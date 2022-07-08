@@ -37,8 +37,8 @@ from coronado.baseobjects import BASE_CARD_PROGRAM_JSON
 # from coronado.baseobjects import BASE_OFFER_JSON
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 from coronado.baseobjects import BASE_PUBLISHER_JSON
-from coronado.baseobjects import BASE_REWARD_DICT
-from coronado.baseobjects import BASE_REWARD_JSON
+# from coronado.baseobjects import BASE_REWARD_DICT
+# from coronado.baseobjects import BASE_REWARD_JSON
 # from coronado.baseobjects import BASE_TRANSACTION_DICT
 # from coronado.baseobjects import BASE_TRANSACTION_JSON
 from coronado.cardprog import CardProgram
@@ -142,4 +142,15 @@ def test_TripleObject_headers():
     assert isinstance(h, dict)
     assert 'Authorization' in h
     assert 'User-Agent' in h
+
+
+def test_TripleObject_requiredAttributes():
+    class Synthetic(TripleObject):
+        requiredAttributes = [ 'alpha', 'beta', ]
+
+    s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
+    assert 'thetaMeta' in s.listAttributes()
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Synthetic({ 'alpha': 42, 'theta_meta': 69, })
 

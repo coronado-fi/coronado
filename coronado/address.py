@@ -27,6 +27,10 @@ class Address(TripleObject):
     This Address implementation is equivalent to the <a href='https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/GeneralDeliveryAddress' target='_blank'>FIBO GeneralDeliveryAddress</a>
     class.
     """
+
+    requiredAttributes = [ 'completeAddress', ]
+
+
     def __init__(self, obj = BASE_ADDRESS_DICT):
         """
         Create a new instance of an address.  `obj` must correspond to a
@@ -70,12 +74,7 @@ class Address(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = [ 'completeAddress', ]
-
-        self.assertAll(requiredAttributes)
-
-        self.completeAddress = 'WARNING:  USE the .complete attribute instead of .completeAddress'
+        self.completeAddress = 'WARNING:  USE .complete instead of .completeAddress'
 
 
     @property

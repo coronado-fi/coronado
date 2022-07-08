@@ -45,6 +45,9 @@
                                 <a class="function" href="#TripleObject.__init__">TripleObject</a>
                         </li>
                         <li>
+                                <a class="variable" href="#TripleObject.requiredAttributes">requiredAttributes</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#TripleObject.initialize">initialize</a>
                         </li>
                         <li>
@@ -95,7 +98,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.0.8</footer>
+    <footer>Coronado - the triple API wrapper version 1.0.9</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -176,6 +179,21 @@ associated with a valid object</p>
 
 
                             </div>
+                            <div id="TripleObject.requiredAttributes" class="classattr">
+                                <div class="attr variable">
+            <span class="name">requiredAttributes</span><span class="default_value"> = None</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TripleObject.requiredAttributes"></a>
+    
+            <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
+JSON or <code>dict</code> object during object construction.  See the <code><a href="#TripleObject.assertAll">assertAll</a></code>()
+method.</p>
+</div>
+
+
+                            </div>
                             <div id="TripleObject.initialize" class="classattr">
                                 <div class="attr function">
                     <div class="decorator">@classmethod</div>
@@ -205,22 +223,29 @@ auth
                                 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">assertAll</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">requiredAttributes</span><span class="p">:</span> <span class="nb">list</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">assertAll</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#TripleObject.assertAll"></a>
     
-            <div class="docstring"><p>Asserts that all the attributes listed in the requiredAttributes list of
-attribute names are presein the final object.  Coronado/triple objects 
-are built from JSON inputs which may or may not include all required
-attributes.  This method ensures they do.</p>
+            <div class="docstring"><p>Asserts that all the attributes listed in the <code><a href="#TripleObject.requiredAttributes">requiredAttributes</a></code> list 
+of attribute names are presein the final object.  Coronado/triple
+objects are built from JSON inputs which may or may not include all
+required attributes.  This method ensures they do.</p>
 
-<p>Arguments:
-    requiresAttributes - a list or tuple of string names</p>
+<h2 id="returns">Returns</h2>
 
-<p>Raises:
-    CoronadoMalformedObjectError if one or more attributes are missing.</p>
+<pre><code>True if all required attributes are present during initialization
+</code></pre>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoMalformedObjectError if one or more attributes are missing.
+</code></pre>
+
+<p>This method either throws the exception or returns True; it's not a true
+Boolean.</p>
 </div>
 
 
