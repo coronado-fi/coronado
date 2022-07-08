@@ -27,7 +27,7 @@ KNOWN_ASSUMED_NAME = 'Kukla Enterprises, Inc.'
 
 _address = Address({
     # We made it a requirement but we'll toss it in the instances:
-    'complete_address': '',  
+    'complete_address': '',
     'countryCode': 'US',
     'latitude': 0,
     'line1': '2801 Turk Boulevard',
@@ -60,7 +60,7 @@ def _generateTestPayload():
 def test_Publisher_create():
     with pytest.raises(CoronadoMalformedObjectError):
         Publisher.create(None)
-    
+
     pubSpec = _generateTestPayload()
     publisher = Publisher.create(pubSpec)
     assert isinstance(publisher, Publisher)
@@ -105,7 +105,7 @@ def test_publisher_createDuplicateFail():
 
     with pytest.raises(CoronadoDuplicatesDisallowedError):
         Publisher.create(pubSpec)
-        
+
 
 def test_Publisher_updateWith():
     address = _address.asSnakeCaseDictionary()
@@ -128,7 +128,7 @@ def test_Publisher_updateWith():
 #     payload = { 'address': address, }
 #     result = Publisher.updateWith(KNOWN_PUB_ID, address)
 #     assert result.address.postalCode == control
-# 
+#
 #     # Reset
 #     payload['address'] = orgAddress
 #     Publisher.updateWith(4, payload)

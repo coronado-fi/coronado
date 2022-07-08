@@ -37,8 +37,8 @@ from coronado.baseobjects import BASE_CARD_PROGRAM_JSON
 # from coronado.baseobjects import BASE_OFFER_JSON
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 from coronado.baseobjects import BASE_PUBLISHER_JSON
-from coronado.baseobjects import BASE_REWARD_DICT
-from coronado.baseobjects import BASE_REWARD_JSON
+# from coronado.baseobjects import BASE_REWARD_DICT
+# from coronado.baseobjects import BASE_REWARD_JSON
 # from coronado.baseobjects import BASE_TRANSACTION_DICT
 # from coronado.baseobjects import BASE_TRANSACTION_JSON
 from coronado.cardprog import CardProgram
@@ -95,7 +95,7 @@ def test_TripleObjectMissingAttrError():
     del(x['address'])
     with pytest.raises(CoronadoMalformedObjectError) as e:
         Publisher(x)
-        assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation" 
+        assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation"
 
 
 def test_APIObjectsInstantiation():
@@ -106,7 +106,7 @@ def test_APIObjectsInstantiation():
 #     _createAndAssertObject(MerchantCategoryCode, BASE_MERCHANT_CATEGORY_CODE_JSON, BASE_MERCHANT_CATEGORY_CODE_DICT, 'description', 'description')
 #     _createAndAssertObject(MerchantLocation, BASE_MERCHANT_LOCATION_JSON, BASE_MERCHANT_LOCATION_DICT, 'isOnline', 'is_online')
 #     _createAndAssertObject(Offer, BASE_OFFER_JSON, BASE_OFFER_DICT, 'activationRequired', 'activation_required')
-#     _createAndAssertObject(OfferActivation, BASE_OFFER_ACTIVATION_JSON, BASE_OFFER_ACTIVATION_DICT) 
+#     _createAndAssertObject(OfferActivation, BASE_OFFER_ACTIVATION_JSON, BASE_OFFER_ACTIVATION_DICT)
 #     _createAndAssertObject(OfferDisplayRules, BASE_OFFER_DISPLAY_RULES_JSON, BASE_OFFER_DISPLAY_RULES_DICT, 'action', 'action')
     _createAndAssertObject(Publisher, BASE_PUBLISHER_JSON, BASE_PUBLISHER_DICT, 'assumedName', 'assumed_name')
 #     _createAndAssertObject(Reward, BASE_REWARD_JSON, BASE_REWARD_DICT, 'merchantName', 'merchant_name')
@@ -130,7 +130,7 @@ def test_TripleObject_initialize():
     TripleObject.initialize(_config['serviceURL'], _auth)
 
     assert TripleObject._serviceURL == _config['serviceURL']
-    assert 'python-coronado' in TripleObject.headers['User-Agent'] 
+    assert 'python-coronado' in TripleObject.headers['User-Agent']
 
 
 def test_TripleObject_headers():
@@ -142,4 +142,15 @@ def test_TripleObject_headers():
     assert isinstance(h, dict)
     assert 'Authorization' in h
     assert 'User-Agent' in h
+
+
+def test_TripleObject_requiredAttributes():
+    class Synthetic(TripleObject):
+        requiredAttributes = [ 'alpha', 'beta', ]
+
+    s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
+    assert 'thetaMeta' in s.listAttributes()
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Synthetic({ 'alpha': 42, 'theta_meta': 69, })
 

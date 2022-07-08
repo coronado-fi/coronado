@@ -23,7 +23,7 @@ _SERVICE_PATH = 'partner/card-programs'
 
 class CardProgram(TripleObject):
     """
-    Card programs are logical groupings of card accounts.  A card program is 
+    Card programs are logical groupings of card accounts.  A card program is
     often a specific type of card offering by a CardProgram, like a payment card
     associated with its own rewards like miles or cash back.  Card programs may
     also be used for organizing card accounts in arbirtrary groupings.
@@ -31,6 +31,10 @@ class CardProgram(TripleObject):
     Card accounts may not move between card programs, and cannot be represented
     in more than one card program at a time.
     """
+
+    requiredAttributes = ['externalID', 'name', 'programCurrency', ]
+
+
     def __init__(self, obj = BASE_CARD_PROGRAM_DICT):
         """
         Create a new instance of a card program.  `obj` must correspond to a
@@ -57,10 +61,6 @@ class CardProgram(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = ['externalID', 'name', 'programCurrency', ]
-
-        self.assertAll(requiredAttributes)
 
 
     @classmethod
@@ -106,7 +106,7 @@ class CardProgram(TripleObject):
 
         endpoint = '/'.join([CardProgram._serviceURL, _SERVICE_PATH]) # URL fix later
         response = requests.request('POST', endpoint, headers = CardProgram.headers, json = spec)
-        
+
         if response.status_code == 201:
             program = CardProgram(response.text)
         elif response.status_code == 409:
@@ -185,7 +185,7 @@ class CardProgram(TripleObject):
 
             spec : dict
         A dict object with the appropriate object references:
-        
+
         - assumed_name
         - address
 

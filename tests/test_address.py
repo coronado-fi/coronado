@@ -13,9 +13,9 @@ COMPLETE_ADDRESS = '1233 Francisco Street Suite 202\nSan Francisco, CA 94123'
 
 # +++ tests +++
 
-_validAddress = Address({ 
+_validAddress = Address({
     # We made it a requirement but we'll toss it in the instances:
-    'complete_address': '',  
+    'complete_address': '',
     'countryCode': 'US',
     'latitude': 37.802821,
     'line1': '1233 Francisco Street',

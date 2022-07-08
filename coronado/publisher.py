@@ -24,11 +24,15 @@ _SERVICE_PATH = 'partner/publishers'
 class Publisher(TripleObject):
     """
     Publisher objects are used for managing portfolios of publishers.  Partners
-    who manage card programs for multiple publishers may wish to organize them 
+    who manage card programs for multiple publishers may wish to organize them
     into portfolios.  Portfolios allow offer exclusions which may be applied
     across multiple publishers without having to add individual publishers to
     an offer exclusion.
     """
+
+    requiredAttributes = [ 'objID', 'assumedName', 'address', 'createdAt', 'updatedAt', ]
+
+
     def __init__(self, obj = BASE_PUBLISHER_DICT):
         """
         Create a new instance of a publisher.  `obj` must correspond to a
@@ -55,10 +59,6 @@ class Publisher(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = [ 'objID', 'assumedName', 'address', 'createdAt', 'updatedAt', ]
-
-        self.assertAll(requiredAttributes)
 
 
     @classmethod
@@ -101,7 +101,7 @@ class Publisher(TripleObject):
 
         endpoint = '/'.join([Publisher._serviceURL, _SERVICE_PATH]) # URL fix later
         response = requests.request('POST', endpoint, headers = Publisher.headers, json = spec)
-        
+
         if response.status_code == 201:
             publisher = Publisher(str(response.text))
         elif response.status_code == 409:

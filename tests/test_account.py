@@ -21,7 +21,12 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
+<<<<<<< HEAD
 CardAccount.initialize(_config['serviceURL'], _auth)
+=======
+CardAccount._serviceURL = _config['serviceURL']
+CardAccount._auth = _auth
+>>>>>>> dev
 
 
 # *** tests ***
@@ -54,7 +59,7 @@ def test_CardAccount_create():
 
     assert account
     # TODO:  finish the implementation; handle 422, other errors
-    
+
 
 
 def test_CardAccount_byID():

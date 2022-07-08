@@ -60,9 +60,9 @@ class TripleObject(object):
     def __init__(self, obj = None):
         """
         Create a new instance of a triple object.  `obj` must correspond to a
-        valid, existing object ID if it's not a collection or JSON.  The 
+        valid, existing object ID if it's not a collection or JSON.  The
         constructor only returns a valid object if a subclass is instantiated;
-        TripleObject is an abstract class, and passing it an object ID will 
+        TripleObject is an abstract class, and passing it an object ID will
         raise an error.
 
         Arguments
@@ -108,6 +108,8 @@ class TripleObject(object):
             else:
                 setattr(self, key, TripleObject(value) if isinstance(value, dict) else value)
 
+        self.assertAll()
+
 
     @classmethod
     def initialize(klass, serviceURL : str, auth : object):
@@ -127,23 +129,28 @@ class TripleObject(object):
         klass._auth = auth
 
 
-    def assertAll(self, requiredAttributes: list) -> bool:
+    def assertAll(self) -> bool:
         """
-        Asserts that all the attributes listed in the requiredAttributes list of
-        attribute names are presein the final object.  Coronado/triple objects 
-        are built from JSON inputs which may or may not include all required
-        attributes.  This method ensures they do.
+        Asserts that all the attributes listed in the `requiredAttributes` list
+        of attribute names are presein the final object.  Coronado/triple
+        objects are built from JSON inputs which may or may not include all
+        required attributes.  This method ensures they do.
 
-        Arguments:
-            requiresAttributes - a list or tuple of string names
-        
-        Raises:
+        Returns
+        -------
+            True if all required attributes are present during initialization
+
+        Raises
+        ------
             CoronadoMalformedObjectError if one or more attributes are missing.
+
+        This method either throws the exception or returns True; it's not a true
+        Boolean.
         """
-        if requiredAttributes:
+        if self.__class__.requiredAttributes:
             attributes = self.__dict__.keys()
-            if not all(attribute in attributes for attribute in requiredAttributes):
-                missing = set(requiredAttributes)-set(attributes)
+            if not all(attribute in attributes for attribute in self.__class__.requiredAttributes):
+                missing = set(self.__class__.requiredAttributes)-set(attributes)
                 raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
@@ -152,7 +159,7 @@ class TripleObject(object):
         Lists all the attributes and their type of the receiving object in the form:
 
             attrName : type
-        
+
         Returns
         -------
             A dictionary of objects and types
@@ -161,7 +168,7 @@ class TripleObject(object):
         result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
 
         return result
-    
+
 
     @classmethod
     @property
@@ -203,7 +210,9 @@ class TripleObject(object):
 
 """
 ---
-## Exrrors
+
+Errors
+======
 """
 
 class CoronadoAPIError(Exception):
