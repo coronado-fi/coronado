@@ -19,8 +19,8 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
-CardAccount.serviceURL = _config['serviceURL']
-CardAccount.auth = _auth
+CardAccount._serviceURL = _config['serviceURL']
+CardAccount._auth = _auth
 
 
 # *** tests ***
