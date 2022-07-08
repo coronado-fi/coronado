@@ -13,6 +13,11 @@ import json
 import requests
 
 
+# *** constants ***
+
+_SERVICE_PATH = 'partner/card-accounts'
+
+
 # *** clases and objects ***
 
 class CardAccountStatus(enum.Enum):
@@ -35,17 +40,37 @@ class CardAccount(TripleObject):
 
 
     @classmethod
-    def list(klass : object) -> list:
+    def list(klass : object, **args) -> list:
         """
-        Return a list of all card accounts.
+        Return a list of card accounts.  The list is a sequential query from the
+        beginning of time if no query parameters are passed:
+
+        Arguments
+        ---------
+            pubExternalID : str
+        A publisher external ID
+            cardProgramExternalID : str
+        A card program external ID
+            cardAccountExternalID : str
+        A card account external ID
 
         Returns
         -------
-        A list of CardAccount objects
+            list
+        A list of TripleObjects objects with some card account attributes:
+
+        - `objID`
+        - `externalID`
+        - `status`
         """
-        endpoint = '/'.join([CardAccount.serviceURL, 'partner/card-accounts']) # URL fix later
-        headers = { 'Authorization': ' '.join([ CardAccount.auth.tokenType, CardAccount.auth.token, ]) }
-        response = requests.request('GET', endpoint, headers = headers)
+        paramMap = {
+            'cardAccountExternalID': 'card_account_external_id',
+            'cardProgramExternalID': 'card_program_external_id',
+            'pubExternalID': 'publisher_external_id',
+        }
+        params = dict([ (paramMap[k], v) for k, v in args.items()])
+        endpoint = '/'.join([CardAccount._serviceURL, _SERVICE_PATH]) # URL fix later
+        response = requests.request('GET', endpoint, headers = CardAccount.headers)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
 
         return result

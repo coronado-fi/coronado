@@ -19,8 +19,7 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
-CardAccount.serviceURL = _config['serviceURL']
-CardAccount.auth = _auth
+CardAccount.initialize(_config['serviceURL'], _auth)
 
 
 # *** tests ***
@@ -34,6 +33,8 @@ def test_CardAccount_list():
         account = accounts[0]
         assert isinstance(account, TripleObject)
         assert account.objID
+
+    accounts = CardAccount.list(pubExternalID = '4')
 
 
 @pytest.mark.skip('failed - underlying service has issues that need to be solved first')
@@ -66,6 +67,7 @@ def test_CardAccount_byID():
 
     assert not account
 
+test_CardAccount_list()
 # test_CardAccount_create()
 # test_CardAccount_byID()
 
