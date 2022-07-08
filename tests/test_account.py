@@ -8,6 +8,8 @@ from coronado.account import CardAccountStatus
 from coronado.auth import Auth
 from coronado.auth import Scopes
 
+import uuid
+
 import pytest
 
 import coronado.auth as auth
@@ -37,23 +39,18 @@ def test_CardAccount_list():
     accounts = CardAccount.list(pubExternalID = '4')
 
 
-@pytest.mark.skip('failed - underlying service has issues that need to be solved first')
 def test_CardAccount_create():
-    accountSpec = {
+    spec = {
         'card_program_external_id': 'rebates-nation-24',
-        # TODO:  file bug
-        # 'external_id': 'PNC-card-69',
         'external_id': 'pnc-card-69',
-        'status': CardAccountStatus.ENROLLED.value,
-        # TODO:  file bug for Matt
-        # 'publisher_external_id': 'PNCBANK',
         'publisher_external_id': 'pncbank',
+        'status': CardAccountStatus.ENROLLED.value,
     }
 
     with pytest.raises(CoronadoMalformedObjectError):
         CardAccount.create(None)
     
-    account = CardAccount.create(accountSpec)
+    account = CardAccount.create(spec)
 
     assert account
     # TODO:  finish the implementation; handle 422, other errors
@@ -67,7 +64,7 @@ def test_CardAccount_byID():
 
     assert not account
 
-test_CardAccount_list()
-# test_CardAccount_create()
+# test_CardAccount_list()
+test_CardAccount_create()
 # test_CardAccount_byID()
 

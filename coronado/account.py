@@ -70,22 +70,34 @@ class CardAccount(TripleObject):
         }
         params = dict([ (paramMap[k], v) for k, v in args.items()])
         endpoint = '/'.join([CardAccount._serviceURL, _SERVICE_PATH]) # URL fix later
-        response = requests.request('GET', endpoint, headers = CardAccount.headers)
+        response = requests.request('GET', endpoint, headers = CardAccount.headers, params = params)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
 
         return result
 
 
     @classmethod
-    def create(klass, accountSpec : dict) -> object:
+    def create(klass, spec : dict) -> object:
         """
-        Create a new CardAccount object resource.
+        Create a new CardAccount object resource based on spec.
+
+        spec:
+
+        ```javascript
+        {
+            'card_program_external_id': 'somethingelse',
+            'external_id': 'anotherthing',
+            'publisher_external_id': 'something',
+            'status': 'ENROLLED',
+        }
+        ```
 
         Arguments
         ---------
-        accountSpec : dict
-            A dictionary with the required camel_case (fugly) fields defined in
-            https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount
+            spec : dict
+        A dictionary with the required fields to create a new account
+        object.
+
 
         Returns
         -------
@@ -100,12 +112,12 @@ class CardAccount(TripleObject):
         CoronadoMalformedObjectError
             When the payload syntax and/or semantics are incorrect, or otherwise the method fails
         """
-        if not accountSpec:
+        if not spec:
             raise CoronadoMalformedObjectError
 
         endpoint = '/'.join([CardAccount.serviceURL, 'partner/card-accounts']) # URL fix later
         headers = { 'Authorization': ' '.join([ CardAccount.auth.tokenType, CardAccount.auth.token, ]) }
-        response = requests.request('POST', endpoint, headers = headers, json = accountSpec)
+        response = requests.request('POST', endpoint, headers = headers, json = spec)
 
 #         # TODO:  Fix the issues with the service before this can be validated
 #         raise NotImplementedError('The underlying API needs to be refactored for this to work')
