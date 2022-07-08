@@ -51,12 +51,12 @@ def test_CardAccount_create():
 
     with pytest.raises(CoronadoMalformedObjectError):
         CardAccount.create(None)
-    
+
     account = CardAccount.create(accountSpec)
 
     assert account
     # TODO:  finish the implementation; handle 422, other errors
-    
+
 
 
 def test_CardAccount_byID():

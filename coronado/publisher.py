@@ -24,7 +24,7 @@ _SERVICE_PATH = 'partner/publishers'
 class Publisher(TripleObject):
     """
     Publisher objects are used for managing portfolios of publishers.  Partners
-    who manage card programs for multiple publishers may wish to organize them 
+    who manage card programs for multiple publishers may wish to organize them
     into portfolios.  Portfolios allow offer exclusions which may be applied
     across multiple publishers without having to add individual publishers to
     an offer exclusion.
@@ -101,7 +101,7 @@ class Publisher(TripleObject):
 
         endpoint = '/'.join([Publisher._serviceURL, _SERVICE_PATH]) # URL fix later
         response = requests.request('POST', endpoint, headers = Publisher.headers, json = spec)
-        
+
         if response.status_code == 201:
             publisher = Publisher(str(response.text))
         elif response.status_code == 409:

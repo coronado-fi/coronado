@@ -43,8 +43,8 @@ class CardAccount(TripleObject):
         -------
         A list of CardAccount objects
         """
-        endpoint = '/'.join([CardAccount.serviceURL, 'partner/card-accounts']) # URL fix later
-        headers = { 'Authorization': ' '.join([ CardAccount.auth.tokenType, CardAccount.auth.token, ]) }
+        endpoint = '/'.join([CardAccount._serviceURL, 'partner/card-accounts']) # URL fix later
+        headers = { 'Authorization': ' '.join([ CardAccount._auth.tokenType, CardAccount._auth.token, ]) }
         response = requests.request('GET', endpoint, headers = headers)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
 
@@ -78,16 +78,16 @@ class CardAccount(TripleObject):
         if not accountSpec:
             raise CoronadoMalformedObjectError
 
-        endpoint = '/'.join([CardAccount.serviceURL, 'partner/card-accounts']) # URL fix later
-        headers = { 'Authorization': ' '.join([ CardAccount.auth.tokenType, CardAccount.auth.token, ]) }
+        endpoint = '/'.join([CardAccount._serviceURL, 'partner/card-accounts']) # URL fix later
+        headers = { 'Authorization': ' '.join([ CardAccount._auth.tokenType, CardAccount._auth.token, ]) }
         response = requests.request('POST', endpoint, headers = headers, json = accountSpec)
 
 #         # TODO:  Fix the issues with the service before this can be validated
 #         raise NotImplementedError('The underlying API needs to be refactored for this to work')
-        
+
         if response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
-            
+
         if response.status_code >= 500:
             raise CoronadoAPIError(response.text)
 
@@ -112,9 +112,9 @@ class CardAccount(TripleObject):
         -------
             The CardAccount object associated with accountID or None
         """
-        endpoint = '/'.join([CardAccount.serviceURL, 'partner/card-accounts/%s' % accountID]) # URL fix later
+        endpoint = '/'.join([CardAccount._serviceURL, 'partner/card-accounts/%s' % accountID]) # URL fix later
         # TODO:  Refactor this in a separate private class method:
-        headers = { 'Authorization': ' '.join([ CardAccount.auth.tokenType, CardAccount.auth.token, ]) }
+        headers = { 'Authorization': ' '.join([ CardAccount._auth.tokenType, CardAccount._auth.token, ]) }
         response = requests.request('GET', endpoint, headers = headers)
         # result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
         if response.status_code == 404:
