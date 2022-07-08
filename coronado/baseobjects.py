@@ -8,8 +8,8 @@ import json
 # JSON parser errros.
 BASE_ADDRESS_JSON = """{
     "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-    "line_1": "7370 BAKER ST STE 100",
-    "line_2": "string",
+    "line_1": "7370 BAKER ST",
+    "line_2": "SUITE 100",
     "locality": "PITTSBURGH",
     "province": "PA",
     "postal_code": "15206",
