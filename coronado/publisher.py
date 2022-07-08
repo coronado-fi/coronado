@@ -29,6 +29,10 @@ class Publisher(TripleObject):
     across multiple publishers without having to add individual publishers to
     an offer exclusion.
     """
+
+    requiredAttributes = [ 'objID', 'assumedName', 'address', 'createdAt', 'updatedAt', ]
+
+
     def __init__(self, obj = BASE_PUBLISHER_DICT):
         """
         Create a new instance of a publisher.  `obj` must correspond to a
@@ -55,10 +59,6 @@ class Publisher(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = [ 'objID', 'assumedName', 'address', 'createdAt', 'updatedAt', ]
-
-        self.assertAll(requiredAttributes)
 
 
     @classmethod

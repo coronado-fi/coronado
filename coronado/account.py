@@ -26,12 +26,12 @@ class CardAccountStatus(enum.Enum):
 
 
 class CardAccount(TripleObject):
+
+    requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
+
+
     def __init__(self, obj = BASE_CARD_ACCOUNT_DICT):
         TripleObject.__init__(self, obj)
-
-        requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
-
-        self.assertAll(requiredAttributes)
 
 
     @classmethod
