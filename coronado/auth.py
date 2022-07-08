@@ -187,7 +187,7 @@ class Auth(object):
         -------
             A token string
         """
-        self.tokenPayload
+        self.tokenPayload()
 
         return self._token
 
@@ -204,7 +204,7 @@ class Auth(object):
         -------
             A token type string
         """
-        self.tokenPayload
+        self.tokenPayload()
 
         return self._tokenType
 
