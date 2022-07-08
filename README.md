@@ -8,6 +8,18 @@ NAME
 enables partners to integrate with the triple platform.  The full API
 documentation is available from https://api.tripleup.dev/docs
 
+**Python API reference implementation:**
+
+- https://coronado-fi.github.io/coronado
+
+**JVM API:**
+
+- PENDING
+
+**Typescript/JavaScript API:**
+
+- https://coronado-fi.github.io/coronado-js
+
 
 SYNOPSIS
 ========
