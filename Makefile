@@ -3,6 +3,7 @@
 
 SHELL=/bin/bash
 
+API_DOC_DIR="./docs"
 BUILD=./build
 # DEVPI_HOST=$(shell cat devpi-hostname.txt)
 # DEVPI_PASSWORD=$(shell cat ./devpi-password.txt)
@@ -20,7 +21,7 @@ VERSION=$(shell echo "from $(PACKAGE) import __VERSION__; print(__VERSION__)" | 
 all: ALWAYS
 	make test
 	make package
-	make manpage
+	make docs
 
 
 # TODO: Use rm -Rfv $$(find $(PACKAGE) | awk '/__pycache__$$/') after the $(PACKAGE)
@@ -43,6 +44,14 @@ devpi:
 	@[[ -e "pip.conf-bak" ]] && rm -f "pip.conf-bak"
 
 
+docs: ALWAYS
+	mkdir -p $(MANPAGES)
+	t=$$(mktemp) && awk -v "v=$(VERSION)" '/^%/ { $$4 = v; print; next; } { print; }' README.md > "$$t" && cat "$$t" > README.md && rm -f "$$t"
+	pandoc --standalone --to man README.md -o $(MANPAGES)/$(PACKAGE).$(MAN_SECTION)
+	mkdir -p $(API_DOC_DIR)
+	VERSION="$(VERSION)" pdoc --logo="https://assets.website-files.com/6287e9b993a42a7dcb001b99/6287eb0b156c574ac578dab3_Triple-Logo-Full-Color.svg" --favicon="https://assets.website-files.com/6287e9b993a42a7dcb001b99/628bc3aee64e1c6c0f5e3863_Triple%20favicon.png" --no-show-source -n -o $(API_DOC_DIR) -t ./resources $(PACKAGE) 
+
+
 install:
 	pip install -U $(PACKAGE)==$(VERSION)
 	pip list | awk 'NR < 3 { print; } /$(PACKAGE)/'
@@ -55,12 +64,6 @@ libupdate:
 
 local:
 	pip install -e .
-
-
-manpage:
-	mkdir -p $(MANPAGES)
-	t=$$(mktemp) && awk -v "v=$(VERSION)" '/^%/ { $$4 = v; print; next; } { print; }' README.md > "$$t" && cat "$$t" > README.md && rm -f "$$t"
-	pandoc --standalone --to man README.md -o $(MANPAGES)/$(PACKAGE).$(MAN_SECTION)
 
 
 nuke: ALWAYS
