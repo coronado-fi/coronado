@@ -35,14 +35,14 @@ CardProgram.initialize(_config['serviceURL'], _auth)
 
 def test_CardProgram_create():
     progSpec = {
-        # TODO:  Verify the that the camelCase converter deals with BINs 
+        # TODO:  Verify the that the camelCase converter deals with BINs
         'card_bins': [ '425907', '511642', '486010', ],
         'external_id': 'prog-%s' % uuid.uuid4().hex,
         'name': 'Mojito Rewards %s' % uuid.uuid4().hex,
         'program_currency': 'USD',
         'publisher_external_id': KNOWN_PUB_EXTERNAL_ID,
     }
-    
+
     program = CardProgram.create(progSpec)
     assert program
 

@@ -39,9 +39,9 @@ class Address(TripleObject):
         obj specification:
 
         ```
-        Address({ 
+        Address({
             # We made it a requirement but we'll toss it in the instances:
-            'complete_address': '',  
+            'complete_address': '',
             'countryCode': 'US',
             'latitude': 37.802821,
             'line1': '1233 Francisco Street',
@@ -95,7 +95,7 @@ class Address(TripleObject):
             '%s, %s %s' % (self.locality, self.province, self.postalCode), ])
 
         return completeAddress
-        
+
 
     def inSnakeCaseJSON(self) -> str:
         """
@@ -112,7 +112,7 @@ class Address(TripleObject):
 
     def asSnakeCaseDictionary(self):
         """
-        Return a dict representation of the receiver with the attributes 
+        Return a dict representation of the receiver with the attributes
         written in snake_case format.
 
         Return

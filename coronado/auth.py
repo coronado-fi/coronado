@@ -55,7 +55,7 @@ def emptyConfig():
              "clientName": "",
              "secret": "",
              "serviceURL": "", # API service URL
-             "token": "", 
+             "token": "",
              "tokenURL": ""}
 
 
@@ -138,7 +138,7 @@ class Auth(object):
 
         Raises
         ------
-        coronado.auth.CoronadoAuthTokenAPIError if the underlying token API call 
+        coronado.auth.CoronadoAuthTokenAPIError if the underlying token API call
         fails.  The exception message will include details about the failure
         reason.
 

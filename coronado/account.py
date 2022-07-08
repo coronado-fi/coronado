@@ -84,10 +84,10 @@ class CardAccount(TripleObject):
 
 #         # TODO:  Fix the issues with the service before this can be validated
 #         raise NotImplementedError('The underlying API needs to be refactored for this to work')
-        
+
         if response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
-            
+
         if response.status_code >= 500:
             raise CoronadoAPIError(response.text)
 

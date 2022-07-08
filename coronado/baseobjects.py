@@ -91,11 +91,11 @@ BASE_OFFER_JSON = """{
     "currency_code": "USD",
     "category": "AUTOMOTIVE",
     "category_tags": "string",
-    "category_mccs": 
+    "category_mccs":
     [],
     "description": "string",
     "effective_date": "2021-12-01",
-    "excluded_dates": 
+    "excluded_dates":
     [],
     "expiration_date": "2021-12-31",
     "is_activated": false,
@@ -103,7 +103,7 @@ BASE_OFFER_JSON = """{
     "max_redemptions": "1/3M",
     "maximum_reward_per_transaction": 0,
     "maximum_reward_cumulative": 0,
-    "merchant_category_code": 
+    "merchant_category_code":
     {},
     "merchant_name": "string",
     "merchant_logo_url": "string",
@@ -113,7 +113,7 @@ BASE_OFFER_JSON = """{
     "reward_value": 0,
     "reward_type": "CARD_LINKED",
     "type": "CARD_LINKED",
-    "valid_day_parts": 
+    "valid_day_parts":
     {},
     "terms_and_conditions": "string",
     "merchant_website": "string"
@@ -147,7 +147,7 @@ BASE_OFFER_DISPLAY_RULES_JSON = """{
     "id": "triple-abc-123",
     "description": "string",
     "enabled": true,
-    "scope": 
+    "scope":
     {
 
         "level": "PORTFOLIO_MANAGER",
@@ -167,7 +167,7 @@ BASE_PUBLISHER_JSON = """{
     "portfolio_manager_id": "triple-abc-123",
     "external_id": "string",
     "assumed_name": "string",
-    "address": 
+    "address":
     {
         "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
         "line_1": "7370 BAKER ST STE 100",
@@ -217,14 +217,14 @@ BASE_TRANSACTION_JSON = """{
     "currency_code": "USD",
     "transaction_type": "PURCHASE",
     "description": "Pittsburgh Zoo",
-    "merchant_category_code": 
+    "merchant_category_code":
     {
 
         "code": "7998",
         "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
 
     },
-    "merchant_address": 
+    "merchant_address":
     {
 
         "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
@@ -241,7 +241,7 @@ BASE_TRANSACTION_JSON = """{
     "processor_mid": "9000012345",
     "processor_mid_type": "VISA_VMID",
     "matching_status": "HISTORIC_TRANSACTION",
-    "reward_details": 
+    "reward_details":
     [
 
         {
