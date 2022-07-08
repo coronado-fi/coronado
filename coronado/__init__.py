@@ -23,7 +23,7 @@ import json
 
 # *** constants ***
 
-__VERSION__ = '1.0.8'
+__VERSION__ = '1.1.0'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -40,6 +40,17 @@ class TripleObject(object):
 
     _auth = None
     _serviceURL = None
+
+    requiredAttributes = None
+    """
+    A list or tuple of attribute names that are required to be present in the
+    JSON or `dict` object during object construction.  See the `assertAll`()
+    method.
+
+    **NB:** The attribute names _must_ be in camelCase; these refer to the
+    object's internal attributes, not the snake_case initialization payload
+    in JSON or a `dict`.
+    """
 
 
     # +++ implementation +++
