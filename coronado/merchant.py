@@ -17,7 +17,7 @@ import requests
 
 # +++ constants +++
 
-_SERVICE_PATH = 'partner/merchants'
+SERVICE_PATH = 'partner/merchants'
 
 
 # *** classes and objects ***
