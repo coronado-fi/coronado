@@ -16,7 +16,19 @@ import requests
 
 # +++ constants +++
 
-_SERVICE_PATH = 'partner/publishers'
+SERVICE_PATH = 'partner/publishers'
+"""
+The default service path associated with CardAccount operations.
+
+Usage:
+
+```
+CardAccount.initialize(serviceURL, SERVICE_PATH, auth)
+```
+
+Users are welcome to initialize the class' service path from regular strings.
+This constant is defined for convenience.
+"""
 
 
 # *** classes and objects ***
@@ -99,7 +111,7 @@ class Publisher(TripleObject):
         if not spec:
             raise CoronadoMalformedObjectError
 
-        endpoint = '/'.join([Publisher._serviceURL, _SERVICE_PATH]) # URL fix later
+        endpoint = '/'.join([Publisher._serviceURL, SERVICE_PATH]) # URL fix later
         response = requests.request('POST', endpoint, headers = Publisher.headers, json = spec)
 
         if response.status_code == 201:
@@ -126,7 +138,7 @@ class Publisher(TripleObject):
             list
         A list of Publisher objects
         """
-        endpoint = '/'.join([Publisher._serviceURL, _SERVICE_PATH]) # URL fix later
+        endpoint = '/'.join([Publisher._serviceURL, SERVICE_PATH]) # URL fix later
         response = requests.request('GET', endpoint, headers = Publisher.headers)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
 
@@ -148,7 +160,7 @@ class Publisher(TripleObject):
             a Publisher
         The Publisher object associated with objID or None
         """
-        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
+        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (SERVICE_PATH, objID)]) # URL fix later
         response = requests.request('GET', endpoint, headers = Publisher.headers)
 
         if response.status_code == 404:
@@ -193,7 +205,7 @@ class Publisher(TripleObject):
         An updated instance of the Publisher associated with objID, or None
         if the objID isn't associated with an existing resource.
         """
-        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
+        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (SERVICE_PATH, objID)]) # URL fix later
         response = requests.request('PATCH', endpoint, headers = Publisher.headers, json = spec)
 
         if response.status_code == 404:

@@ -27,6 +27,7 @@ all: ALWAYS
 # TODO: Use rm -Rfv $$(find $(PACKAGE) | awk '/__pycache__$$/') after the $(PACKAGE)
 #       package is claimed to this project by PyPI.
 clean:
+	rm -Rf $(API_DOC_DIR)/*
 	rm -Rf $(BUILD)/*
 	rm -Rf $(DIST)/*
 	rm -Rf $(MANPAGES)/*
@@ -106,10 +107,11 @@ test: ALWAYS
 	pip install -r requirements.txt
 	pip install -e .
 	pytest -v ./tests/test_$(PACKAGE).py
-	pytest -v ./tests/test_account.py
+	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_address.py
 	pytest -v ./tests/test_auth.py
 	pytest -v ./tests/test_cardprog.py
+	pytest -v ./tests/test_merchant.py
 	pytest -v ./tests/test_publisher.py
 	pytest -v ./tests/test_tools.py
 	pip uninstall -y $(PACKAGE)==$(VERSION) || true

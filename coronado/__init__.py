@@ -7,23 +7,16 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 
 from copy import deepcopy
 
-from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
-from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
-from coronado.baseobjects import BASE_MERCHANT_LOCATION_DICT
-from coronado.baseobjects import BASE_OFFER_ACTIVATION_DICT
-from coronado.baseobjects import BASE_OFFER_DICT
-from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_DICT
-from coronado.baseobjects import BASE_PUBLISHER_DICT
-from coronado.baseobjects import BASE_REWARD_DICT
-from coronado.baseobjects import BASE_TRANSACTION_DICT
 from coronado.tools import tripleKeysToCamelCase
 
 import json
 
+import requests
+
 
 # *** constants ***
 
-__VERSION__ = '1.1.0'
+__VERSION__ = '1.1.1'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -39,6 +32,7 @@ class TripleObject(object):
     # +++ class variables ++
 
     _auth = None
+    _servicePath = None
     _serviceURL = None
 
     requiredAttributes = None
@@ -112,7 +106,7 @@ class TripleObject(object):
 
 
     @classmethod
-    def initialize(klass, serviceURL : str, auth : object):
+    def initialize(klass, serviceURL : str, servicePath : str, auth : object):
         """
         Initialize the class to use an appropriate service URL or authentication
         object.
@@ -125,8 +119,9 @@ class TripleObject(object):
             An instance of Auth configured to use the the serviceURL within the
             defined scope
         """
-        klass._serviceURL = serviceURL
         klass._auth = auth
+        klass._servicePath = servicePath
+        klass._serviceURL = serviceURL
 
 
     def assertAll(self) -> bool:
@@ -179,41 +174,174 @@ class TripleObject(object):
         }
 
 
-    # TODO:  Determine if the create(), list(), byID(), etc. methods need to be
-    #        declared as abstract here, and/or if they have common return codes
-    #        that we could leverage for implementation.  We won't know for sure
-    #        until there is more than one working business object.  There may be
-    #        enough commonality to float that behavior to the abstract parent
-    #        class.
+    @classmethod
+    def create(klass, spec : dict) -> object:
+        """
+        Create a new TripleObject object resource based on spec.
+
+        spec:
+
+        ```python
+        {
+        }
+        ```
+
+        Arguments
+        ---------
+        TODO:
+            spec : dict
+        A dictionary with the required fields to create a new tripleObject
+        object.
+
+
+        Returns
+        -------
+            aTripleObject
+        An instance of TripleObject with a valid objID
+
+        Raises
+        ------
+            CoronadoUnprocessableObjectError
+        When the payload syntax is correct but the semantics are invalid
+            CoronadoAPIError
+        When the service endpoint has an error (500 series)
+            CoronadoMalformedObjectError
+        When the payload syntax and/or semantics are incorrect, or otherwise the method fails
+            CoronadoUnexpectedError
+        When the underlying API throws an error not covered by this implementation
+        """
+        if klass == TripleObject:
+            # Don't allow this in the abstract ancestor
+            raise NotImplementedError
+
+        if not spec:
+            raise CoronadoMalformedObjectError
+
+        endpoint = '/'.join([klass._serviceURL, klass._servicePath ]) # URL fix later
+        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+
+        if response.status_code == 201:
+            tripleObject = klass(response.text)
+        elif response.status_code == 409:
+            raise CoronadoDuplicatesDisallowedError(response.text)
+        elif response.status_code == 422:
+            raise CoronadoUnprocessableObjectError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
+
+        return tripleObject
+
+
     @classmethod
     def byID(klass, objID : str) -> object:
         """
-        Return the triple object associated with objID.
+        Return the tripleObject associated with objID.
 
         Arguments
         ---------
             objID : str
-        The object ID associated with the resource to fetch
+        The tripleObject ID associated with the resource to fetch
 
         Returns
         -------
-            The object associated with objID or None
+            aTripleObject
+        The TripleObject object associated with objID or None
 
         Raises
         ------
-            NotImplementedError
-        If the caller attempts this method against the
-        TripleObject class
+            CoronadoAPIError
+        When the service encounters some error
         """
-        raise NotImplementedError # because abstract
+        endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
+        response = requests.request('GET', endpoint, headers = klass.headers)
+
+        if response.status_code == 404:
+            result = None
+        elif response.status_code == 200:
+            result = klass(response.content.decode())
+        else:
+            raise CoronadoAPIError(response.text)
+
+        return result
 
 
-"""
----
+    @classmethod
+    def updateWith(klass, objID : str, spec : dict) -> object:
+        """
+        Update the receiver with new values for the attributes set in spec.
 
-Errors
-======
-"""
+        spec:
+
+        ```
+        spec = {
+        }
+        ```
+
+        Arguments
+        ---------
+            objID : str
+        The TripleObject ID to update
+
+            spec : dict
+        A dict object with the appropriate object references:
+
+        - assumed_name
+        - address
+
+        The address should be generated using a Coronado Address object and
+        then calling its asSnakeCaseDictionary() method
+
+        Returns
+        -------
+            aTripleObject
+        An updated instance of the TripleObject associated with objID, or None
+        if the objID isn't associated with an existing resource.
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the service encounters some error
+        """
+        endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
+        response = requests.request('PATCH', endpoint, headers = klass.headers, json = spec)
+
+        if response.status_code == 404:
+            result = None
+        elif response.status_code == 200:
+            result = klass(response.content.decode())
+        else:
+            raise CoronadoAPIError(response.text)
+
+        return result
+
+
+    @classmethod
+    def list(klass : object, paramMap = None, **args) -> list:
+        """
+        Return a list of tripleObjects.  The list is a sequential query from the
+        beginning of time if no query parameters are passed:
+
+        Arguments
+        ---------
+            See concrete class implementations for specific arguments for each
+            use case.
+
+        Returns
+        -------
+            list
+        A list of TripleObjects
+        """
+        params = None
+        if paramMap:
+            params = dict([ (paramMap[k], v) for k, v in args.items() ])
+
+        endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
+        response = requests.request('GET', endpoint, headers = klass.headers, params = params)
+
+        return response
+
 
 class CoronadoAPIError(Exception):
     """

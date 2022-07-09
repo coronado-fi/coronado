@@ -58,9 +58,33 @@ BASE_CARD_PROGRAM_DICT = json.loads(BASE_CARD_PROGRAM_JSON)
 
 BASE_MERCHANT_CATEGORY_CODE_JSON = """{
     "code": "7998",
-    "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+    "description": "Aquaria, Dolphinaria, Seaquaria, and Zoos"
 }"""
 BASE_MERCHANT_CATEGORY_CODE_DICT = json.loads(BASE_MERCHANT_CATEGORY_CODE_JSON)
+
+
+BASE_MERCHANT_JSON = """{
+  "id": "triple-abc-123",
+  "external_id": "string",
+  "assumed_name": "string",
+  "address": {
+    "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
+    "line_1": "7370 BAKER ST STE 100",
+    "line_2": "string",
+    "locality": "PITTSBURGH",
+    "province": "PA",
+    "postal_code": "15206",
+    "country_code": "US",
+    "latitude": 40.440624,
+    "longitude": -79.995888
+  },
+  "merchant_category_code": {
+    "code": "7998",
+    "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+  },
+  "logo_url": "string"
+}"""
+BASE_MERCHANT_DICT = json.loads(BASE_MERCHANT_JSON)
 
 
 BASE_MERCHANT_LOCATION_JSON = """{

@@ -25,15 +25,6 @@
 #         self.assertAll(requiredAttributes)
 #
 #
-# class Offer(TripleObject):
-#     def __init__(self, obj = BASE_OFFER_DICT):
-#         TripleObject.__init__(self, obj)
-#
-#         requiredAttributes = [ 'objID', 'activationRequired', 'currencyCode', 'effectiveDate', 'isActivated', 'headline', 'minimumSpend', 'mode', 'rewardType', 'type', ]
-#
-#         self.assertAll(requiredAttributes)
-#
-#
 # class OfferActivation(TripleObject):
 #     def __init__(self, obj = BASE_OFFER_ACTIVATION_DICT):
 #         TripleObject.__init__(self, obj)

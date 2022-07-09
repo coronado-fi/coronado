@@ -110,7 +110,7 @@ class Address(TripleObject):
         return json.dumps(self.asSnakeCaseDictionary())
 
 
-    def asSnakeCaseDictionary(self):
+    def asSnakeCaseDictionary(self) -> dict:
         """
         Return a dict representation of the receiver with the attributes
         written in snake_case format.

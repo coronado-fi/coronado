@@ -9,6 +9,7 @@ from coronado.address import Address
 from coronado.auth import Auth
 from coronado.auth import Scopes
 from coronado.publisher import Publisher
+from coronado.publisher import SERVICE_PATH
 
 import uuid
 
@@ -41,7 +42,7 @@ _address = Address({
 _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
-Publisher.initialize(_config['serviceURL'], _auth)
+Publisher.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # --- utility functions ---
@@ -136,4 +137,7 @@ def test_Publisher_updateWith():
 
 def test_Publisher_instanceByID():
     assert Publisher(KNOWN_PUB_ID).assumedName == KNOWN_ASSUMED_NAME
+
+
+test_Publisher_create()
 
