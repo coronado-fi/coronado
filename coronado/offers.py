@@ -10,6 +10,7 @@ from coronado import TripleObject
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.baseobjects import BASE_OFFER_DICT
 
+import enum
 import json
 
 import requests
@@ -23,61 +24,16 @@ _SERVICE_PATH = 'partner/publishers'
 # *** classes and objects ***
 
 
-class MerchantCategoryCode(TripleObject):
+class MarketingFeeType(enum.Enum):
     """
-    A Merchant Category Code, or MCC, is a 4-digit number that indicates a line
-    of business and the types of goods and services that the business provides
-    to their customers.
-
-    <a href='https://www.merchantmaverick.com/merchant-category-code-mcc/' target='_blank'>Merchant Category Codes (MCC):</a>
-    All You Need to Know from *Maverick Merchant*.
+    Offer fees may be expressed as percentages or fixed.
     """
-    requiredAttributes = [ 'code', 'description', ]
+    FIXED = 'FIXED'
+    PERCENTAGE = 'PERCENTAGE'
 
 
-    def __init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT):
-        """
-        Create a new MCC instance.
-
-        spec:
-
-        ```
-        {
-            'code': '4269',
-            'description': 'Aquaria, Dolphinaria, Seaquaria, and Zoos',
-        }
-        ```
-        """
-        TripleObject.__init__(self, obj)
-
-
-    def __str__(self):
-        return '%s: %s' % (self.code, self.description)
-
-
-    def inSnakeCaseJSON(self) -> str:
-        """
-        Return a JSON representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            A string with a JSON representation of the receiver.
-
-        """
-        return json.dumps(self.asSnakeCaseDictionary())
-
-
-    def asSnakeCaseDictionary(self) -> dict:
-        """
-        Return a dict representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            A dict representation of the receiver.
-        """
-        return { 'code': self.code, 'description': self.description, }
+    def __str__(self) -> str:
+        return self.value
 
 
 class Offer(TripleObject):
@@ -93,8 +49,10 @@ class Offer(TripleObject):
         'activationRequired',
         'currencyCode',
         'effectiveDate',
-        'isActivated',
+        'expirationDate',
+        'externalID',
         'headline',
+        'isActivated',
         'minimumSpend',
         'mode',
         'rewardType',

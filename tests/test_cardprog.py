@@ -7,6 +7,7 @@ from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
 from coronado.auth import Scopes
 from coronado.cardprog import CardProgram
+from coronado.cardprog import SERVICE_PATH
 
 import uuid
 
@@ -28,7 +29,7 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
-CardProgram.initialize(_config['serviceURL'], _auth)
+CardProgram.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # +++ tests +++

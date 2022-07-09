@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado.offers import MerchantCategoryCode as MCC
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado.merchant import MerchantCategoryCode as MCC
 
 import json
 
@@ -26,8 +26,4 @@ def test_MCC_inSnakeCaseJSON():
 
     assert _code.code == control['code']
     assert _code.description == control['description']
-
-
-test_MCC()
-test_MCC_inSnakeCaseJSON()
 
