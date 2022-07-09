@@ -59,7 +59,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.0.9</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -88,7 +88,7 @@
     </div>
     <a class="headerlink" href="#CardProgram"></a>
     
-            <div class="docstring"><p>Card programs are logical groupings of card accounts.  A card program is 
+            <div class="docstring"><p>Card programs are logical groupings of card accounts.  A card program is
 often a specific type of card offering by a CardProgram, like a payment card
 associated with its own rewards like miles or cash back.  Card programs may
 also be used for organizing card accounts in arbirtrary groupings.</p>
@@ -152,6 +152,10 @@ associated with a valid object</p>
             <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
 JSON or <code>dict</code> object during object construction.  See the <code><a href="#CardProgram.assertAll">assertAll</a></code>()
 method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
 </div>
 
 
@@ -258,6 +262,13 @@ operation</p>
 
 <pre><code>The card program object associated with objID or None
 </code></pre>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the service encounters some error</p>
 </div>
 
 
@@ -309,6 +320,13 @@ then calling its asSnakeCaseDictionary() method</p>
 
 <p>An updated instance of the CardProgram associated with objID, or None
 if the objID isn't associated with an existing resource.</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the service encounters some error</p>
 </div>
 
 

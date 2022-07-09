@@ -165,7 +165,6 @@ class Auth(object):
         -------
         A JWT string
         """
-        # delta = self._expirationTime.timestamp()-datetime.now().timestamp()
         now = round(datetime.now().timestamp())
         delta = self._expirationTime-now
         if delta < 0:

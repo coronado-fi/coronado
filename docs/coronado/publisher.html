@@ -59,7 +59,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.0.9</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -89,7 +89,7 @@
     <a class="headerlink" href="#Publisher"></a>
     
             <div class="docstring"><p>Publisher objects are used for managing portfolios of publishers.  Partners
-who manage card programs for multiple publishers may wish to organize them 
+who manage card programs for multiple publishers may wish to organize them
 into portfolios.  Portfolios allow offer exclusions which may be applied
 across multiple publishers without having to add individual publishers to
 an offer exclusion.</p>
@@ -150,6 +150,10 @@ associated with a valid object</p>
             <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
 JSON or <code>dict</code> object during object construction.  See the <code><a href="#Publisher.assertAll">assertAll</a></code>()
 method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
 </div>
 
 

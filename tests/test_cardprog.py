@@ -2,8 +2,8 @@
 
 
 from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import CoronadoMalformedObjectError
+from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
 from coronado.auth import Scopes
 from coronado.cardprog import CardProgram
