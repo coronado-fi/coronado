@@ -5,10 +5,11 @@ from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
-from coronado.account import CardAccount
-from coronado.account import CardAccountStatus
 from coronado.auth import Auth
 from coronado.auth import Scopes
+from coronado.cardaccount import CardAccount
+from coronado.cardaccount import CardAccountStatus
+from coronado.cardaccount import SERVICE_PATH
 
 import uuid
 
@@ -31,7 +32,7 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
 
-CardAccount.initialize(_config['serviceURL'], _auth)
+CardAccount.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # *** tests ***
