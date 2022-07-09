@@ -2,7 +2,9 @@
 
 
 from coronado import CoronadoAPIError
+from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
+from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -28,6 +30,10 @@ class CardAccountStatus(enum.Enum):
     CLOSED = 'CLOSED'
     ENROLLED = 'ENROLLED'
     NOT_ENROLLED = 'NOT_ENROLLED'
+
+
+    def __str__(self) -> str:
+        return self.value
 
 
 class CardAccount(TripleObject):
@@ -68,6 +74,7 @@ class CardAccount(TripleObject):
             'cardProgramExternalID': 'card_program_external_id',
             'pubExternalID': 'publisher_external_id',
         }
+        # params = dict([ (paramMap[k], v) for k, v in args.items()]) if args else None
         params = dict([ (paramMap[k], v) for k, v in args.items()])
         endpoint = '/'.join([CardAccount._serviceURL, _SERVICE_PATH]) # URL fix later
         response = requests.request('GET', endpoint, headers = CardAccount.headers, params = params)
@@ -88,7 +95,7 @@ class CardAccount(TripleObject):
             'card_program_external_id': 'somethingelse',
             'external_id': 'anotherthing',
             'publisher_external_id': 'something',
-            'status': 'ENROLLED',
+            'status': str(CardAccountStatus.ENROLLED),
         }
         ```
 
@@ -101,61 +108,120 @@ class CardAccount(TripleObject):
 
         Returns
         -------
+            aCardAccount
         An instance of CardAccount with a valid objID
 
         Raises
         ------
-        CoronadoUnprocessableObjectError
-            When the payload syntax is correct but the semantics are invalid
-        CoronadoAPIError
-            When the service endpoint has an error (500 series)
-        CoronadoMalformedObjectError
-            When the payload syntax and/or semantics are incorrect, or otherwise the method fails
+            CoronadoUnprocessableObjectError
+        When the payload syntax is correct but the semantics are invalid
+            CoronadoAPIError
+        When the service endpoint has an error (500 series)
+            CoronadoMalformedObjectError
+        When the payload syntax and/or semantics are incorrect, or otherwise the method fails
+            CoronadoUnexpectedError
+        When the underlying API throws an error not covered by this implementation
         """
         if not spec:
             raise CoronadoMalformedObjectError
 
         endpoint = '/'.join([CardAccount._serviceURL, 'partner/card-accounts']) # URL fix later
-        headers = { 'Authorization': ' '.join([ CardAccount._auth.tokenType, CardAccount._auth.token, ]) }
-        response = requests.request('POST', endpoint, headers = headers, json = accountSpec)
+        response = requests.request('POST', endpoint, headers = CardAccount.headers, json = spec)
 
-        if response.status_code == 422:
+        if response.status_code == 201:
+            account = CardAccount(response.text)
+        elif response.status_code == 409:
+            raise CoronadoDuplicatesDisallowedError(response.text)
+        elif response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
-
-        if response.status_code >= 500:
+        elif response.status_code >= 500:
             raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
 
-        if response.status_code != 200:
-            raise CoronadoMalformedObjectError(response.text)
-
-
-        return None
+        return account
 
 
     @classmethod
-    def byID(klass, accountID : str) -> object:
+    def byID(klass, objID : str) -> object:
         """
-        Return the card account associated with accountID.
+        Return the card account associated with objID.
 
         Arguments
         ---------
-        accountID : str
-            The account ID associated with the resource to fetch
+            objID : str
+        The account ID associated with the resource to fetch
 
         Returns
         -------
-            The CardAccount object associated with accountID or None
+            aCardAccount
+        The CardAccount object associated with objID or None
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the service encounters some error
         """
-        endpoint = '/'.join([CardAccount._serviceURL, 'partner/card-accounts/%s' % accountID]) # URL fix later
-        # TODO:  Refactor this in a separate private class method:
-        headers = { 'Authorization': ' '.join([ CardAccount._auth.tokenType, CardAccount._auth.token, ]) }
-        response = requests.request('GET', endpoint, headers = headers)
-        # result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+        endpoint = '/'.join([CardAccount._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
+        response = requests.request('GET', endpoint, headers = CardAccount.headers)
+
         if response.status_code == 404:
             result = None
+        elif response.status_code == 200:
+            result = CardAccount(response.content.decode())
         else:
-            # TODO:  no data there, can't test yet
-            pass
+            raise CoronadoAPIError(response.text)
+
+        return result
+
+
+    @classmethod
+    def updateWith(klass, objID : str, spec : dict) -> object:
+        """
+        Update the receiver with new values for the attributes set in spec.
+
+        spec:
+
+        ```
+        spec = {
+            'status': str(CardAccountStatus.ENROLLED),
+        }
+        ```
+
+        Arguments
+        ---------
+            objID : str
+        The CardProgram ID to update
+
+            spec : dict
+        A dict object with the appropriate object references:
+
+        - assumed_name
+        - address
+
+        The address should be generated using a Coronado Address object and
+        then calling its asSnakeCaseDictionary() method
+
+        Returns
+        -------
+            aCardProgram
+        An updated instance of the CardProgram associated with objID, or None
+        if the objID isn't associated with an existing resource.
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the service encounters some error
+        """
+        endpoint = '/'.join([CardAccount._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
+        response = requests.request('PATCH', endpoint, headers = CardAccount.headers, json = spec)
+
+        if response.status_code == 404:
+            result = None
+        elif response.status_code == 200:
+            result = CardAccount(response.content.decode())
+        else:
+            raise CoronadoAPIError(response.text)
 
         return result
 

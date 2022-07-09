@@ -151,6 +151,11 @@ class CardProgram(TripleObject):
         Returns
         -------
             The card program object associated with objID or None
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the service encounters some error
         """
         endpoint = '/'.join([CardProgram._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
         response = requests.request('GET', endpoint, headers = CardProgram.headers)
@@ -197,6 +202,11 @@ class CardProgram(TripleObject):
             aCardProgram
         An updated instance of the CardProgram associated with objID, or None
         if the objID isn't associated with an existing resource.
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the service encounters some error
         """
         endpoint = '/'.join([CardProgram._serviceURL, '%s/%s' % (_SERVICE_PATH, objID)]) # URL fix later
         response = requests.request('PATCH', endpoint, headers = CardProgram.headers, json = spec)

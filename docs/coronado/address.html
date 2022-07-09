@@ -56,7 +56,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.0.9</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -117,9 +117,9 @@ valid, existing object ID if it's not a collection or JSON.</p>
 
 <p>obj specification:</p>
 
-<pre><code>Address({ 
+<pre><code>Address({
     # We made it a requirement but we'll toss it in the instances:
-    'complete_address': '',  
+    'complete_address': '',
     'countryCode': 'US',
     'latitude': 37.802821,
     'line1': '1233 Francisco Street',
@@ -173,6 +173,10 @@ associated with a valid object</p>
             <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
 JSON or <code>dict</code> object during object construction.  See the <code><a href="#Address.assertAll">assertAll</a></code>()
 method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
 </div>
 
 
@@ -231,7 +235,7 @@ written in snake_case format.</p>
     </div>
     <a class="headerlink" href="#Address.asSnakeCaseDictionary"></a>
     
-            <div class="docstring"><p>Return a dict representation of the receiver with the attributes 
+            <div class="docstring"><p>Return a dict representation of the receiver with the attributes
 written in snake_case format.</p>
 
 <h2 id="return">Return</h2>

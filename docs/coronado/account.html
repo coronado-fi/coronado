@@ -65,13 +65,16 @@
                         <li>
                                 <a class="function" href="#CardAccount.byID">byID</a>
                         </li>
+                        <li>
+                                <a class="function" href="#CardAccount.updateWith">updateWith</a>
+                        </li>
                 </ul>
 
             </li>
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.0.9</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -173,9 +176,9 @@ See:  <a href="https://api.partners.dev.tripleupdev.com/docs#operation/createCar
     <a class="headerlink" href="#CardAccount.__init__"></a>
     
             <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
-valid, existing object ID if it's not a collection or JSON.  The 
+valid, existing object ID if it's not a collection or JSON.  The
 constructor only returns a valid object if a subclass is instantiated;
-TripleObject is an abstract class, and passing it an object ID will 
+TripleObject is an abstract class, and passing it an object ID will
 raise an error.</p>
 
 <h2 id="arguments">Arguments</h2>
@@ -220,6 +223,10 @@ associated with a valid object</p>
             <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
 JSON or <code>dict</code> object during object construction.  See the <code><a href="#CardAccount.assertAll">assertAll</a></code>()
 method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
 </div>
 
 
@@ -229,17 +236,38 @@ method.</p>
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
-        <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
+        <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span>, </span><span class="param"><span class="o">**</span><span class="n">args</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#CardAccount.list"></a>
     
-            <div class="docstring"><p>Return a list of all card accounts.</p>
+            <div class="docstring"><p>Return a list of card accounts.  The list is a sequential query from the
+beginning of time if no query parameters are passed:</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>pubExternalID : str
+</code></pre>
+
+<p>A publisher external ID
+    cardProgramExternalID : str
+A card program external ID
+    cardAccountExternalID : str
+A card account external ID</p>
 
 <h2 id="returns">Returns</h2>
 
-<p>A list of CardAccount objects</p>
+<pre><code>list
+</code></pre>
+
+<p>A list of TripleObjects objects with some card account attributes:</p>
+
+<ul>
+<li><code>objID</code></li>
+<li><code>externalID</code></li>
+<li><code>status</code></li>
+</ul>
 </div>
 
 
@@ -249,32 +277,51 @@ method.</p>
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
-        <span class="name">create</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">accountSpec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
+        <span class="name">create</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#CardAccount.create"></a>
     
-            <div class="docstring"><p>Create a new CardAccount object resource.</p>
+            <div class="docstring"><p>Create a new CardAccount object resource based on spec.</p>
+
+<p>spec:</p>
+
+<div class="pdoc-code codehilite"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;card_program_external_id&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;somethingelse&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;external_id&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;anotherthing&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;publisher_external_id&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;something&#39;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s1">&#39;status&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">str</span><span class="p">(</span><span class="nx">CardAccountStatus</span><span class="p">.</span><span class="nx">ENROLLED</span><span class="p">),</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
 
 <h2 id="arguments">Arguments</h2>
 
-<p>accountSpec : dict
-    A dictionary with the required camel_case (fugly) fields defined in
-    <a href="https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount">https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount</a></p>
+<pre><code>spec : dict
+</code></pre>
+
+<p>A dictionary with the required fields to create a new account
+object.</p>
 
 <h2 id="returns">Returns</h2>
+
+<pre><code>aCardAccount
+</code></pre>
 
 <p>An instance of CardAccount with a valid objID</p>
 
 <h2 id="raises">Raises</h2>
 
-<p>CoronadoUnprocessableObjectError
-    When the payload syntax is correct but the semantics are invalid
-CoronadoAPIError
-    When the service endpoint has an error (500 series)
-CoronadoMalformedObjectError
-    When the payload syntax and/or semantics are incorrect, or otherwise the method fails</p>
+<pre><code>CoronadoUnprocessableObjectError
+</code></pre>
+
+<p>When the payload syntax is correct but the semantics are invalid
+    CoronadoAPIError
+When the service endpoint has an error (500 series)
+    CoronadoMalformedObjectError
+When the payload syntax and/or semantics are incorrect, or otherwise the method fails
+    CoronadoUnexpectedError
+When the underlying API throws an error not covered by this implementation</p>
 </div>
 
 
@@ -284,23 +331,92 @@ CoronadoMalformedObjectError
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
-        <span class="name">byID</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">accountID</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
+        <span class="name">byID</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
         
     </div>
     <a class="headerlink" href="#CardAccount.byID"></a>
     
-            <div class="docstring"><p>Return the card account associated with accountID.</p>
+            <div class="docstring"><p>Return the card account associated with objID.</p>
 
 <h2 id="arguments">Arguments</h2>
 
-<p>accountID : str
-    The account ID associated with the resource to fetch</p>
+<pre><code>objID : str
+</code></pre>
+
+<p>The account ID associated with the resource to fetch</p>
 
 <h2 id="returns">Returns</h2>
 
-<pre><code>The CardAccount object associated with accountID or None
+<pre><code>aCardAccount
 </code></pre>
+
+<p>The CardAccount object associated with objID or None</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the service encounters some error</p>
+</div>
+
+
+                            </div>
+                            <div id="CardAccount.updateWith" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">updateWith</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#CardAccount.updateWith"></a>
+    
+            <div class="docstring"><p>Update the receiver with new values for the attributes set in spec.</p>
+
+<p>spec:</p>
+
+<pre><code>spec = {
+    'status': str(<a href="#CardAccountStatus.ENROLLED">CardAccountStatus.ENROLLED</a>),
+}
+</code></pre>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>objID : str
+</code></pre>
+
+<p>The CardProgram ID to update</p>
+
+<pre><code>spec : dict
+</code></pre>
+
+<p>A dict object with the appropriate object references:</p>
+
+<ul>
+<li>assumed_name</li>
+<li>address</li>
+</ul>
+
+<p>The address should be generated using a Coronado Address object and
+then calling its asSnakeCaseDictionary() method</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>aCardProgram
+</code></pre>
+
+<p>An updated instance of the CardProgram associated with objID, or None
+if the objID isn't associated with an existing resource.</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the service encounters some error</p>
 </div>
 
 
