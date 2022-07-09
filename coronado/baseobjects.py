@@ -58,7 +58,7 @@ BASE_CARD_PROGRAM_DICT = json.loads(BASE_CARD_PROGRAM_JSON)
 
 BASE_MERCHANT_CATEGORY_CODE_JSON = """{
     "code": "7998",
-    "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+    "description": "Aquaria, Dolphinaria, Seaquaria, and Zoos"
 }"""
 BASE_MERCHANT_CATEGORY_CODE_DICT = json.loads(BASE_MERCHANT_CATEGORY_CODE_JSON)
 
