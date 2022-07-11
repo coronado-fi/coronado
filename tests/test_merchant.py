@@ -27,7 +27,9 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
+# TODO:  file this bug:
+# _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
 
 
 Merchant.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
@@ -52,6 +54,7 @@ def test_MCC_inSnakeCaseJSON():
 
 
 
+@pytest.mark.skip('501 - not implemented in underlying API')
 def test_Merchant_create():
     spec = {
         "external_id": uuid.uuid4().hex,
@@ -86,7 +89,4 @@ def test_Merchant_create():
     spec['external_id'] = '****'
     with pytest.raises(CoronadoUnprocessableObjectError):
         Merchant.create(spec)
-
-
-test_Merchant_create()
 
