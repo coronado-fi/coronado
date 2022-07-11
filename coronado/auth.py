@@ -3,14 +3,19 @@
 
 from datetime import datetime
 
+from jose import jwt
+from jose.exceptions import ExpiredSignatureError
+from jose.exceptions import JWTClaimsError
+from jose.exceptions import JWTError
+
 import enum
 import json
 import os
-import urllib.parse as encoder
 
 import appdirs
 import requests
 
+from coronado.tools import tripleKeysToCamelCase
 
 
 # --- constants ----
@@ -61,37 +66,41 @@ def emptyConfig():
 
 # +++ classes +++
 
-class CoronadoAuthTokenAPIError(Exception):
-    """
-    Raised when the access token API fails to produce an access token.
-    """
-
-
 class Scopes(enum.Enum):
     """
     Client credentials OAuth2 flow scopes.
 
     Enum items
     ----------
-    CONTENT_PROVIDERS : str
-        API partner content provider scope
-    PORTFOLIOS : str
-        API partner portfolios scope
-    PUBLISHERS : str
-        API partner publishers scope
-    VIEW_OFFERS : str
-        API partner view offers scope
+        CONTENT_PROVIDERS : str
+    API partner content provider scope
+        PORTFOLIOS : str
+    API partner portfolios scope
+        PUBLISHERS : str
+    API partner publishers scope
+        VIEW_OFFERS : str
+    API partner view offers scope
     """
     CONTENT_PROVIDERS = 'api.tripleup.com/partner.content_providers'
-    NA = 'no.scope.for.testint'
+    NA = 'no.scope.for.testing'
     PORTFOLIOS = 'api.tripleup.com/partner.portfolios'
     PUBLISHERS = 'api.tripleup.com/partner.publishers'
     VIEW_OFFERS = 'api.tripleup.com/partner.view_offers'
 
 
 class Auth(object):
+    def _buildScopeStrFrom(self, scopes):
+        if isinstance(scopes, Scopes):
+            return scopes.value
+        elif isinstance(scopes, list):
+            return ' '.join([ s.value for s in scopes ])
+        
+        return ""
+
+
     def _getTokenPayload(self) -> str:
-        scopeStr = encoder.quote(self._scope.value)
+        # scopeStr = encoder.quote(self._buildScopeStrFrom(self._scope))
+        scopeStr = self._buildScopeStrFrom(self._scope)
         payload = { 'grant_type': 'client_credentials', 'scope': scopeStr, }
         credentials = (self._clientID, self._clientSecret)
 
@@ -114,6 +123,19 @@ class Auth(object):
         self._tokenType = d['token_type']
 
 
+    def _resolveScopeFrom(self, scope):
+        if not scope:
+            return
+        if isinstance(scope, Scopes):
+            return scope
+        elif isinstance(scope, list):
+            for item in scope:
+                if not isinstance(item, Scopes):
+                    raise CoronadoAuthInvalidScopes(str(scope))
+            return scope
+        else:
+            raise CoronadoAuthInvalidScopes(str(scope))
+
     # --------------------
 
     def __init__(self, tokenURL = TOKEN_URL, clientID = None, clientSecret = None, scope = None, expirationOffset = None):
@@ -123,18 +145,32 @@ class Auth(object):
 
         Arguments
         ---------
-        tokenURL : str
-            The URL for the access token provider
-        clientID : str
-            A unique client ID, provider by triple
-        clientSecret : str
-            The unique client ID associated secret
-        scope : coronado.auth.Scopes
-            The client credentials OAuth2 scope for which access is granted
-        expirationOffset : int
-            Expiration time buffer, seconds to subtract from expiration time to
-            that the internal token representation is up-to-date; used only for
-            unit testing, users should ignore this argument
+            tokenURL : str
+        The URL for the access token provider
+
+            clientID : str
+        A unique client ID, provider by triple
+
+            clientSecret : str
+        The unique client ID associated secret
+
+            scope : coronado.auth.Scopes
+        The client credentials OAuth2 scope for which access is granted. `scope`
+        is one of:
+
+        - A single `Scopes` value
+        - A list of two or more `Scopes` values
+        - `None`
+
+        If `None`, the receiver will grant access to all available scopes.
+
+        See:  <a href='https://aws.amazon.com/blogs/mobile/understanding-amazon-cognito-user-pool-oauth-2-0-grants/' target='_blank'>AWS Cognito user pool grants</a>
+        for details.
+
+            expirationOffset : int
+        Expiration time buffer, seconds to subtract from expiration time to
+        that the internal token representation is up-to-date; **used only for
+        unit testing, users should ignore this argument**.
 
         Raises
         ------
@@ -146,7 +182,7 @@ class Auth(object):
         self._tokenURL = tokenURL
         self._clientID = clientID
         self._clientSecret = clientSecret
-        self._scope = scope
+        self._scope = self._resolveScopeFrom(scope)
 
         self._tokenPayload = self._getTokenPayload()
 
@@ -206,4 +242,49 @@ class Auth(object):
         self.tokenPayload  # This is for the refresh token side effect
 
         return self._tokenType
+
+
+    @property
+    def info(self) -> dict:
+        """
+        Return the receiver's reserved OAuth2 claims set.
+        
+        Reference:  https://www.oauth.com/oauth2-servers/openid-connect/id-tokens/
+
+        Raises
+        ------
+            CoronadoAuthTokenAPIError
+        If the JWT provider fails; the error text will include the reason
+        for the failure.  Possible causes:
+
+        - The claims are invalid at the issuer
+        - The token signature might have expired (should never happen)
+        - The service provider (e.g. Cognito) may have some issue
+        """
+        self.tokenPayload
+
+        try:
+            claimSet = jwt.decode(self.token, '', options = {'verify_signature': False})
+        # TODO:  finesse error handling is someone actually uses this; so far
+        #        we have no reason to think it's necessary.
+        except JWTError as e:
+            raise CoronadoAuthTokenAPIError(str(e))
+        except ExpiredSignatureError as e:
+            raise CoronadoAuthTokenAPIError(str(e))
+        except JWTClaimsError as e:
+            raise CoronadoAuthTokenAPIError(str(e))
+            
+        return tripleKeysToCamelCase(claimSet)
+
+
+class CoronadoAuthInvalidScopes(Exception):
+    """
+    Raised during `Auth` token instantiation if an invalid scopes list is used.
+    """
+
+
+class CoronadoAuthTokenAPIError(Exception):
+    """
+    Raised when the access token API fails to produce an access token.
+    """
 
