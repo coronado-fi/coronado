@@ -361,7 +361,6 @@ class CoronadoDuplicatesDisallowedError(Exception):
     """
 
 
-
 class CoronadoMalformedObjectError(Exception):
     """
     Raised when instantiating a Coronado object fails.  May also include
