@@ -57,8 +57,17 @@ def tripleKeysToCamelCase(d: dict):
             v = 'objID'
         elif 'Id' in v and 'Ident' not in v and 'Idio' not in v:
             v = v.replace('Id', 'ID')
+        # Alphabetical from here; use a lookup table if it gets too big:
+        elif v == 'iat':
+            v = 'issuedAt'
+        elif v == 'iss':
+            v = 'issuingServer'
+        elif v == 'jti':
+            v = 'tokenIssuerID' # acronyms everywhere!
         elif v == 'mid':
             v = 'aMID'
+        elif v == 'sub':
+            v = 'subject'
 
         keysTable[k] = v
 
