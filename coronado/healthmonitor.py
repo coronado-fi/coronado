@@ -32,6 +32,7 @@ class HealthMonitor(TripleObject):
 
 
 if '__main__' == __name__:
+    # TODO:  Turn this into a real object and define its unit tests and a runner.
     _config = auth.loadConfig()
     _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
 
