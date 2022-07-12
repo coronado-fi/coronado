@@ -3,7 +3,7 @@
 
 from coronado import CoronadoAPIError
 from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
+# from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoNotFoundError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
@@ -120,7 +120,70 @@ class OfferSearchResult(TripleObject):
         return result
 
 
+    @classmethod
+    def create(klass, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def byID(klass, objID: str) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def updateWith(klass, objID: str, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def list(klass, paraMap = None, **args) -> list:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
 class CLOfferDetails(TripleObject):
     """
     """
-    pass
+
+    @classmethod
+    def create(klass, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def byID(klass, objID: str) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def updateWith(klass, objID: str, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def list(klass, paraMap = None, **args) -> list:
+        """
+        **Disabled for this class.**
+        """
+        None
+
