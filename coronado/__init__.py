@@ -369,6 +369,13 @@ class CoronadoMalformedObjectError(Exception):
     pass
 
 
+class CoronadoNotFoundError(Exception):
+    """
+    Raised when performing a search or update operation and the underlying API
+    is unable to tie the `objID` to a triple object of the corresponding type.
+    """
+
+
 class CoronadoUnexpectedError(Exception):
     """
     Raised when performning a Coronado API call that results in an

@@ -1,19 +1,19 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnexpectedError
-from coronado import CoronadoUnprocessableObjectError
+# from coronado import CoronadoAPIError
+# from coronado import CoronadoDuplicatesDisallowedError
+# from coronado import CoronadoMalformedObjectError
+# from coronado import CoronadoUnexpectedError
+# from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
-from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.baseobjects import BASE_OFFER_DICT
-
+# 
 import enum
-import json
-
-import requests
+# import json
+# 
+# import requests
 
 
 # +++ constants +++
@@ -79,6 +79,4 @@ class Offer(TripleObject):
 #
 #       1. MerchantCategoryCode
 #       2. Merchant
-
-
 
