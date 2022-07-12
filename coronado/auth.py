@@ -74,10 +74,13 @@ class Scopes(enum.Enum):
     ----------
         CONTENT_PROVIDERS : str
     API partner content provider scope
+
         PORTFOLIOS : str
     API partner portfolios scope
+
         PUBLISHERS : str
     API partner publishers scope
+
         VIEW_OFFERS : str
     API partner view offers scope
     """
