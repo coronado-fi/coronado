@@ -1,13 +1,15 @@
 # vim: set fileencoding=utf-8:
 
 
-# from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoAPIError
+from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
+from coronado.merchant import MerchantCategoryCode as MCC
+from coronado.address import Address
 
 import json
 
@@ -16,7 +18,8 @@ import requests
 
 # +++ constants +++
 
-SERVICE_PATH = 'partner/offer-display/search-offers'
+FETCH_RPC_SERVICE_PATH = 'partners/offer-display/details'
+SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
 
 
 # *** classes and objects ***
@@ -60,7 +63,7 @@ class OfferSearchResult(TripleObject):
 
 
     @classmethod
-    def forQuery(klass, spec):
+    def forQuery(klass, spec : dict) -> list:
         """
         Search for offers that meet the query search criteria.  The underlying
         service allows for parameterized search and plain text searches.  The
@@ -163,7 +166,35 @@ class OfferSearchResult(TripleObject):
         None
 
 
+def _assembleDetailsFrom(payload):
+    # payload == JSON
+    d = json.loads(payload)
+
+    if 'offer' not in d:
+        raise CoronadoMalformedObjectError('offer attribute not found')
+
+    offer = CLOffer(d['offer'])
+    offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
+
+    if 'category_mccs' in d:
+        offer.categoryMCCs = [ MCC(c) for c in offer.categoryMCCs ]
+
+    merchantLocations = [ MerchantLocations(l) for l in d['merchant_locations'] ]
+
+    for location in merchantLocations:
+        location.address = Address(location.address)
+
+    d['offer'] = offer
+    d['merchant_locations'] = merchantLocations
+
+    offerDetails = CLOfferDetails(d)
+
+    return offerDetails
+
+
 class CLOfferDetails(TripleObject):
+    # --- private ---
+
     """
     Object representation of the offer details and associated merchant
     locations for an offer.
@@ -178,7 +209,7 @@ class CLOfferDetails(TripleObject):
 
 
     @classmethod
-    def forID(klass, objID : str, includeLocations = False) -> object:
+    def forID(klass, objID : str, spec : dict, includeLocations = False) -> object:
         """
         Get the details and merchant locations for an offer.
 
@@ -187,8 +218,27 @@ class CLOfferDetails(TripleObject):
             objID
         A known, valid offer ID
 
+            spec
+        A snake_case dictionary with the query request body.
+
             includeLocations
         Set to `True` to include the merchant locations in the response.
+
+        Sample spec (incomplete, for illustrative purposes only; see
+        documentation for full spec):
+
+        ```
+        {
+          'proximity_target': {
+            'postal_code': '15206',
+            'country_code': 'US',
+            'radius': 35000
+          },
+          'card_account_identifier': {
+            'card_account_id': 'triple-abc-123'
+          }
+        }
+        ```
 
         Returns
         -------
@@ -204,13 +254,16 @@ class CLOfferDetails(TripleObject):
             CoronadoUnexpectedError
         When this object implementation is unable to handle a server response 
         error not covered by existing exceptions.
+
+            CoronadoUnprocessableObjectError
+        When the `spec` query is missing one or more atribute:value pairs.
         """
         # TODO: triple bug - where's the Geo-Position header spec?
-        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details/%s' % objID, ])
-        response = requests.request('POST', endpoint, headers = klass.headers)
+        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details', objID, ])
+        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 200:
-            result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
+            result = _assembleDetailsFrom(response.content)
         elif response.status_code == 404:
             result = None
         elif response.status_code == 422:
@@ -258,6 +311,7 @@ class CLOfferDetails(TripleObject):
 
 
 class CLOffer(TripleObject):
+    # TODO:  Documantation, required fields
     """
     """
 
@@ -307,7 +361,8 @@ class MerchantLocations(TripleObject):
     """
 
     requiredAttributes = [
-        'objiD',
+# TODO: Bug!
+#         'objiD',
         'address',
         'isOnline',
     ]
