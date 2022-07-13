@@ -6,11 +6,11 @@
 # from coronado import CoronadoMalformedObjectError
 # from coronado import CoronadoUnexpectedError
 # from coronado import CoronadoUnprocessableObjectError
-from coronado import TripleObject
 # from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado import TripleEnum
+from coronado import TripleObject
 from coronado.baseobjects import BASE_OFFER_DICT
 # 
-import enum
 # import json
 # 
 # import requests
@@ -24,7 +24,7 @@ _SERVICE_PATH = 'partner/publishers'
 # *** classes and objects ***
 
 
-class MarketingFeeType(enum.Enum):
+class MarketingFeeType(TripleEnum):
     """
     Offer fees may be expressed as percentages or fixed.
     """
@@ -32,8 +32,23 @@ class MarketingFeeType(enum.Enum):
     PERCENTAGE = 'PERCENTAGE'
 
 
-    def __str__(self) -> str:
-        return self.value
+class OfferCategory(TripleEnum):
+    """
+    High-level offer categories.  May be database-based in future
+    implementations.
+    """
+    AUTOMOTIVE = 'AUTOMOTIVE'
+    CHILDREN_AND_FAMILY = 'CHILDREN_AND_FAMILY'
+    ELECTRONICS = 'ELECTRONICS'
+    ENTERTAINMENT = 'ENTERTAINMENT'
+    FINANCIAL_SERVICES = 'FINANCIAL_SERVICES'
+    FOOD = 'FOOD'
+    HEALTH_AND_BEAUTY = 'HEALTH_AND_BEAUTY'
+    HOME = 'HOME'
+    OFFICE_AND_BUSINESS = 'OFFICE_AND_BUSINESS'
+    RETAIL = 'RETAIL'
+    TRAVEL = 'TRAVEL'
+    UTILITIES_AND_TELECOM = 'UTILITIES_AND_TELECOM'
 
 
 class Offer(TripleObject):
