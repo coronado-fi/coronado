@@ -1,10 +1,10 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 
-import enum
 import json
 
 
@@ -25,7 +25,7 @@ This constant is defined for convenience.
 
 # *** clases and objects ***
 
-class CardAccountStatus(enum.Enum):
+class CardAccountStatus(TripleEnum):
     """
     Account status object.
     See:  https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount
@@ -33,10 +33,6 @@ class CardAccountStatus(enum.Enum):
     CLOSED = 'CLOSED'
     ENROLLED = 'ENROLLED'
     NOT_ENROLLED = 'NOT_ENROLLED'
-
-
-    def __str__(self) -> str:
-        return self.value
 
 
 class CardAccount(TripleObject):

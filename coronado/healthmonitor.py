@@ -17,6 +17,7 @@ SERVICE_PATH = 'partner/healthcheck'
 
 class HealthMonitor(TripleObject):
     """
+    Health monitor.  **NEEDS DOCUMENTATION**
     """
     requiredAttributes = [ 'APIVersion', 'build', ]
 

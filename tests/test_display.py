@@ -1,12 +1,11 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
+from coronado import CoronadoAPIError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
-from coronado.auth import Scopes
 from coronado.display import OfferSearchResult
+from coronado.display import CLOfferDetails
 from coronado.display import SERVICE_PATH
 
 import pytest
@@ -16,8 +15,10 @@ import coronado.auth as auth
 
 # *** constants ***
 
-KNOWN_CARD_PROG_EXT_ID = 'prog-5a4d1563410c4ff687d8a6fa8c208fe8'
 KNOWN_CARD_ID = '2'
+KNOWN_CARD_PROG_EXT_ID = 'prog-5a4d1563410c4ff687d8a6fa8c208fe8'
+# KNOWN_OFFER_ID = '4862'
+KNOWN_OFFER_ID = '10953'
 
 
 # *** globals ***
@@ -26,14 +27,12 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'])
 
 
-OfferSearchResult.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+classes = [ OfferSearchResult, CLOfferDetails, ]
+for c in classes:
+    c.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # +++ tests +++
-
-def test_OfferSearchResult():
-    pass
-
 
 def test_OfferSearchResult_searchFor():
     # Known offers working query:
@@ -66,4 +65,14 @@ def test_OfferSearchResult_searchFor():
     del spec['proximity_target']
     with pytest.raises(CoronadoUnprocessableObjectError):
         OfferSearchResult.forQuery(spec)
+
+
+@pytest.mark.skip('offer details API errors')
+def test_CLOfferDetails_forID():
+    offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID)
+
+    assert offerDetails
+
+
+# test_CLOfferDetails_forID()
 

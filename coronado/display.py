@@ -1,18 +1,16 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
 # from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoNotFoundError
+from coronado import CoronadoAPIError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
+from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
-# 
-# import enum
+
 import json
-# 
+
 import requests
 
 
@@ -99,7 +97,22 @@ class OfferSearchResult(TripleObject):
         Returns
         -------
             list of OfferSearchResult
-        A list of offer search results.  The list may be empty/zero-length.
+        A list of offer search results.  The list may be empty/zero-length,
+        or `None`.
+
+        Raises
+        ------
+            CoronadoUnprocessableObjectError
+        When the query `spec` is malformed, missing required fields, or has
+        invalid or out of range query parameter values.
+
+            CoronadoAPIError
+        When the underlying service is unable to serve the response.  The text 
+        in the exception explains the possible reason.
+
+            CoronadoUnexpectedError
+        When this object implementation is unable to handle a server response 
+        error not covered by existing exceptions.
         """
         endpoint = '/'.join([ klass._serviceURL, klass._servicePath, ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
@@ -107,9 +120,7 @@ class OfferSearchResult(TripleObject):
         if response.status_code == 200:
             result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
         elif response.status_code == 404:
-            raise CoronadoNotFoundError(response.text)
-        elif response.status_code == 409:
-            raise CoronadoDuplicatesDisallowedError(response.text)
+            result = None
         elif response.status_code == 422:
             raise CoronadoUnprocessableObjectError(response.text)
         elif response.status_code >= 500:
@@ -154,7 +165,159 @@ class OfferSearchResult(TripleObject):
 
 class CLOfferDetails(TripleObject):
     """
+    Object representation of the offer details and associated merchant
+    locations for an offer.
     """
+
+    def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
+        """
+        Create a new CLOffer instance.
+        """
+        TripleObject.__init__(self, obj)
+
+
+
+    @classmethod
+    def forID(klass, objID : str, includeLocations = False) -> object:
+        """
+        Get the details and merchant locations for an offer.
+
+        Arguments
+        ---------
+            objID
+        A known, valid offer ID
+
+            includeLocations
+        Set to `True` to include the merchant locations in the response.
+
+        Returns
+        -------
+            CLOfferDetails
+        An offer details instance if objID is valid, else `None`.
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the underlying service is unable to serve the response.  The text 
+        in the exception explains the possible reason.
+
+            CoronadoUnexpectedError
+        When this object implementation is unable to handle a server response 
+        error not covered by existing exceptions.
+        """
+        # TODO: triple bug - where's the Geo-Position header spec?
+        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details/%s' % objID, ])
+        response = requests.request('POST', endpoint, headers = klass.headers)
+
+        if response.status_code == 200:
+            result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
+        elif response.status_code == 404:
+            result = None
+        elif response.status_code == 422:
+            raise CoronadoUnprocessableObjectError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
+
+        return result
+
+
+    @classmethod
+    def create(klass, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def byID(klass, objID: str) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def updateWith(klass, objID: str, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def list(klass, paraMap = None, **args) -> list:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+
+
+class CLOffer(TripleObject):
+    """
+    """
+
+    def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
+        """
+        Create a new OfferSearchResult instance.  Objects of this class should
+        not be instantiated via constructor in most cases.  Use the `forQuery()`
+        method to query the system for valid results.
+        """
+        TripleObject.__init__(self, obj)
+
+
+    @classmethod
+    def create(klass, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def byID(klass, objID: str) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def updateWith(klass, objID: str, spec: dict) -> object:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+    @classmethod
+    def list(klass, paraMap = None, **args) -> list:
+        """
+        **Disabled for this class.**
+        """
+        None
+
+
+class MerchantLocations(TripleObject):
+    """
+    """
+
+    requiredAttributes = [
+        'objiD',
+        'address',
+        'isOnline',
+    ]
+
+    def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
+        """
+        Create a new MerchantLocations instance.
+        """
+        TripleObject.__init__(self, obj)
+
 
     @classmethod
     def create(klass, spec: dict) -> object:

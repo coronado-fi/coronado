@@ -1,37 +1,50 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
-from coronado import TripleObject
-from coronado.auth import Auth
-from coronado.auth import Scopes
-from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
-from coronado.merchant import Merchant
-from coronado.merchant import SERVICE_PATH
-
-import json
-import uuid
-
-import pytest
-
-import coronado.auth as auth
+# from coronado import CoronadoDuplicatesDisallowedError
+# from coronado import CoronadoMalformedObjectError
+# from coronado import CoronadoUnprocessableObjectError
+# from coronado import TripleObject
+# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado.offer import MarketingFeeType
+from coronado.offer import OfferCategory
 
 
-# *** globals ***
+# import json
+# import uuid
+
+# import pytest
+
+# import coronado.auth as auth
 
 
 # *** globals ***
 
-_config = auth.loadConfig()
-# TODO:  file this bug:
-# _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
 
+# *** globals ***
 
-Merchant.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+# TODO: Pending Offer implementation
+# _config = auth.loadConfig()
+# _auth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scopes.PORTFOLIOS)
+# 
+# Offer.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # +++ tests +++
+
+def test_MarketingFeeType():
+    x = MarketingFeeType.PERCENTAGE
+
+    assert isinstance(x, MarketingFeeType)
+    assert str(x) == 'PERCENTAGE'
+    assert str(x) == MarketingFeeType.PERCENTAGE.value
+
+
+
+def test_OfferCatetory():
+    x = OfferCategory.ENTERTAINMENT
+
+    assert isinstance(x, OfferCategory)
+    assert str(x) == 'ENTERTAINMENT'
+    assert str(x) == OfferCategory.ENTERTAINMENT.value
 
