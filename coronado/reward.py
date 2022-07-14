@@ -6,8 +6,8 @@ from coronado import TripleEnum
 
 # *** classes and objects ***
 
-class RewardType(TripleEnum):
-    CARD_LINKED = 'CARD_LINKED'
-    AFFILIATE = 'AFFILIATE'
-    CATEGORICAL = 'CATEGORICAL'
+# class RewardType(TripleEnum):
+#     CARD_LINKED = 'CARD_LINKED'
+#     AFFILIATE = 'AFFILIATE'
+#     CATEGORICAL = 'CATEGORICAL'
 

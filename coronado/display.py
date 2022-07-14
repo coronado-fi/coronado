@@ -12,7 +12,7 @@ from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
 from coronado.offer import OfferCategory
 from coronado.offer import OfferDeliveryModes
-from coronado.reward import RewardType
+from coronado.offer import OfferType
 
 import json
 
@@ -184,7 +184,7 @@ def _assembleDetailsFrom(payload):
     # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
     offer.offerMode = OfferDeliveryModes(offer.offerMode)
-    offer.type = RewardType(offer.type)
+    offer.type = OfferType(offer.type)
 
     merchantLocations = [ MerchantLocation(l) for l in d['merchant_locations'] ]
 

@@ -109,12 +109,13 @@ test: ALWAYS
 	pip install -r requirements.txt
 	pip install -e .
 	pytest -v ./tests/test_$(PACKAGE).py
-	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_address.py
 	pytest -v ./tests/test_auth.py
+	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_cardprog.py
 	pytest -v ./tests/test_display.py
 	pytest -v ./tests/test_merchant.py
+	pytest -v ./tests/test_offer.py
 	pytest -v ./tests/test_publisher.py
 	pytest -v ./tests/test_reward.py
 	pytest -v ./tests/test_tools.py
