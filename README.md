@@ -1,4 +1,5 @@
-% coronado(5) Version 1.1.2 | triple API Python wrapper
+% coronado(5) Version 1.1.3 | triple API Python wrapper
+
 
 
 NAME
@@ -25,6 +26,14 @@ SYNOPSIS
 ========
 
 | **coronado** - Auth, TripleObjects, and business objects manipulation API
+| **triplchk** - command line tool for reporting if the triple service is
+available and healthy
+
+**triplechk** takes no arguments.  The triple configuration file must exist in
+the system-dependent configuration directory.
+
+Executables install to `/usr/local/bin` unless **coronado** is installed in a 
+virtual environment, in which case they are installed to `$VIRTUALENV/bin`.
 
 
 DESCRIPTION
@@ -161,7 +170,6 @@ FILES
 Coronado provides a simple configuration service via API that resolves a JSON
 configuration file from system-specific, well-known file system locations.  All
 paths are assumed to be under a service user in $HOME.
-
 
 - Linux (XDG): `$HOME/.config/coronado/config.json
 - macOS: `$HOME/Application Support/coronado/config.json

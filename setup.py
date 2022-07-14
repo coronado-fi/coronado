@@ -38,11 +38,11 @@ if '__main__' == __name__:
             "Programming Language :: Python :: 3.9",
         ],
         description                   = 'Coronado - triple API Python wrapper and reference implementation',
-#         entry_points                  = {
-#                                     'console_scripts': {
-#                                         'coronado=coronado:main',
-#                                     }
-#                                },
+        entry_points                  = {
+                                            'console_scripts': {
+                                                'triplchk=coronado.healthmonitor:main',
+                                            }
+                                       },
         include_package_data          = True,
         install_requires              = requirements,
         license                       = "Apache 2.0",
