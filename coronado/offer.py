@@ -51,6 +51,15 @@ class OfferCategory(TripleEnum):
     UTILITIES_AND_TELECOM = 'UTILITIES_AND_TELECOM'
 
 
+class OfferDeliveryModes(TripleEnum):
+    """
+    Offer delivery mode.
+    """
+    IN_PERSON = 'IN_PERSON'
+    IN_PERSON_AND_ONLINE = 'IN_PERSON_AND_ONLINE'
+    ONLINE = 'ONLINE'
+
+
 class Offer(TripleObject):
     """
     Offer objects represent offers from brands and retaliers linked to a payment

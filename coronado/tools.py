@@ -70,6 +70,8 @@ def tripleKeysToCamelCase(d: dict):
             v = 'aMID'
         elif v == 'sub':
             v = 'subject'
+        elif 'Url' in v and v[0] not in [ 'c', 'h', ]:
+            v = v.replace('Url', 'URL')
 
         keysTable[k] = v
 
