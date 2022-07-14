@@ -176,10 +176,7 @@ def _assembleDetailsFrom(payload):
     offer = CLOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
 
-    if 'category_mccs' in d:
-        offer.categoryMCCs = [ MCC(c) for c in offer.categoryMCCs ]
-
-    merchantLocations = [ MerchantLocations(l) for l in d['merchant_locations'] ]
+    merchantLocations = [ MerchantLocation(l) for l in d['merchant_locations'] ]
 
     for location in merchantLocations:
         location.address = Address(location.address)
@@ -199,6 +196,10 @@ class CLOfferDetails(TripleObject):
     Object representation of the offer details and associated merchant
     locations for an offer.
     """
+
+    requiredAttributes = [
+        'offer',
+    ]
 
     def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
         """
@@ -258,7 +259,6 @@ class CLOfferDetails(TripleObject):
             CoronadoUnprocessableObjectError
         When the `spec` query is missing one or more atribute:value pairs.
         """
-        # TODO: triple bug - where's the Geo-Position header spec?
         endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details', objID, ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
@@ -311,9 +311,28 @@ class CLOfferDetails(TripleObject):
 
 
 class CLOffer(TripleObject):
-    # TODO:  Documantation, required fields
     """
+    CLOffer presents a detailed view of a card linked offer (CLO) with all the
+    relevant details.
+
+    Offer objects represent offers from brands and retaliers linked to a payment
+    provider like a debit or credit card.  The offer is redeemed by the consumer
+    when the linked payment card is used at a point-of-sale.  Offer instances 
+    connect on-line advertising campaings with concrete purchases.
     """
+
+    requiredAttributes = [
+        'activationRequired',
+        'currencyCode',
+        'effectiveDate',
+        'headline',
+        'isActivated',
+        'minimumSpend',
+# TODO:  internal ticket M-906
+#         'mode',
+#         'rewardType',
+        'type',
+    ]
 
     def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
         """
@@ -356,20 +375,21 @@ class CLOffer(TripleObject):
         None
 
 
-class MerchantLocations(TripleObject):
+class MerchantLocation(TripleObject):
     """
+    A merchant's business adddress, whether physical or on-line.
+
+    See `coronado.address.Address`
     """
 
     requiredAttributes = [
-# TODO: Bug!
-#         'objiD',
         'address',
         'isOnline',
     ]
 
     def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):
         """
-        Create a new MerchantLocations instance.
+        Create a new MerchantLocation instance.
         """
         TripleObject.__init__(self, obj)
 
