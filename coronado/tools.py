@@ -53,6 +53,8 @@ def tripleKeysToCamelCase(d: dict):
 
     for k in d.keys():
         v = camelCaseOf(k)
+        if 'api' in v:
+            v = v.replace('api', 'API')
         if v == 'id':
             v = 'objID'
         elif 'Id' in v and 'Ident' not in v and 'Idio' not in v:
@@ -70,6 +72,7 @@ def tripleKeysToCamelCase(d: dict):
             v = 'aMID'
         elif v == 'sub':
             v = 'subject'
+        # TODO: from Matt - fix this for realz next version
         elif 'Url' in v and v[0] not in [ 'c', 'h', ]:
             v = v.replace('Url', 'URL')
 

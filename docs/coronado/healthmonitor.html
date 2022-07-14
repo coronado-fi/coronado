@@ -47,10 +47,13 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="function" href="#main">main</a>
+            </li>
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.2</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.3</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -79,7 +82,26 @@
     </div>
     <a class="headerlink" href="#HealthMonitor"></a>
     
-            <div class="docstring"><p>Health monitor.  <strong>NEEDS DOCUMENTATION</strong></p>
+            <div class="docstring"><p>Health monitor reports if the API service is healthy and operational.</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>TripleObject
+</code></pre>
+
+<p>A triple object with these attributes set:</p>
+
+<ul>
+<li><code>APIVersion</code></li>
+<li><code>build</code></li>
+</ul>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the service is unavailable because of a fatal runtime condition.</p>
 </div>
 
 
@@ -180,6 +202,44 @@ in JSON or a <code>dict</code>.</p>
             </div>
                                 </dl>
                             </div>
+                </section>
+                <section id="main">
+                    <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">main</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unitTest</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#main"></a>
+    
+            <div class="docstring"><p>Check the triple API service health by reporting the API version, build ID,
+and other information relevant to implementers.</p>
+
+<p>This function is the main entry point for a script that will be installed to
+<code>/usr/local/bin/triplchk</code> or equivalent depending on whether the Coronado
+package was installed in the system wide Python configuraiton or in a
+virtual environment.</p>
+
+<p>See:  <code>man 5 coronado</code> for details.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>unitTest
+</code></pre>
+
+<p>Set it to True for running it in a unit test.</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>dict
+</code></pre>
+
+<p><code>None</code> if running standalone, or a dictionary with information useful to
+API developers if running a unit test.</p>
+</div>
+
+
                 </section>
     </main>
 <script>
