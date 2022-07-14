@@ -96,13 +96,11 @@ def test_CardAccount_byID():
 
 def test_CardAccount_updateWith():
     control = CardAccountStatus.NOT_ENROLLED
-    orgStatus = CardAccountStatus(CardAccount.byID(KNOWN_ACCT_ID).status)
     payload = { 'status' : str(control), }
     obj  = CardAccount.updateWith(KNOWN_ACCT_ID, payload)
     assert obj.status == str(control)
 
     # Reset:
-    payload['status'] = str(orgStatus)
     payload['status'] = 'ENROLLED'
     CardAccount.updateWith(KNOWN_ACCT_ID, payload)
 
