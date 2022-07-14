@@ -2,6 +2,8 @@
 
 """
 Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' target='_blank'>triple services API</a>.
+
+![Class diagram](classes.png)
 """
 
 
@@ -199,7 +201,6 @@ class TripleObject(object):
 
         Arguments
         ---------
-        TODO:
             spec : dict
         A dictionary with the required fields to create a new tripleObject
         object.

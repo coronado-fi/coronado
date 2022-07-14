@@ -268,8 +268,6 @@ class Auth(object):
 
         try:
             claimSet = jwt.decode(self.token, '', options = {'verify_signature': False})
-        # TODO:  finesse error handling is someone actually uses this; so far
-        #        we have no reason to think it's necessary.
         except JWTError as e:
             raise CoronadoAuthTokenAPIError(str(e))
         except ExpiredSignatureError as e:
