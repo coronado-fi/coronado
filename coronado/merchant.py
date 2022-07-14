@@ -17,7 +17,7 @@ import requests
 
 # +++ constants +++
 
-_SERVICE_PATH = 'partner/merchants'
+SERVICE_PATH = 'partner/merchants'
 
 
 # *** classes and objects ***
@@ -59,18 +59,6 @@ class MerchantCategoryCode(TripleObject):
 
     def __str__(self):
         return '%s: %s' % (self.code, self.description)
-
-
-    def inSnakeCaseJSON(self) -> str:
-        """
-        Return a JSON representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            A string with a JSON representation of the receiver.
-        """
-        return json.dumps(self.asSnakeCaseDictionary())
 
 
     def asSnakeCaseDictionary(self) -> dict:

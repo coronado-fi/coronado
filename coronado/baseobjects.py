@@ -167,6 +167,144 @@ BASE_OFFER_ACTIVATION_JSON = """{
 BASE_OFFER_ACTIVATION_DICT=json.loads(BASE_OFFER_ACTIVATION_JSON)
 
 
+BASE_CLOFFER_DETAILS_JSON = """
+{
+  "offer": {
+    "id": "triple-abc-123",
+    "activation_required": true,
+    "activation_duration_in_days": 0,
+    "currency_code": "USD",
+    "category": "AUTOMOTIVE",
+    "category_tags": "string",
+    "category_mccs": [
+      {
+        "code": "7998",
+        "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+      }
+    ],
+    "description": "string",
+    "effective_date": "2021-12-01",
+    "excluded_dates": [
+      "2021-12-25"
+    ],
+    "expiration_date": "2021-12-31",
+    "is_activated": false,
+    "headline": "string",
+    "max_redemptions": "1/3M",
+    "maximum_reward_per_transaction": 0,
+    "maximum_reward_cumulative": 0,
+    "merchant_category_code": {
+      "code": "7998",
+      "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+    },
+    "merchant_name": "string",
+    "merchant_logo_url": "string",
+    "minimum_spend": 0,
+    "mode": "ONLINE",
+    "reward_rate": 0,
+    "reward_value": 0,
+    "reward_type": "CARD_LINKED",
+    "type": "CARD_LINKED",
+    "valid_day_parts": {
+      "sunday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "monday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "tuesday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "wednesday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "thursday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "friday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      },
+      "saturday": {
+        "times": [
+          "00:30-13:30"
+        ]
+      }
+    },
+    "terms_and_conditions": "string",
+    "merchant_website": "string"
+  },
+  "merchant_locations": [
+    {
+      "id": "triple-abc-123",
+      "location_name": "string",
+      "is_online": true,
+      "email": "string",
+      "phone_number": "string",
+      "address": {
+        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
+        "line_1": "7370 BAKER ST STE 100",
+        "line_2": "string",
+        "locality": "PITTSBURGH",
+        "province": "PA",
+        "postal_code": "15206",
+        "country_code": "US",
+        "latitude": 40.440624,
+        "longitude": -79.995888
+     }
+    }
+  ]
+}
+"""
+BASE_CLOFFER_DETAILS_DICT = json.loads(BASE_CLOFFER_DETAILS_JSON)
+
+
+BASE_OFFER_SEARCH_RESULT_JSON = """{
+
+    "id": "triple-abc-123",
+    "score": 0,
+    "external_id": "string",
+    "type": "CARD_LINKED",
+    "currency_code": "USD",
+    "merchant_logo_url": "string",
+    "merchant_id": "triple-abc-123",
+    "headline": "string",
+    "category": "AUTOMOTIVE",
+    "category_tags": "string",
+    "reward_rate": 0,
+    "reward_type": "FIXED",
+    "reward_value": 0,
+    "effective_date": "2021-12-01",
+    "expiration_date": "2021-12-31",
+    "minimum_spend": 0,
+    "maximum_reward_per_transaction": 0,
+    "max_redemptions": "1/3M",
+    "mode": "ONLINE",
+    "activation_required": true,
+    "is_activated": false,
+    "nearest_location": 
+
+    {
+        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
+        "latitude": 40.440624,
+        "longitude": -79.995888
+    }
+
+}"""
+BASE_OFFER_SEARCH_RESULT_DICT = json.loads(BASE_OFFER_SEARCH_RESULT_JSON)
+
+
 BASE_OFFER_DISPLAY_RULES_JSON = """{
     "id": "triple-abc-123",
     "description": "string",

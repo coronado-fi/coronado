@@ -28,6 +28,7 @@ from copy import deepcopy
 # from coronado.baseobjects import BASE_TRANSACTION_DICT
 # from coronado.baseobjects import BASE_TRANSACTION_JSON
 from coronado import CoronadoMalformedObjectError
+from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.address import Address
 from coronado.auth import Auth
@@ -158,4 +159,16 @@ def test_TripleObject_requiredAttributes():
 
     with pytest.raises(CoronadoMalformedObjectError):
         Synthetic({ 'alpha': 42, 'theta_meta': 69, })
+
+
+def test_TripleEnum():
+    class Bogus(TripleEnum):
+        XX = 42
+        YY = 69
+
+    x = Bogus.XX
+
+    assert x == Bogus.XX
+    assert x.value == 42
+    assert str(x) == '42'
 

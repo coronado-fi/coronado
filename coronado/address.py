@@ -97,19 +97,6 @@ class Address(TripleObject):
         return completeAddress
 
 
-    def inSnakeCaseJSON(self) -> str:
-        """
-        Return a JSON representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            A string with a JSON representation of the receiver.
-
-        """
-        return json.dumps(self.asSnakeCaseDictionary())
-
-
     def asSnakeCaseDictionary(self) -> dict:
         """
         Return a dict representation of the receiver with the attributes

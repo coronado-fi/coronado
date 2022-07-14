@@ -2,6 +2,8 @@
 
 """
 Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' target='_blank'>triple services API</a>.
+
+![Class diagram](classes.png)
 """
 
 
@@ -10,13 +12,14 @@ from copy import deepcopy
 from coronado.tools import tripleKeysToCamelCase
 
 import json
+import enum
 
 import requests
 
 
 # *** constants ***
 
-__VERSION__ = '1.1.1'
+__VERSION__ = '1.1.2'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -24,6 +27,16 @@ CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
 
 
 # +++ classes and objects +++
+
+class TripleEnum(enum.Enum):
+    """
+    TripleEnum extends the standard Enum class to add support
+    for pretty printing of the instance's value by overloading
+    the `__str__()` method.  It's a convenience class.
+    """
+    def __str__(self) -> str:
+        return str(self.value)
+
 
 class TripleObject(object):
     """
@@ -188,7 +201,6 @@ class TripleObject(object):
 
         Arguments
         ---------
-        TODO:
             spec : dict
         A dictionary with the required fields to create a new tripleObject
         object.
@@ -343,6 +355,65 @@ class TripleObject(object):
         return response
 
 
+    def inSnakeCaseJSON(self) -> str:
+        """
+        Return a JSON representation of the receiver with the attributes
+        written in snake_case format.
+
+        Return
+        ------
+            string
+        A string with a JSON representation of the receiver.
+
+        Raises
+        ------
+            NotImplementedError
+        If the instance doesn't implement the `asSnakeCaseDictionary()`
+        method.  Only classes used for building triple API objects
+        require that method implementation.
+        """
+        return json.dumps(self.asSnakeCaseDictionary())
+
+
+    def asSnakeCaseDictionary(self) -> dict:
+        """
+        Return a dict representation of the receiver with the attributes
+        written in snake_case format.
+
+        Return
+        ------
+            dict
+        A dictionary representation of the receiver.
+
+        Raises
+        ------
+            NotImplementedError
+        If the instance doesn't implement the `asSnakeCaseDictionary()`
+        method.  Only classes used for building triple API objects
+        require that method implementation.
+
+        Typical implementation (from a TripleObject specialization that
+        represents an address-like object):
+
+        ```
+        result = {
+            'complete_address': self.complete,
+            'country_code': self.countryCode,
+            'latitude': self.latitude,
+            'line_1': self.line1,
+            'line_2': self.line2,
+            'locality': self.locality,
+            'longitude': self.longitude,
+            'postal_code': self.postalCode,
+            'province': self.province,
+        }
+
+        return result
+        ```
+        """
+        raise NotImplementedError('subclasses must implement this if required')
+
+
 class CoronadoAPIError(Exception):
     """
     Raised when the API server fails for some reason (HTTP status 5xx)
@@ -367,6 +438,13 @@ class CoronadoMalformedObjectError(Exception):
     a string describing the cause of the exception.
     """
     pass
+
+
+class CoronadoNotFoundError(Exception):
+    """
+    Raised when performing a search or update operation and the underlying API
+    is unable to tie the `objID` to a triple object of the corresponding type.
+    """
 
 
 class CoronadoUnexpectedError(Exception):

@@ -74,10 +74,13 @@ class Scopes(enum.Enum):
     ----------
         CONTENT_PROVIDERS : str
     API partner content provider scope
+
         PORTFOLIOS : str
     API partner portfolios scope
+
         PUBLISHERS : str
     API partner publishers scope
+
         VIEW_OFFERS : str
     API partner view offers scope
     """
@@ -265,8 +268,6 @@ class Auth(object):
 
         try:
             claimSet = jwt.decode(self.token, '', options = {'verify_signature': False})
-        # TODO:  finesse error handling is someone actually uses this; so far
-        #        we have no reason to think it's necessary.
         except JWTError as e:
             raise CoronadoAuthTokenAPIError(str(e))
         except ExpiredSignatureError as e:
