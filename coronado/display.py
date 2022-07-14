@@ -6,10 +6,13 @@ from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
+from coronado.address import Address
 from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
-from coronado.address import Address
+from coronado.offer import OfferCategory
+from coronado.offer import OfferDeliveryModes
+from coronado.offer import OfferType
 
 import json
 
@@ -175,6 +178,13 @@ def _assembleDetailsFrom(payload):
 
     offer = CLOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
+    # TODO: the category attribute is missing from the result
+    # offer.category = OfferCategory(offer.category)
+    # TODO: the rewardType attribute is missing from the result
+    # offer.rewardType = OfferCategory(offer.rewardType)
+    offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
+    offer.offerMode = OfferDeliveryModes(offer.offerMode)
+    offer.type = OfferType(offer.type)
 
     merchantLocations = [ MerchantLocation(l) for l in d['merchant_locations'] ]
 

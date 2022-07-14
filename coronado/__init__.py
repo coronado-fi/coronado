@@ -3,7 +3,9 @@
 """
 Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' target='_blank'>triple services API</a>.
 
-![Class diagram](classes.png)
+<a href='https://github.com/coronado-fi/coronado/blob/dev/resources/classes.png?raw=true' target='_blank'>
+    <img src='https://github.com/coronado-fi/coronado/blob/dev/resources/classes.png?raw=true' width='600' alt='click to view full image'>
+</a>
 """
 
 

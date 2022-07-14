@@ -46,11 +46,13 @@ devpi:
 
 
 docs: ALWAYS
+	pip install -U pdoc pylint
 	mkdir -p $(MANPAGES)
 	t=$$(mktemp) && awk -v "v=$(VERSION)" '/^%/ { $$4 = v; print; next; } { print; }' README.md > "$$t" && cat "$$t" > README.md && rm -f "$$t"
 	pandoc --standalone --to man README.md -o $(MANPAGES)/$(PACKAGE).$(MAN_SECTION)
 	mkdir -p $(API_DOC_DIR)
 	VERSION="$(VERSION)" pdoc --logo="https://assets.website-files.com/6287e9b993a42a7dcb001b99/6287eb0b156c574ac578dab3_Triple-Logo-Full-Color.svg" --favicon="https://assets.website-files.com/6287e9b993a42a7dcb001b99/628bc3aee64e1c6c0f5e3863_Triple%20favicon.png" --no-show-source -n -o $(API_DOC_DIR) -t ./resources $(PACKAGE) 
+	pyreverse --colorized --output-directory ./resources -o png coronado
 
 
 install:
@@ -107,12 +109,13 @@ test: ALWAYS
 	pip install -r requirements.txt
 	pip install -e .
 	pytest -v ./tests/test_$(PACKAGE).py
-	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_address.py
 	pytest -v ./tests/test_auth.py
+	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_cardprog.py
 	pytest -v ./tests/test_display.py
 	pytest -v ./tests/test_merchant.py
+	pytest -v ./tests/test_offer.py
 	pytest -v ./tests/test_publisher.py
 	pytest -v ./tests/test_reward.py
 	pytest -v ./tests/test_tools.py
