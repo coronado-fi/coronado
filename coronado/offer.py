@@ -60,6 +60,12 @@ class OfferDeliveryModes(TripleEnum):
     ONLINE = 'ONLINE'
 
 
+class OfferType(TripleEnum):
+    CARD_LINKED = 'CARD_LINKED'
+    AFFILIATE = 'AFFILIATE'
+    CATEGORICAL = 'CATEGORICAL'
+
+
 class Offer(TripleObject):
     """
     Offer objects represent offers from brands and retaliers linked to a payment

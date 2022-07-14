@@ -8,6 +8,7 @@
 # from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.offer import MarketingFeeType
 from coronado.offer import OfferCategory
+from coronado.offer import OfferType
 
 
 # import json
@@ -47,4 +48,12 @@ def test_OfferCatetory():
     assert isinstance(x, OfferCategory)
     assert str(x) == 'ENTERTAINMENT'
     assert str(x) == OfferCategory.ENTERTAINMENT.value
+
+
+def test_OfferType():
+    x = OfferType.AFFILIATE
+
+    assert x == OfferType.AFFILIATE
+    assert str(x) == 'AFFILIATE'
+    assert str(x) == OfferType.AFFILIATE.value
 
