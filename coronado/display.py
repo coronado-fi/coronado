@@ -10,6 +10,7 @@ from coronado.address import Address
 from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
+from coronado.offer import Offer
 from coronado.offer import OfferCategory
 from coronado.offer import OfferDeliveryModes
 from coronado.offer import OfferType
@@ -27,7 +28,7 @@ SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
 
 # *** classes and objects ***
 
-class OfferSearchResult(TripleObject):
+class OfferSearchResult(Offer):
     """
     Offer search result.  Search results objects are only produced
     when executing a call to the `forQuery()` method.  Each result represents 
