@@ -66,7 +66,7 @@ def tripleKeysToCamelCase(d: dict):
             v = 'issuingServer'
         elif v == 'jti':
             v = 'tokenIssuerID' # acronyms everywhere!
-        elif 'mcc' in v:
+        elif 'mcc' in v or 'Mcc' in v:
             v.replace('mcc', 'MCC')
         elif v == 'mid':
             v = 'aMID'
