@@ -161,6 +161,14 @@ def test_TripleObject_requiredAttributes():
         Synthetic({ 'alpha': 42, 'theta_meta': 69, })
 
 
+def test_TripleObject___str__():
+    class Synthetic(TripleObject):
+        requiredAttributes = [ 'alpha', 'beta', ]
+
+    s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
+    assert str(s)
+
+    
 def test_TripleEnum():
     class Bogus(TripleEnum):
         XX = 42
@@ -171,4 +179,7 @@ def test_TripleEnum():
     assert x == Bogus.XX
     assert x.value == 42
     assert str(x) == '42'
+
+
+test_TripleObject___str__()
 
