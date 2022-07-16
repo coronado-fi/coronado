@@ -180,6 +180,3 @@ def test_TripleEnum():
     assert x.value == 42
     assert str(x) == '42'
 
-
-test_TripleObject___str__()
-
