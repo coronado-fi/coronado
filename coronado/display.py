@@ -171,13 +171,13 @@ class OfferSearchResult(Offer):
 
 
 def _assembleDetailsFrom(payload):
-    # payload == JSON
+    # payload ::= JSON
     d = json.loads(payload)
 
     if 'offer' not in d:
         raise CoronadoMalformedObjectError('offer attribute not found')
 
-    offer = CLOffer(d['offer'])
+    offer = CardLinkedOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
     # TODO: the category attribute is missing from the result
     # offer.category = OfferCategory(offer.category)
@@ -195,12 +195,12 @@ def _assembleDetailsFrom(payload):
     d['offer'] = offer
     d['merchant_locations'] = merchantLocations
 
-    offerDetails = CLOfferDetails(d)
+    offerDetails = CardLinkedOfferDetails(d)
 
     return offerDetails
 
 
-class CLOfferDetails(TripleObject):
+class CardLinkedOfferDetails(Offer):
     # --- private ---
 
     """
@@ -321,7 +321,7 @@ class CLOfferDetails(TripleObject):
 
 
 
-class CLOffer(TripleObject):
+class CardLinkedOffer(Offer):
     """
     CLOffer presents a detailed view of a card linked offer (CLO) with all the
     relevant details.

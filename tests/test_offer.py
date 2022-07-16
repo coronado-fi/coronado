@@ -7,6 +7,7 @@
 # from coronado import TripleObject
 # from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.offer import MarketingFeeType
+from coronado.offer import Offer
 from coronado.offer import OfferCategory
 from coronado.offer import OfferType
 
@@ -57,3 +58,9 @@ def test_OfferType():
     assert str(x) == 'AFFILIATE'
     assert str(x) == OfferType.AFFILIATE.value
 
+
+def test_Offer():
+    x = Offer()
+
+    assert isinstance(x, Offer)
+    

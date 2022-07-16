@@ -16,7 +16,7 @@ import appdirs
 import requests
 
 from coronado.tools import tripleKeysToCamelCase
-
+from coronado import TripleEnum
 
 # --- constants ----
 
@@ -66,7 +66,7 @@ def emptyConfig():
 
 # +++ classes +++
 
-class Scopes(enum.Enum):
+class Scopes(TripleEnum):
     """
     Client credentials OAuth2 flow scopes.
 

@@ -76,7 +76,6 @@ class Offer(TripleObject):
         'activationRequired',
         'category',
         'categoryTags',
-        'categoryCode',
         'effectiveDate',
         'expirationDate',
         'headline',

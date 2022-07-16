@@ -125,7 +125,7 @@ BASE_OFFER_JSON = """
   "is_activated": false,
   "max_redemptions": "1/3M",
   "mode": "ONLINE",
-  "type": "CARD_LINKED",
+  "type": "CARD_LINKED"
 }
 """
 BASE_OFFER_DICT = json.loads(BASE_OFFER_JSON)
