@@ -108,41 +108,110 @@ BASE_MERCHANT_LOCATION_JSON = """{
 BASE_MERCHANT_LOCATION_DICT = json.loads(BASE_MERCHANT_LOCATION_JSON)
 
 
-BASE_OFFER_JSON = """{
-    "id": "triple-abc-123",
-    "activation_required": true,
-    "activation_duration_in_days": 0,
-    "currency_code": "USD",
-    "category": "AUTOMOTIVE",
-    "category_tags": "string",
-    "category_mccs":
-    [],
-    "description": "string",
-    "effective_date": "2021-12-01",
-    "excluded_dates":
-    [],
-    "expiration_date": "2021-12-31",
-    "is_activated": false,
-    "headline": "string",
-    "max_redemptions": "1/3M",
-    "maximum_reward_per_transaction": 0,
-    "maximum_reward_cumulative": 0,
-    "merchant_category_code":
-    {},
-    "merchant_name": "string",
-    "merchant_logo_url": "string",
-    "minimum_spend": 0,
-    "mode": "ONLINE",
-    "reward_rate": 0,
-    "reward_value": 0,
-    "reward_type": "CARD_LINKED",
-    "type": "CARD_LINKED",
-    "valid_day_parts":
-    {},
-    "terms_and_conditions": "string",
-    "merchant_website": "string"
-}"""
+# Ontological mapping foundation
+
+# TODO:  Clarify with the KDR and implementation teams:
+#   "description": "string",
+BASE_OFFER_JSON = """
+{
+  "activation_required": true,
+  "category": "AUTOMOTIVE",
+  "category_tags": "string",
+  "currency_code": "USD",
+  "effective_date": "2021-12-01",
+  "expiration_date": "2021-12-31",
+  "headline": "string",
+  "id": "triple-abc-123",
+  "is_activated": false,
+  "max_redemptions": "1/3M",
+  "mode": "ONLINE",
+  "type": "CARD_LINKED"
+}
+"""
 BASE_OFFER_DICT = json.loads(BASE_OFFER_JSON)
+
+
+BASE_MERCHANT_OFFER_JSON = """
+{
+  "activation_required": true,
+  "category": "AUTOMOTIVE",
+  "category_tags": "string",
+  "currency_code": "USD",
+  "effective_date": "2021-12-01",
+  "expiration_date": "2021-12-31",
+  "headline": "string",
+  "id": "triple-abc-123",
+  "is_activated": false,
+  "max_redemptions": "1/3M",
+  "mode": "ONLINE",
+  "type": "CARD_LINKED",
+
+
+  "activation_duration_in_days": 0,
+  "category_mccs": [
+    {
+      "code": "7998",
+      "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
+    }
+  ],
+  "description": "string",
+  "excluded_dates": [
+    "2021-12-25"
+  ],
+  "external_id": "string",
+  "logo_url": "string",
+  "marketing_fee": 0,
+  "marketing_fee_currency_code": "USD",
+  "marketing_fee_type": "FIXED",
+  "maximum_reward_cumulative": 0,
+  "maximum_reward_per_transaction": 0,
+  "merchant_id": "triple-abc-123",
+  "merchant_website": "string",
+  "minimum_spend": 0,
+  "reward_rate": 0,
+  "reward_type": "FIXED",
+  "reward_value": 0,
+  "terms_and_conditions": "string",
+  "valid_day_parts": {
+    "sunday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "monday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "tuesday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "wednesday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "thursday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "friday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    },
+    "saturday": {
+      "times": [
+        "00:30-13:30"
+      ]
+    }
+  }
+}
+"""
+BASE_MERCHANT_OFFER_DICT = json.loads(BASE_MERCHANT_OFFER_JSON)
 
 
 BASE_OFFER_ACTIVATION_JSON = """{
@@ -271,28 +340,30 @@ BASE_CLOFFER_DETAILS_DICT = json.loads(BASE_CLOFFER_DETAILS_JSON)
 
 
 BASE_OFFER_SEARCH_RESULT_JSON = """{
-
-    "id": "triple-abc-123",
-    "score": 0,
-    "external_id": "string",
-    "type": "CARD_LINKED",
-    "currency_code": "USD",
-    "merchant_logo_url": "string",
-    "merchant_id": "triple-abc-123",
-    "headline": "string",
+    "activation_required": true,
     "category": "AUTOMOTIVE",
     "category_tags": "string",
+    "currency_code": "USD",
+    "effective_date": "2021-12-01",
+    "expiration_date": "2021-12-31",
+    "headline": "string",
+    "id": "triple-abc-123",
+    "is_activated": false,
+    "max_redemptions": "1/3M",
+    "mode": "ONLINE",
+    "type": "CARD_LINKED",
+
+
+    "external_id": "string",
+    "maximum_reward_per_transaction": 0,
+    "merchant_id": "triple-abc-123",
+    "merchant_logo_url": "string",
+    "minimum_spend": 0,
     "reward_rate": 0,
     "reward_type": "FIXED",
     "reward_value": 0,
-    "effective_date": "2021-12-01",
-    "expiration_date": "2021-12-31",
-    "minimum_spend": 0,
-    "maximum_reward_per_transaction": 0,
-    "max_redemptions": "1/3M",
-    "mode": "ONLINE",
-    "activation_required": true,
-    "is_activated": false,
+    "score": 0,
+    "type": "CARD_LINKED",
     "nearest_location": 
 
     {
@@ -305,8 +376,7 @@ BASE_OFFER_SEARCH_RESULT_JSON = """{
 BASE_OFFER_SEARCH_RESULT_DICT = json.loads(BASE_OFFER_SEARCH_RESULT_JSON)
 
 
-BASE_OFFER_DISPLAY_RULES_JSON = """{
-    "id": "triple-abc-123",
+BASE_OFFER_DISPLAY_RULES_JSON = """{ "id": "triple-abc-123",
     "description": "string",
     "enabled": true,
     "scope":

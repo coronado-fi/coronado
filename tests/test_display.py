@@ -4,8 +4,8 @@
 from coronado import CoronadoAPIError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
-from coronado.display import CLOfferDetails
-from coronado.display import CLOffer
+from coronado.display import CardLinkedOffer as CLOffer
+from coronado.display import CardLinkedOfferDetails as CLOfferDetails
 from coronado.display import FETCH_RPC_SERVICE_PATH
 from coronado.display import OfferSearchResult
 from coronado.display import SEARCH_RPC_SERVICE_PATH
@@ -79,15 +79,16 @@ def test_CLOfferDetails_forID():
             "card_account_id": KNOWN_CARD_ID
         },
     }
-    offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
+    # offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
+    offerDetails = CLOfferDetails.forID('4930', spec)
 
     assert isinstance(offerDetails, CLOfferDetails)
     assert isinstance(offerDetails.offer, CLOffer)
 
-    # TODO:  500!  404 better.
-    # CLOfferDetails.forID('BOGUs', spec)
+# TODO:  500!  404 better.
+#     CLOfferDetails.forID('BOGUs', spec)
 
-    # TODO:  500!  404 better.
+# TODO:  500!  404 better.
 #     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
 #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
 
@@ -96,5 +97,5 @@ def test_CLOfferDetails_forID():
         CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
 
 
-# test_CLOfferDetails_forID()
+test_CLOfferDetails_forID()
 
