@@ -128,6 +128,18 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#MerchantOffer">MerchantOffer</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#MerchantOffer.__init__">MerchantOffer</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#MerchantOffer.requiredAttributes">requiredAttributes</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -481,17 +493,14 @@ implementations.</p>
     </div>
     <a class="headerlink" href="#Offer"></a>
     
-            <div class="docstring"><p>Offer objects represent offers from brands and retaliers linked to a payment
-provider like a debit or credit card.  The offer is redeemed by the consumer
-when the linked payment card is used at a point-of-sale.  Offer instances 
-connect on-line advertising campaings with concrete purchases.</p>
+            <div class="docstring"><p>The parent abstract class for all Coronado offer classes.</p>
 </div>
 
 
                             <div id="Offer.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">Offer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;activation_required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;activation_duration_in_days&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTOMOTIVE&#39;</span><span class="p">,</span> <span class="s1">&#39;category_tags&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;category_mccs&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;effective_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01&#39;</span><span class="p">,</span> <span class="s1">&#39;excluded_dates&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;expiration_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-31&#39;</span><span class="p">,</span> <span class="s1">&#39;is_activated&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;headline&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;max_redemptions&#39;</span><span class="p">:</span> <span class="s1">&#39;1/3M&#39;</span><span class="p">,</span> <span class="s1">&#39;maximum_reward_per_transaction&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;maximum_reward_cumulative&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;merchant_category_code&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;merchant_name&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_logo_url&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;minimum_spend&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;ONLINE&#39;</span><span class="p">,</span> <span class="s1">&#39;reward_rate&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;reward_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;reward_type&#39;</span><span class="p">:</span> <span class="s1">&#39;CARD_LINKED&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;CARD_LINKED&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_day_parts&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;terms_and_conditions&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_website&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}</span></span>)</span>
+        <span class="name">Offer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;activation_required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTOMOTIVE&#39;</span><span class="p">,</span> <span class="s1">&#39;category_tags&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;effective_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01&#39;</span><span class="p">,</span> <span class="s1">&#39;expiration_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-31&#39;</span><span class="p">,</span> <span class="s1">&#39;headline&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;is_activated&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;max_redemptions&#39;</span><span class="p">:</span> <span class="s1">&#39;1/3M&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;ONLINE&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;CARD_LINKED&#39;</span><span class="p">}</span></span>)</span>
 
         
     </div>
@@ -511,7 +520,7 @@ connect on-line advertising campaings with concrete purchases.</p>
                             </div>
                             <div id="Offer.requiredAttributes" class="classattr">
                                 <div class="attr variable">
-            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;objID&#39;, &#39;activationRequired&#39;, &#39;currencyCode&#39;, &#39;effectiveDate&#39;, &#39;expirationDate&#39;, &#39;externalID&#39;, &#39;headline&#39;, &#39;isActivated&#39;, &#39;minimumSpend&#39;, &#39;mode&#39;, &#39;rewardType&#39;, &#39;type&#39;]</span>
+            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;activationRequired&#39;, &#39;category&#39;, &#39;categoryTags&#39;, &#39;effectiveDate&#39;, &#39;expirationDate&#39;, &#39;headline&#39;, &#39;objID&#39;, &#39;isActivated&#39;, &#39;maxRedemptions&#39;, &#39;mode&#39;, &#39;type&#39;]</span>
 
         
     </div>
@@ -542,6 +551,82 @@ in JSON or a <code>dict</code>.</p>
                 <dd id="Offer.list" class="function"><a href="../coronado.html#TripleObject.list">list</a></dd>
                 <dd id="Offer.inSnakeCaseJSON" class="function"><a href="../coronado.html#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a></dd>
                 <dd id="Offer.asSnakeCaseDictionary" class="function"><a href="../coronado.html#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="MerchantOffer">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">MerchantOffer</span><wbr>(<span class="base"><a href="#Offer">Offer</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#MerchantOffer"></a>
+    
+            <div class="docstring"><p>Merchant offer objects represent offers from brands and retaliers linked to a payment
+provider like a debit or credit card.  The offer is redeemed by the consumer
+when the linked payment card is used at a point-of-sale.  Offer instances 
+connect on-line advertising campaings with concrete purchases.</p>
+</div>
+
+
+                            <div id="MerchantOffer.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">MerchantOffer</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;activation_required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTOMOTIVE&#39;</span><span class="p">,</span> <span class="s1">&#39;category_tags&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;effective_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01&#39;</span><span class="p">,</span> <span class="s1">&#39;expiration_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-31&#39;</span><span class="p">,</span> <span class="s1">&#39;headline&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;is_activated&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;max_redemptions&#39;</span><span class="p">:</span> <span class="s1">&#39;1/3M&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;ONLINE&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;CARD_LINKED&#39;</span><span class="p">,</span> <span class="s1">&#39;activation_duration_in_days&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;category_mccs&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;7998&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Aquariums, Dolphinariums, Seaquariums, and Zoos&#39;</span><span class="p">}],</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;excluded_dates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2021-12-25&#39;</span><span class="p">],</span> <span class="s1">&#39;external_id&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;logo_url&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;marketing_fee&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;marketing_fee_currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;marketing_fee_type&#39;</span><span class="p">:</span> <span class="s1">&#39;FIXED&#39;</span><span class="p">,</span> <span class="s1">&#39;maximum_reward_cumulative&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;maximum_reward_per_transaction&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;merchant_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_website&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;minimum_spend&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;reward_rate&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;reward_type&#39;</span><span class="p">:</span> <span class="s1">&#39;FIXED&#39;</span><span class="p">,</span> <span class="s1">&#39;reward_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;terms_and_conditions&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_day_parts&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;sunday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;monday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;tuesday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;wednesday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;thursday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;friday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]},</span> <span class="s1">&#39;saturday&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00:30-13:30&#39;</span><span class="p">]}}}</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#MerchantOffer.__init__"></a>
+    
+            <div class="docstring"><p>Create a new MerchantOffer instance.</p>
+
+<p>spec:</p>
+
+<pre><code>{
+    'lorem': 'ipsum',
+}
+</code></pre>
+</div>
+
+
+                            </div>
+                            <div id="MerchantOffer.requiredAttributes" class="classattr">
+                                <div class="attr variable">
+            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;objID&#39;, &#39;activationDurationDays&#39;, &#39;categoryMccs&#39;, &#39;descriptioin&#39;, &#39;externalID&#39;, &#39;logoURL&#39;, &#39;marketingFee&#39;]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#MerchantOffer.requiredAttributes"></a>
+    
+            <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
+JSON or <code>dict</code> object during object construction.  See the <code><a href="#MerchantOffer.assertAll">assertAll</a></code>()
+method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="../coronado.html#TripleObject">coronado.TripleObject</a></dt>
+                                <dd id="MerchantOffer.initialize" class="function"><a href="../coronado.html#TripleObject.initialize">initialize</a></dd>
+                <dd id="MerchantOffer.assertAll" class="function"><a href="../coronado.html#TripleObject.assertAll">assertAll</a></dd>
+                <dd id="MerchantOffer.listAttributes" class="function"><a href="../coronado.html#TripleObject.listAttributes">listAttributes</a></dd>
+                <dd id="MerchantOffer.headers" class="variable"><a href="../coronado.html#TripleObject.headers">headers</a></dd>
+                <dd id="MerchantOffer.create" class="function"><a href="../coronado.html#TripleObject.create">create</a></dd>
+                <dd id="MerchantOffer.byID" class="function"><a href="../coronado.html#TripleObject.byID">byID</a></dd>
+                <dd id="MerchantOffer.updateWith" class="function"><a href="../coronado.html#TripleObject.updateWith">updateWith</a></dd>
+                <dd id="MerchantOffer.list" class="function"><a href="../coronado.html#TripleObject.list">list</a></dd>
+                <dd id="MerchantOffer.inSnakeCaseJSON" class="function"><a href="../coronado.html#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a></dd>
+                <dd id="MerchantOffer.asSnakeCaseDictionary" class="function"><a href="../coronado.html#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a></dd>
 
             </div>
                                 </dl>

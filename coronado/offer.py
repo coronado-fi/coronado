@@ -9,6 +9,7 @@
 # from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado import TripleEnum
 from coronado import TripleObject
+from coronado.baseobjects import BASE_MERCHANT_OFFER_DICT
 from coronado.baseobjects import BASE_OFFER_DICT
 # 
 # import json
@@ -68,7 +69,42 @@ class OfferType(TripleEnum):
 
 class Offer(TripleObject):
     """
-    Offer objects represent offers from brands and retaliers linked to a payment
+    The parent abstract class for all Coronado offer classes.
+    """
+
+    requiredAttributes = [
+        'activationRequired',
+        'category',
+        'categoryTags',
+        'effectiveDate',
+        'expirationDate',
+        'headline',
+        'objID',
+        'isActivated',
+        'maxRedemptions',
+        'mode',
+        'type',
+    ]
+
+    def __init__(self, obj = BASE_OFFER_DICT):
+        """
+        Create a new Offer instance.
+
+        spec:
+
+        ```
+        {
+            'lorem': 'ipsum',
+        }
+        ```
+        """
+        TripleObject.__init__(self, obj)
+
+
+class MerchantOffer(Offer):
+    # TODO: Under heavy construction because this isn't implemented yet.
+    """
+    Merchant offer objects represent offers from brands and retaliers linked to a payment
     provider like a debit or credit card.  The offer is redeemed by the consumer
     when the linked payment card is used at a point-of-sale.  Offer instances 
     connect on-line advertising campaings with concrete purchases.
@@ -76,23 +112,18 @@ class Offer(TripleObject):
 
     requiredAttributes = [
         'objID',
-        'activationRequired',
-        'currencyCode',
-        'effectiveDate',
-        'expirationDate',
+        'activationDurationDays',
+        'categoryMccs',
+        'descriptioin',
         'externalID',
-        'headline',
-        'isActivated',
-        'minimumSpend',
-        'mode',
-        'rewardType',
-        'type',
+        'logoURL',
+        'marketingFee',
     ]
 
 
-    def __init__(self, obj = BASE_OFFER_DICT):
+    def __init__(self, obj = BASE_MERCHANT_OFFER_DICT):
         """
-        Create a new Offer instance.
+        Create a new MerchantOffer instance.
 
         spec:
 

@@ -416,6 +416,31 @@ class TripleObject(object):
         raise NotImplementedError('subclasses must implement this if required')
 
 
+    def __str__(self) -> str:
+        """
+        Creates a human-readable string representation of the receiver.
+
+        Returns
+        -------
+            str
+        A human-readable string representation of the receiver.
+        """
+        result = ''
+        keys = sorted(self.__dict__.keys())
+        longest = max((len(k) for k in keys))
+        formatTrunc = '%%-%ds: %%s... <snip>' % longest
+        formatFull = '%%-%ds: %%s' % longest
+
+        for k in keys:
+            v = self.__dict__[k]
+            if isinstance(v, str) and len(v) > 60:
+                result = '\n'.join([ result, formatTrunc % (k, v[:60]), ])
+            else:
+                result = '\n'.join([ result, formatFull % (k, v), ])
+
+        return result
+
+
 class CoronadoAPIError(Exception):
     """
     Raised when the API server fails for some reason (HTTP status 5xx)

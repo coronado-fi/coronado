@@ -1,0 +1,37 @@
+attr	class1	class2	class3
+nearestLocation	OfferSearchResult
+rewardValue	CLOffer	Offer	OfferSearchResult
+logoURL	Offer
+categoryMccs	CLOffer	Offer
+externalID	Offer	OfferSearchResult
+validDayParts	CLOffer	Offer
+headline	CLOffer	Offer	OfferSearchResult
+type	CLOffer	Offer	OfferSearchResult
+mode	CLOffer	Offer	OfferSearchResult
+merchantLogoURL	CLOffer	OfferSearchResult
+score	OfferSearchResult
+maxRedemptions	CLOffer	Offer	OfferSearchResult
+marketingFeeType	Offer
+merchantName	CLOffer
+expirationDate	CLOffer	Offer	OfferSearchResult
+marketingFee	Offer
+termsAndConditions	CLOffer	Offer
+excludedDates	CLOffer	Offer
+rewardRate	CLOffer	Offer	OfferSearchResult
+merchantCategoryCode	CLOffer
+activationRequired	CLOffer	Offer	OfferSearchResult
+minimumSpend	CLOffer	Offer	OfferSearchResult
+maximumRewardCumulative	CLOffer	Offer
+description	CLOffer	Offer
+currencyCode	CLOffer	Offer	OfferSearchResult
+isActivated	CLOffer	Offer	OfferSearchResult
+merchantID	Offer	OfferSearchResult
+category	CLOffer	Offer	OfferSearchResult
+marketingFeeCurrencyCode	Offer
+effectiveDate	CLOffer	Offer	OfferSearchResult
+objID	CLOffer	Offer	OfferSearchResult
+rewardType	CLOffer	Offer	OfferSearchResult
+merchantWebsite	CLOffer	Offer
+maximumRewardPerTransaction	CLOffer	Offer	OfferSearchResult
+categoryTags	CLOffer	Offer	OfferSearchResult
+activationDurationInDays	CLOffer	Offer

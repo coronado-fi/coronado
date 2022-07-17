@@ -10,6 +10,7 @@ from coronado.address import Address
 from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
+from coronado.offer import Offer
 from coronado.offer import OfferCategory
 from coronado.offer import OfferDeliveryModes
 from coronado.offer import OfferType
@@ -27,7 +28,7 @@ SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
 
 # *** classes and objects ***
 
-class OfferSearchResult(TripleObject):
+class OfferSearchResult(Offer):
     """
     Offer search result.  Search results objects are only produced
     when executing a call to the `forQuery()` method.  Each result represents 
@@ -170,13 +171,13 @@ class OfferSearchResult(TripleObject):
 
 
 def _assembleDetailsFrom(payload):
-    # payload == JSON
+    # payload ::= JSON
     d = json.loads(payload)
 
     if 'offer' not in d:
         raise CoronadoMalformedObjectError('offer attribute not found')
 
-    offer = CLOffer(d['offer'])
+    offer = CardLinkedOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
     # TODO: the category attribute is missing from the result
     # offer.category = OfferCategory(offer.category)
@@ -194,12 +195,12 @@ def _assembleDetailsFrom(payload):
     d['offer'] = offer
     d['merchant_locations'] = merchantLocations
 
-    offerDetails = CLOfferDetails(d)
+    offerDetails = CardLinkedOfferDetails(d)
 
     return offerDetails
 
 
-class CLOfferDetails(TripleObject):
+class CardLinkedOfferDetails(Offer):
     # --- private ---
 
     """
@@ -320,7 +321,7 @@ class CLOfferDetails(TripleObject):
 
 
 
-class CLOffer(TripleObject):
+class CardLinkedOffer(Offer):
     """
     CLOffer presents a detailed view of a card linked offer (CLO) with all the
     relevant details.
