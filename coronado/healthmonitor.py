@@ -35,7 +35,7 @@ class HealthMonitor(TripleObject):
         CoronadoAPIError
     When the service is unavailable because of a fatal runtime condition.
     """
-    # requiredAttributes = [ 'APIVersion', 'build', ]
+    requiredAttributes = [ 'APIVersion', 'build', ]
 
     def __init__(self):
         TripleObject.__init__(self, None)
