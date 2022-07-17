@@ -10,4 +10,3 @@ from coronado import TripleEnum
 #     CARD_LINKED = 'CARD_LINKED'
 #     AFFILIATE = 'AFFILIATE'
 #     CATEGORICAL = 'CATEGORICAL'
-

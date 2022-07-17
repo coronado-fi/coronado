@@ -59,12 +59,18 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+_auth = Auth(
+    _config["tokenURL"],
+    clientID=_config["clientID"],
+    clientSecret=_config["secret"],
+    scope=Scopes.PUBLISHERS,
+)
 
 
 # --- tests ---
 
-def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = None):
+
+def _createAndAssertObject(klass, pJSON, pDict, testKey=None, controlKey=None):
     with pytest.raises(CoronadoMalformedObjectError):
         klass(42)
 
@@ -81,7 +87,7 @@ def test_TripleObject():
     x = TripleObject(BASE_PUBLISHER_DICT)
     y = x.listAttributes()
 
-    assert 'portfolioManagerID' in y.keys()
+    assert "portfolioManagerID" in y.keys()
 
     z = Publisher(x)
     assert isinstance(z, Publisher)
@@ -89,25 +95,48 @@ def test_TripleObject():
 
 def test_TripleObjectMissingAttrError():
     x = deepcopy(BASE_PUBLISHER_DICT)
-    del(x['assumed_name'])
+    del x["assumed_name"]
 
     try:
         Publisher(x)
     except CoronadoMalformedObjectError as e:
         assert str(e) == "attribute {'assumedName'} missing during instantiation"
 
-    del(x['address'])
+    del x["address"]
     with pytest.raises(CoronadoMalformedObjectError) as e:
         Publisher(x)
-        assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation"
+        assert (
+            str(e)
+            == "attributes {'assumedName', 'address'} missing during instantiation"
+        )
 
 
 def test_APIObjectsInstantiation():
-    _createAndAssertObject(Address, BASE_ADDRESS_JSON, BASE_ADDRESS_DICT, 'countryCode', 'country_code')
-    _createAndAssertObject(CardAccount, BASE_CARD_ACCOUNT_JSON, BASE_CARD_ACCOUNT_DICT, 'objID', 'id')
-    _createAndAssertObject(CardProgram, BASE_CARD_PROGRAM_JSON, BASE_CARD_PROGRAM_DICT, 'publisherID', 'publisher_id')
-    _createAndAssertObject(Merchant, BASE_MERCHANT_JSON, BASE_MERCHANT_DICT, 'externalID', 'external_id')
-    _createAndAssertObject(Publisher, BASE_PUBLISHER_JSON, BASE_PUBLISHER_DICT, 'assumedName', 'assumed_name')
+    _createAndAssertObject(
+        Address, BASE_ADDRESS_JSON, BASE_ADDRESS_DICT, "countryCode", "country_code"
+    )
+    _createAndAssertObject(
+        CardAccount, BASE_CARD_ACCOUNT_JSON, BASE_CARD_ACCOUNT_DICT, "objID", "id"
+    )
+    _createAndAssertObject(
+        CardProgram,
+        BASE_CARD_PROGRAM_JSON,
+        BASE_CARD_PROGRAM_DICT,
+        "publisherID",
+        "publisher_id",
+    )
+    _createAndAssertObject(
+        Merchant, BASE_MERCHANT_JSON, BASE_MERCHANT_DICT, "externalID", "external_id"
+    )
+    _createAndAssertObject(
+        Publisher,
+        BASE_PUBLISHER_JSON,
+        BASE_PUBLISHER_DICT,
+        "assumedName",
+        "assumed_name",
+    )
+
+
 #     _createAndAssertObject(CardAccountIdentifier, BASE_CARD_ACCOUNT_IDENTIFIER_JSON, BASE_CARD_ACCOUNT_IDENTIFIER_DICT, 'cardProgramExternalID', 'card_program_external_id')
 #     _createAndAssertObject(MerchantCategoryCode, BASE_MERCHANT_CATEGORY_CODE_JSON, BASE_MERCHANT_CATEGORY_CODE_DICT, 'description', 'description')
 #     _createAndAssertObject(MerchantLocation, BASE_MERCHANT_LOCATION_JSON, BASE_MERCHANT_LOCATION_DICT, 'isOnline', 'is_online')
@@ -124,19 +153,21 @@ def test_TripleObject_classVariables():
     assert Address._auth == CardAccount._auth
 
     # Initialize one of them
-    Address._serviceURL = 'https://example.com'
-    Address._auth = { 'bogus': '42', }
+    Address._serviceURL = "https://example.com"
+    Address._auth = {
+        "bogus": "42",
+    }
 
     assert Address._serviceURL != CardAccount._serviceURL
     assert Address._auth != CardAccount._auth
 
 
 def test_TripleObject_initialize():
-    TripleObject.initialize(_config['serviceURL'], 'BOGUS', _auth)
+    TripleObject.initialize(_config["serviceURL"], "BOGUS", _auth)
 
-    assert TripleObject._serviceURL == _config['serviceURL']
-    assert TripleObject._servicePath == 'BOGUS'
-    assert 'python-coronado' in TripleObject.headers['User-Agent']
+    assert TripleObject._serviceURL == _config["serviceURL"]
+    assert TripleObject._servicePath == "BOGUS"
+    assert "python-coronado" in TripleObject.headers["User-Agent"]
 
 
 def test_TripleObject_headers():
@@ -146,29 +177,52 @@ def test_TripleObject_headers():
     h = TripleObject.headers
 
     assert isinstance(h, dict)
-    assert 'Authorization' in h
-    assert 'User-Agent' in h
+    assert "Authorization" in h
+    assert "User-Agent" in h
 
 
 def test_TripleObject_requiredAttributes():
     class Synthetic(TripleObject):
-        requiredAttributes = [ 'alpha', 'beta', ]
+        requiredAttributes = [
+            "alpha",
+            "beta",
+        ]
 
-    s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
-    assert 'thetaMeta' in s.listAttributes()
+    s = Synthetic(
+        {
+            "alpha": 42,
+            "theta_meta": 69,
+            "beta": 99,
+        }
+    )
+    assert "thetaMeta" in s.listAttributes()
 
     with pytest.raises(CoronadoMalformedObjectError):
-        Synthetic({ 'alpha': 42, 'theta_meta': 69, })
+        Synthetic(
+            {
+                "alpha": 42,
+                "theta_meta": 69,
+            }
+        )
 
 
 def test_TripleObject___str__():
     class Synthetic(TripleObject):
-        requiredAttributes = [ 'alpha', 'beta', ]
+        requiredAttributes = [
+            "alpha",
+            "beta",
+        ]
 
-    s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
+    s = Synthetic(
+        {
+            "alpha": 42,
+            "theta_meta": 69,
+            "beta": 99,
+        }
+    )
     assert str(s)
 
-    
+
 def test_TripleEnum():
     class Bogus(TripleEnum):
         XX = 42
@@ -178,5 +232,4 @@ def test_TripleEnum():
 
     assert x == Bogus.XX
     assert x.value == 42
-    assert str(x) == '42'
-
+    assert str(x) == "42"

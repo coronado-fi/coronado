@@ -9,6 +9,7 @@ import json
 
 # +++ classes and objects +++
 
+
 class Address(TripleObject):
     """
     Address object that provides a high-level definition for address components
@@ -28,10 +29,11 @@ class Address(TripleObject):
     class.
     """
 
-    requiredAttributes = [ 'completeAddress', ]
+    requiredAttributes = [
+        "completeAddress",
+    ]
 
-
-    def __init__(self, obj = BASE_ADDRESS_DICT):
+    def __init__(self, obj=BASE_ADDRESS_DICT):
         """
         Create a new instance of an address.  `obj` must correspond to a
         valid, existing object ID if it's not a collection or JSON.
@@ -74,8 +76,7 @@ class Address(TripleObject):
         If obj format is invalid (non `dict`, non JSON)
         """
         TripleObject.__init__(self, obj)
-        self.completeAddress = 'WARNING:  USE .complete instead of .completeAddress'
-
+        self.completeAddress = "WARNING:  USE .complete instead of .completeAddress"
 
     @property
     def complete(self) -> str:
@@ -90,12 +91,14 @@ class Address(TripleObject):
         ------
             A string representation of the address.
         """
-        completeAddress = '\n'.join([
-            ('%s %s' % (self.line1, self.line2)).strip(),
-            '%s, %s %s' % (self.locality, self.province, self.postalCode), ])
+        completeAddress = "\n".join(
+            [
+                ("%s %s" % (self.line1, self.line2)).strip(),
+                "%s, %s %s" % (self.locality, self.province, self.postalCode),
+            ]
+        )
 
         return completeAddress
-
 
     def asSnakeCaseDictionary(self) -> dict:
         """
@@ -107,22 +110,21 @@ class Address(TripleObject):
             A dict representation of the receiver.
         """
         result = {
-            'complete_address': self.complete,
-            'country_code': self.countryCode,
-            'latitude': self.latitude,
-            'line_1': self.line1,
-            'line_2': self.line2,
-            'locality': self.locality,
-            'longitude': self.longitude,
-            'postal_code': self.postalCode,
-            'province': self.province,
+            "complete_address": self.complete,
+            "country_code": self.countryCode,
+            "latitude": self.latitude,
+            "line_1": self.line1,
+            "line_2": self.line2,
+            "locality": self.locality,
+            "longitude": self.longitude,
+            "postal_code": self.postalCode,
+            "province": self.province,
         }
 
         return result
 
-
     def __str__(self) -> str:
-        return '%s\n%s\n%s, %s %s %s' % (
+        return "%s\n%s\n%s, %s %s %s" % (
             self.line1,
             self.line2,
             self.locality,
@@ -130,4 +132,3 @@ class Address(TripleObject):
             self.postalCode,
             self.countryCode,
         )
-

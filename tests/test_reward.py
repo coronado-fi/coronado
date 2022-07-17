@@ -11,6 +11,7 @@ import pytest
 
 # *** tests ***
 
-@pytest.mark.skip('Not implemented yet')
+
+@pytest.mark.skip("Not implemented yet")
 def test_RewardType():
     None
