@@ -80,7 +80,7 @@ def test_CLOfferDetails_forID():
         },
     }
     # offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
-    offerDetails = CLOfferDetails.forID('4930', spec)
+    offerDetails = CLOfferDetails.forID('4930', spec = spec)
 
     assert isinstance(offerDetails, CLOfferDetails)
     assert isinstance(offerDetails.offer, CLOffer)
@@ -94,8 +94,8 @@ def test_CLOfferDetails_forID():
 
     del spec['card_account_identifier']
     with pytest.raises(CoronadoUnprocessableObjectError):
-        CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
+        CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
 
-
-test_CLOfferDetails_forID()
+    with pytest.raises(CoronadoAPIError):
+        CLOfferDetails.forID(KNOWN_OFFER_ID, postalCode = '94123')
 
