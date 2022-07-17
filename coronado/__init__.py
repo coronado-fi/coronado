@@ -21,14 +21,14 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.3'
+__VERSION__ = "1.1.3"
 
-API_URL = 'https://api.sandbox.tripleup.dev'
-CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
-
+API_URL = "https://api.sandbox.tripleup.dev"
+CORONADO_USER_AGENT = "python-coronado/%s" % __VERSION__
 
 
 # +++ classes and objects +++
+
 
 class TripleEnum(enum.Enum):
     """
@@ -36,6 +36,7 @@ class TripleEnum(enum.Enum):
     for pretty printing of the instance's value by overloading
     the `__str__()` method.  It's a convenience class.
     """
+
     def __str__(self) -> str:
         return str(self.value)
 
@@ -44,6 +45,7 @@ class TripleObject(object):
     """
     Abstract class ancestor to all the triple API objects.
     """
+
     # +++ class variables ++
 
     _auth = None
@@ -61,12 +63,11 @@ class TripleObject(object):
     in JSON or a `dict`.
     """
 
-
     # +++ implementation +++
 
     # +++ public +++
 
-    def __init__(self, obj = None):
+    def __init__(self, obj=None):
         """
         Create a new instance of a triple object.  `obj` must correspond to a
         valid, existing object ID if it's not a collection or JSON.  The
@@ -95,13 +96,13 @@ class TripleObject(object):
         If obj format is invalid (non `dict`, non JSON)
         """
         if isinstance(obj, str):
-            if '{' in obj:
+            if "{" in obj:
                 d = json.loads(obj)
             else:  # ValueError JSON test is untenable
                 try:
                     d = self.__class__.byID(obj).__dict__
                 except:
-                    raise CoronadoAPIError('invalid object ID')
+                    raise CoronadoAPIError("invalid object ID")
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         elif isinstance(obj, TripleObject):
@@ -113,15 +114,20 @@ class TripleObject(object):
 
         for key, value in d.items():
             if isinstance(value, (list, tuple)):
-                setattr(self, key, [TripleObject(x) if isinstance(x, dict) else x for x in value])
+                setattr(
+                    self,
+                    key,
+                    [TripleObject(x) if isinstance(x, dict) else x for x in value],
+                )
             else:
-                setattr(self, key, TripleObject(value) if isinstance(value, dict) else value)
+                setattr(
+                    self, key, TripleObject(value) if isinstance(value, dict) else value
+                )
 
         self.assertAll()
 
-
     @classmethod
-    def initialize(klass, serviceURL : str, servicePath : str, auth : object):
+    def initialize(klass, serviceURL: str, servicePath: str, auth: object):
         """
         Initialize the class to use an appropriate service URL or authentication
         object.
@@ -137,7 +143,6 @@ class TripleObject(object):
         klass._auth = auth
         klass._servicePath = servicePath
         klass._serviceURL = serviceURL
-
 
     def assertAll(self) -> bool:
         """
@@ -159,10 +164,15 @@ class TripleObject(object):
         """
         if self.__class__.requiredAttributes:
             attributes = self.__dict__.keys()
-            if not all(attribute in attributes for attribute in self.__class__.requiredAttributes):
-                missing = set(self.__class__.requiredAttributes)-set(attributes)
-                raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
-
+            if not all(
+                attribute in attributes
+                for attribute in self.__class__.requiredAttributes
+            ):
+                missing = set(self.__class__.requiredAttributes) - set(attributes)
+                raise CoronadoMalformedObjectError(
+                    "attribute%s %s missing during instantiation"
+                    % ("" if len(missing) == 1 else "s", missing)
+                )
 
     def listAttributes(self) -> dict:
         """
@@ -175,22 +185,37 @@ class TripleObject(object):
             A dictionary of objects and types
         """
         keys = sorted(self.__dict__.keys())
-        result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
+        result = dict(
+            [
+                (
+                    key,
+                    str(type(self.__dict__[key]))
+                    .replace("class ", "")
+                    .replace("'", "")
+                    .replace("<", "")
+                    .replace(">", ""),
+                )
+                for key in keys
+            ]
+        )
 
         return result
-
 
     @classmethod
     @property
     def headers(klass):
         return {
-            'Authorization': ' '.join([ klass._auth.tokenType, klass._auth.token, ]),
-            'User-Agent': CORONADO_USER_AGENT,
+            "Authorization": " ".join(
+                [
+                    klass._auth.tokenType,
+                    klass._auth.token,
+                ]
+            ),
+            "User-Agent": CORONADO_USER_AGENT,
         }
 
-
     @classmethod
-    def create(klass, spec : dict) -> object:
+    def create(klass, spec: dict) -> object:
         """
         Create a new TripleObject object resource based on spec.
 
@@ -231,8 +256,8 @@ class TripleObject(object):
         if not spec:
             raise CoronadoMalformedObjectError
 
-        endpoint = '/'.join([klass._serviceURL, klass._servicePath ]) # URL fix later
-        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+        endpoint = "/".join([klass._serviceURL, klass._servicePath])  # URL fix later
+        response = requests.request("POST", endpoint, headers=klass.headers, json=spec)
 
         if response.status_code == 201:
             tripleObject = klass(response.text)
@@ -247,9 +272,8 @@ class TripleObject(object):
 
         return tripleObject
 
-
     @classmethod
-    def byID(klass, objID : str) -> object:
+    def byID(klass, objID: str) -> object:
         """
         Return the tripleObject associated with objID.
 
@@ -268,8 +292,10 @@ class TripleObject(object):
             CoronadoAPIError
         When the service encounters some error
         """
-        endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
-        response = requests.request('GET', endpoint, headers = klass.headers)
+        endpoint = "/".join(
+            [klass._serviceURL, "%s/%s" % (klass._servicePath, objID)]
+        )  # URL fix later
+        response = requests.request("GET", endpoint, headers=klass.headers)
 
         if response.status_code == 404:
             result = None
@@ -280,9 +306,8 @@ class TripleObject(object):
 
         return result
 
-
     @classmethod
-    def updateWith(klass, objID : str, spec : dict) -> object:
+    def updateWith(klass, objID: str, spec: dict) -> object:
         """
         Update the receiver with new values for the attributes set in spec.
 
@@ -318,8 +343,10 @@ class TripleObject(object):
             CoronadoAPIError
         When the service encounters some error
         """
-        endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
-        response = requests.request('PATCH', endpoint, headers = klass.headers, json = spec)
+        endpoint = "/".join(
+            [klass._serviceURL, "%s/%s" % (klass._servicePath, objID)]
+        )  # URL fix later
+        response = requests.request("PATCH", endpoint, headers=klass.headers, json=spec)
 
         if response.status_code == 404:
             result = None
@@ -330,9 +357,8 @@ class TripleObject(object):
 
         return result
 
-
     @classmethod
-    def list(klass : object, paramMap = None, **args) -> list:
+    def list(klass: object, paramMap=None, **args) -> list:
         """
         Return a list of tripleObjects.  The list is a sequential query from the
         beginning of time if no query parameters are passed:
@@ -349,13 +375,14 @@ class TripleObject(object):
         """
         params = None
         if paramMap:
-            params = dict([ (paramMap[k], v) for k, v in args.items() ])
+            params = dict([(paramMap[k], v) for k, v in args.items()])
 
-        endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
-        response = requests.request('GET', endpoint, headers = klass.headers, params = params)
+        endpoint = "/".join([klass._serviceURL, klass._servicePath])
+        response = requests.request(
+            "GET", endpoint, headers=klass.headers, params=params
+        )
 
         return response
-
 
     def inSnakeCaseJSON(self) -> str:
         """
@@ -375,7 +402,6 @@ class TripleObject(object):
         require that method implementation.
         """
         return json.dumps(self.asSnakeCaseDictionary())
-
 
     def asSnakeCaseDictionary(self) -> dict:
         """
@@ -413,8 +439,7 @@ class TripleObject(object):
         return result
         ```
         """
-        raise NotImplementedError('subclasses must implement this if required')
-
+        raise NotImplementedError("subclasses must implement this if required")
 
     def __str__(self) -> str:
         """
@@ -425,18 +450,28 @@ class TripleObject(object):
             str
         A human-readable string representation of the receiver.
         """
-        result = ''
+        result = ""
         keys = sorted(self.__dict__.keys())
         longest = max((len(k) for k in keys))
-        formatTrunc = '%%-%ds: %%s... <snip>' % longest
-        formatFull = '%%-%ds: %%s' % longest
+        formatTrunc = "%%-%ds: %%s... <snip>" % longest
+        formatFull = "%%-%ds: %%s" % longest
 
         for k in keys:
             v = self.__dict__[k]
             if isinstance(v, str) and len(v) > 60:
-                result = '\n'.join([ result, formatTrunc % (k, v[:60]), ])
+                result = "\n".join(
+                    [
+                        result,
+                        formatTrunc % (k, v[:60]),
+                    ]
+                )
             else:
-                result = '\n'.join([ result, formatFull % (k, v), ])
+                result = "\n".join(
+                    [
+                        result,
+                        formatFull % (k, v),
+                    ]
+                )
 
         return result
 
@@ -449,6 +484,7 @@ class CoronadoAPIError(Exception):
     Printing the reason code will display as much information about why
     the service failed as it is available from the API system.
     """
+
 
 class CoronadoDuplicatesDisallowedError(Exception):
     """
@@ -464,6 +500,7 @@ class CoronadoMalformedObjectError(Exception):
     Raised when instantiating a Coronado object fails.  May also include
     a string describing the cause of the exception.
     """
+
     pass
 
 
@@ -487,5 +524,5 @@ class CoronadoUnprocessableObjectError(Exception):
     Raised when instantiating a Coronado object fails because the object
     is well-formed but contains semantic or object representation errors.
     """
-    pass
 
+    pass

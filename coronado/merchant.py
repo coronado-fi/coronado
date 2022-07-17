@@ -17,7 +17,7 @@ import requests
 
 # +++ constants +++
 
-SERVICE_PATH = 'partner/merchants'
+SERVICE_PATH = "partner/merchants"
 
 
 # *** classes and objects ***
@@ -38,10 +38,13 @@ class MerchantCategoryCode(TripleObject):
     <a href='https://www.merchantmaverick.com/merchant-category-code-mcc/' target='_blank'>Merchant Category Codes (MCC):</a>
     All You Need to Know from *Maverick Merchant*.
     """
-    requiredAttributes = [ 'code', 'description', ]
 
+    requiredAttributes = [
+        "code",
+        "description",
+    ]
 
-    def __init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT):
+    def __init__(self, obj=BASE_MERCHANT_CATEGORY_CODE_DICT):
         """
         Create a new MCC instance.
 
@@ -56,10 +59,8 @@ class MerchantCategoryCode(TripleObject):
         """
         TripleObject.__init__(self, obj)
 
-
     def __str__(self):
-        return '%s: %s' % (self.code, self.description)
-
+        return "%s: %s" % (self.code, self.description)
 
     def asSnakeCaseDictionary(self) -> dict:
         """
@@ -70,13 +71,16 @@ class MerchantCategoryCode(TripleObject):
         ------
             A dict representation of the receiver.
         """
-        return { 'code': self.code, 'description': self.description, }
+        return {
+            "code": self.code,
+            "description": self.description,
+        }
 
 
 class Merchant(TripleObject):
-    """
-    """
-    def __init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT):
+    """ """
+
+    def __init__(self, obj=BASE_MERCHANT_CATEGORY_CODE_DICT):
         """
         Create a new Merchant instance.
 
@@ -105,4 +109,3 @@ class Merchant(TripleObject):
         ```
         """
         TripleObject.__init__(self, obj)
-

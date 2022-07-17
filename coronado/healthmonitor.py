@@ -12,10 +12,11 @@ import coronado.auth as auth
 
 # +++ constants +++
 
-SERVICE_PATH = 'partner/healthcheck'
+SERVICE_PATH = "partner/healthcheck"
 
 
 # +++ implementation +++
+
 
 class HealthMonitor(TripleObject):
     """
@@ -25,7 +26,7 @@ class HealthMonitor(TripleObject):
     -------
         TripleObject
     A triple object with these attributes set:
-    
+
     - `APIVersion`
     - `build`
 
@@ -35,11 +36,14 @@ class HealthMonitor(TripleObject):
         CoronadoAPIError
     When the service is unavailable because of a fatal runtime condition.
     """
-    requiredAttributes = [ 'APIVersion', 'build', ]
+
+    requiredAttributes = [
+        "APIVersion",
+        "build",
+    ]
 
     def __init__(self):
         TripleObject.__init__(self, None)
-
 
     @classmethod
     def check(klass) -> object:
@@ -50,7 +54,8 @@ class HealthMonitor(TripleObject):
 
 # --- functions ---
 
-def main(unitTest : bool = False) -> dict:
+
+def main(unitTest: bool = False) -> dict:
     """
     Check the triple API service health by reporting the API version, build ID,
     and other information relevant to implementers.
@@ -74,13 +79,17 @@ def main(unitTest : bool = False) -> dict:
     API developers if running a unit test.
     """
     _config = auth.loadConfig()
-    _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+    _auth = Auth(
+        _config["tokenURL"],
+        clientID=_config["clientID"],
+        clientSecret=_config["secret"],
+        scope=Scopes.PUBLISHERS,
+    )
 
-    HealthMonitor.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+    HealthMonitor.initialize(_config["serviceURL"], SERVICE_PATH, _auth)
     check = HealthMonitor.check()
 
-    print('triple API version = %s, build = %s' % (check.APIVersion, check.build))
+    print("triple API version = %s, build = %s" % (check.APIVersion, check.build))
 
     if unitTest:
         return check.__dict__
-

@@ -9,7 +9,7 @@ import json
 
 # *** constants ***
 
-SERVICE_PATH = 'partner/card-programs'
+SERVICE_PATH = "partner/card-programs"
 """
 The default service path associated with CardProgram operations.
 
@@ -26,6 +26,7 @@ This constant is defined for convenience.
 
 # ***
 
+
 class CardProgram(TripleObject):
     """
     Card programs are logical groupings of card accounts.  A card program is
@@ -37,10 +38,13 @@ class CardProgram(TripleObject):
     in more than one card program at a time.
     """
 
-    requiredAttributes = ['externalID', 'name', 'programCurrency', ]
+    requiredAttributes = [
+        "externalID",
+        "name",
+        "programCurrency",
+    ]
 
-
-    def __init__(self, obj = BASE_CARD_PROGRAM_DICT):
+    def __init__(self, obj=BASE_CARD_PROGRAM_DICT):
         """
         Create a new instance of a card program.  `obj` must correspond to a
         valid, existing object ID if it's not a collection or JSON.
@@ -67,9 +71,8 @@ class CardProgram(TripleObject):
         """
         TripleObject.__init__(self, obj)
 
-
     @classmethod
-    def list(klass : object) -> list:
+    def list(klass: object) -> list:
         """
         Return a list of card programs.
 
@@ -79,7 +82,8 @@ class CardProgram(TripleObject):
         A list of CardProgram objects
         """
         response = super().list()
-        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_programs'] ]
+        result = [
+            TripleObject(obj) for obj in json.loads(response.content)["card_programs"]
+        ]
 
         return result
-

@@ -16,7 +16,7 @@ import requests
 
 # +++ constants +++
 
-SERVICE_PATH = 'partner/publishers'
+SERVICE_PATH = "partner/publishers"
 """
 The default service path associated with CardAccount operations.
 
@@ -33,6 +33,7 @@ This constant is defined for convenience.
 
 # *** classes and objects ***
 
+
 class Publisher(TripleObject):
     """
     Publisher objects are used for managing portfolios of publishers.  Partners
@@ -42,10 +43,15 @@ class Publisher(TripleObject):
     an offer exclusion.
     """
 
-    requiredAttributes = [ 'objID', 'assumedName', 'address', 'createdAt', 'updatedAt', ]
+    requiredAttributes = [
+        "objID",
+        "assumedName",
+        "address",
+        "createdAt",
+        "updatedAt",
+    ]
 
-
-    def __init__(self, obj = BASE_PUBLISHER_DICT):
+    def __init__(self, obj=BASE_PUBLISHER_DICT):
         """
         Create a new instance of a publisher.  `obj` must correspond to a
         valid, existing object ID if it's not a collection or JSON.
@@ -72,9 +78,8 @@ class Publisher(TripleObject):
         """
         TripleObject.__init__(self, obj)
 
-
     @classmethod
-    def create(klass, spec : dict) -> object:
+    def create(klass, spec: dict) -> object:
         """
         Create a new Publisher instance using the spec.
 
@@ -111,8 +116,10 @@ class Publisher(TripleObject):
         if not spec:
             raise CoronadoMalformedObjectError
 
-        endpoint = '/'.join([Publisher._serviceURL, SERVICE_PATH]) # URL fix later
-        response = requests.request('POST', endpoint, headers = Publisher.headers, json = spec)
+        endpoint = "/".join([Publisher._serviceURL, SERVICE_PATH])  # URL fix later
+        response = requests.request(
+            "POST", endpoint, headers=Publisher.headers, json=spec
+        )
 
         if response.status_code == 201:
             publisher = Publisher(str(response.text))
@@ -127,9 +134,8 @@ class Publisher(TripleObject):
 
         return publisher
 
-
     @classmethod
-    def list(klass : object) -> list:
+    def list(klass: object) -> list:
         """
         Return a list of publishers.
 
@@ -138,15 +144,16 @@ class Publisher(TripleObject):
             list
         A list of Publisher objects
         """
-        endpoint = '/'.join([Publisher._serviceURL, SERVICE_PATH]) # URL fix later
-        response = requests.request('GET', endpoint, headers = Publisher.headers)
-        result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
+        endpoint = "/".join([Publisher._serviceURL, SERVICE_PATH])  # URL fix later
+        response = requests.request("GET", endpoint, headers=Publisher.headers)
+        result = [
+            TripleObject(obj) for obj in json.loads(response.content)["publishers"]
+        ]
 
         return result
 
-
     @classmethod
-    def byID(klass, objID : str) -> object:
+    def byID(klass, objID: str) -> object:
         """
         Return the publisher associated with objID.
 
@@ -160,8 +167,10 @@ class Publisher(TripleObject):
             a Publisher
         The Publisher object associated with objID or None
         """
-        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (SERVICE_PATH, objID)]) # URL fix later
-        response = requests.request('GET', endpoint, headers = Publisher.headers)
+        endpoint = "/".join(
+            [Publisher._serviceURL, "%s/%s" % (SERVICE_PATH, objID)]
+        )  # URL fix later
+        response = requests.request("GET", endpoint, headers=Publisher.headers)
 
         if response.status_code == 404:
             result = None
@@ -172,9 +181,8 @@ class Publisher(TripleObject):
 
         return result
 
-
     @classmethod
-    def updateWith(klass, objID : str, spec : dict) -> object:
+    def updateWith(klass, objID: str, spec: dict) -> object:
         """
         Update the receiver with a new assumed name or update its address.
 
@@ -205,8 +213,12 @@ class Publisher(TripleObject):
         An updated instance of the Publisher associated with objID, or None
         if the objID isn't associated with an existing resource.
         """
-        endpoint = '/'.join([Publisher._serviceURL, '%s/%s' % (SERVICE_PATH, objID)]) # URL fix later
-        response = requests.request('PATCH', endpoint, headers = Publisher.headers, json = spec)
+        endpoint = "/".join(
+            [Publisher._serviceURL, "%s/%s" % (SERVICE_PATH, objID)]
+        )  # URL fix later
+        response = requests.request(
+            "PATCH", endpoint, headers=Publisher.headers, json=spec
+        )
 
         if response.status_code == 404:
             result = None
@@ -216,4 +228,3 @@ class Publisher(TripleObject):
             raise CoronadoAPIError(response.text)
 
         return result
-

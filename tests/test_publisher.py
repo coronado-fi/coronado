@@ -20,43 +20,52 @@ import coronado.auth as auth
 
 # *** constants ***
 
-KNOWN_PUB_ID = '4'
-KNOWN_ASSUMED_NAME = 'Kukla Enterprises, Inc.'
+KNOWN_PUB_ID = "4"
+KNOWN_ASSUMED_NAME = "Kukla Enterprises, Inc."
 
 
 # *** globals ***
 
-_address = Address({
-    # We made it a requirement but we'll toss it in the instances:
-    'complete_address': '',
-    'countryCode': 'US',
-    'latitude': 0,
-    'line1': '2801 Turk Boulevard',
-    'line2': 'Suite 202',
-    'locality': 'San Francisco',
-    'longitude': 0,
-    'postalCode': '94118',
-    'province': 'CA',
-})
+_address = Address(
+    {
+        # We made it a requirement but we'll toss it in the instances:
+        "complete_address": "",
+        "countryCode": "US",
+        "latitude": 0,
+        "line1": "2801 Turk Boulevard",
+        "line2": "Suite 202",
+        "locality": "San Francisco",
+        "longitude": 0,
+        "postalCode": "94118",
+        "province": "CA",
+    }
+)
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+_auth = Auth(
+    _config["tokenURL"],
+    clientID=_config["clientID"],
+    clientSecret=_config["secret"],
+    scope=Scopes.PUBLISHERS,
+)
 
-Publisher.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+Publisher.initialize(_config["serviceURL"], SERVICE_PATH, _auth)
 
 
 # --- utility functions ---
 
+
 def _generateTestPayload():
     return {  # sn ::= snake case
-        'address': _address.asSnakeCaseDictionary(),
-        'assumed_name': 'R2D2 Enterprises %s' % uuid.uuid4().hex,
-        'external_id': uuid.uuid4().hex[-12:],
-        'revenue_share': 1.5,
+        "address": _address.asSnakeCaseDictionary(),
+        "assumed_name": "R2D2 Enterprises %s" % uuid.uuid4().hex,
+        "external_id": uuid.uuid4().hex[-12:],
+        "revenue_share": 1.5,
     }
 
 
 # +++ tests +++
+
 
 def test_Publisher_create():
     with pytest.raises(CoronadoMalformedObjectError):
@@ -66,12 +75,12 @@ def test_Publisher_create():
     publisher = Publisher.create(pubSpec)
     assert isinstance(publisher, Publisher)
 
-    del(pubSpec['address'])
+    del pubSpec["address"]
     with pytest.raises(CoronadoUnprocessableObjectError):
         Publisher.create(pubSpec)
 
     pubSpec = _generateTestPayload()
-    pubSpec['revenue_share'] = 'bogus'
+    pubSpec["revenue_share"] = "bogus"
     with pytest.raises(CoronadoUnprocessableObjectError):
         Publisher.create(pubSpec)
 
@@ -89,19 +98,19 @@ def test_Publisher_byID():
     result = Publisher.byID(KNOWN_PUB_ID)
     assert isinstance(result, Publisher)
 
-    assert not Publisher.byID({ 'bogus': 'test'})
+    assert not Publisher.byID({"bogus": "test"})
     assert not Publisher.byID(None)
-    assert not Publisher.byID('bogus')
+    assert not Publisher.byID("bogus")
 
 
 def test_publisher_createDuplicateFail():
     p = Publisher.byID(KNOWN_PUB_ID)
     address = Address(p.address)
     pubSpec = {
-        'address': address.asSnakeCaseDictionary(),
-        'assumed_name': p.assumedName,
-        'external_id': p.externalID,
-        'revenue_share': p.revenueShare,
+        "address": address.asSnakeCaseDictionary(),
+        "assumed_name": p.assumedName,
+        "external_id": p.externalID,
+        "revenue_share": p.revenueShare,
     }
 
     with pytest.raises(CoronadoDuplicatesDisallowedError):
@@ -111,15 +120,19 @@ def test_publisher_createDuplicateFail():
 def test_Publisher_updateWith():
     address = _address.asSnakeCaseDictionary()
 
-    control = 'OOO Kukla'
+    control = "OOO Kukla"
     orgName = Publisher.byID(KNOWN_PUB_ID).assumedName
-    payload = { 'assumed_name' : control, 'address': address, }
+    payload = {
+        "assumed_name": control,
+        "address": address,
+    }
     result = Publisher.updateWith(KNOWN_PUB_ID, payload)
     assert result.assumedName == control
 
     # Reset:
-    payload['assumed_name'] = orgName
+    payload["assumed_name"] = orgName
     Publisher.updateWith(KNOWN_PUB_ID, payload)
+
 
 # TODO:  implement these tests after the underlying bug is fixed:
 #     orgAddress = result.address
@@ -140,4 +153,3 @@ def test_Publisher_instanceByID():
 
 
 test_Publisher_create()
-

@@ -68,6 +68,3 @@
 #         requiredAttributes = [ 'objID', 'cardAccountID', 'externalID', 'localDate', 'debit', 'amount', 'currencyCode', 'transactionType', 'description', 'matchingStatus', 'createdAt', 'updatedAt', ]
 #
 #         self.assertAll(requiredAttributes)
-
-
-

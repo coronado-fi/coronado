@@ -8,7 +8,7 @@ from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 import json
 
 
-SERVICE_PATH = 'partner/card-accounts'
+SERVICE_PATH = "partner/card-accounts"
 """
 The default service path associated with CardAccount operations.
 
@@ -25,27 +25,34 @@ This constant is defined for convenience.
 
 # *** clases and objects ***
 
+
 class CardAccountStatus(TripleEnum):
     """
     Account status object.
     See:  https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount
     """
-    CLOSED = 'CLOSED'
-    ENROLLED = 'ENROLLED'
-    NOT_ENROLLED = 'NOT_ENROLLED'
+
+    CLOSED = "CLOSED"
+    ENROLLED = "ENROLLED"
+    NOT_ENROLLED = "NOT_ENROLLED"
 
 
 class CardAccount(TripleObject):
 
-    requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
+    requiredAttributes = [
+        "objID",
+        "cardProgramID",
+        "externalID",
+        "status",
+        "createdAt",
+        "updatedAt",
+    ]
 
-
-    def __init__(self, obj = BASE_CARD_ACCOUNT_DICT):
+    def __init__(self, obj=BASE_CARD_ACCOUNT_DICT):
         TripleObject.__init__(self, obj)
 
-
     @classmethod
-    def list(klass : object, paramMap = None, **args) -> list:
+    def list(klass: object, paramMap=None, **args) -> list:
         """
         Return a list of card accounts.  The list is a sequential query from the
         beginning of time if no query parameters are passed:
@@ -69,11 +76,12 @@ class CardAccount(TripleObject):
         - `status`
         """
         paramMap = {
-            'cardAccountExternalID': 'card_account_external_id',
-            'cardProgramExternalID': 'card_program_external_id',
-            'pubExternalID': 'publisher_external_id',
+            "cardAccountExternalID": "card_account_external_id",
+            "cardProgramExternalID": "card_program_external_id",
+            "pubExternalID": "publisher_external_id",
         }
         response = super().list(paramMap, **args)
-        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+        result = [
+            TripleObject(obj) for obj in json.loads(response.content)["card_accounts"]
+        ]
         return result
-
