@@ -19,8 +19,8 @@ import coronado.auth as auth
 
 # *** constants ***
 
-KNOWN_CARD_ID = '2'
-KNOWN_CARD_PROG_EXT_ID = 'prog-5a4d1563410c4ff687d8a6fa8c208fe8'
+KNOWN_CARD_ID = '1270'
+KNOWN_CARD_PROG_EXT_ID = 'prog-66'
 KNOWN_OFFER_ID = '4862'
 # KNOWN_OFFER_ID = '10953'
 
