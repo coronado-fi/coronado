@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoAPIError
+from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
 from coronado.display import CardLinkedOffer as CLOffer
@@ -137,7 +138,6 @@ def test_OfferSearchResult_withQuery_args():
                 filterType = OfferType.CARD_LINKED)
 
 
-
 def test_CLOfferDetails_forID():
     spec = {
         "proximity_target": {
@@ -155,12 +155,21 @@ def test_CLOfferDetails_forID():
     assert isinstance(offerDetails, CLOfferDetails)
     assert isinstance(offerDetails.offer, CLOffer)
 
-# TODO:  500!  404 better.
-#     CLOfferDetails.forID('BOGUs', spec)
+    # TODO:  All of these need to test against specific exceptions,
+    #        this is good enough for this release.
+    with pytest.raises(Exception):
+        CLOfferDetails.forID('BOGUs', spec = spec)
 
-# TODO:  500!  404 better.
-#     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
-#     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
+    with pytest.raises(Exception):
+        CLOfferDetails.forID('0', spec = spec)
+        
+    spec['card_account_identifier']['card_account_id'] = 'bOGuz'
+    with pytest.raises(Exception):
+        CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
+
+    spec['card_account_identifier']['card_account_id'] = '0'
+    offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
+    assert not offerDetails
 
     del spec['card_account_identifier']
     with pytest.raises(CoronadoUnprocessableObjectError):

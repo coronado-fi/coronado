@@ -72,12 +72,10 @@ class OfferSearchResult(Offer):
         'activationRequired',
         'currencyCode',
         'effectiveDate',
-# TODO:  Bug!
-#         'expirationDate',
         'externalID',
         'headline',
         'isActivated',
-# TODO:  Bug!
+# TODO:  Bug! -- 20220718
 #         'mode',
 #         'rewardType',
         'score',
@@ -245,12 +243,8 @@ class OfferSearchResult(Offer):
                 or klass._error(CoronadoAPIError, 'filterType must be an instance of %s' % OfferType)
             filters['type'] = str(args['filterType'])
 
-        # TODO:  the proximity target only works for lat, long; lat and long
-        #        use strings in the examples instead of floats or Decimal, and 
-        #        the API doesn't barf on it.  Do we want to enforce float or
-        #        Decimal?
         spec = {
-            # TODO:  what's the behavior if both coordinates and postal code +
+            # TODO:  what's the behavior if both coordinates and postal code + # 20220718 -- lat,long used; the rest is ignored
             #        country code are specified?
             'proximity_target': {
                 'latitude': args['latitude'],
@@ -310,9 +304,9 @@ def _assembleDetailsFrom(payload):
 
     offer = CardLinkedOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
-    # TODO: the category attribute is missing from the result
+    # TODO: the category attribute is missing from the result - 20220718
     # offer.category = OfferCategory(offer.category)
-    # TODO: the rewardType attribute is missing from the result
+    # TODO: the rewardType attribute is missing from the result - 20220718
     # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
     offer.offerMode = OfferDeliveryMode(offer.offerMode)
@@ -448,14 +442,6 @@ class CardLinkedOfferDetails(Offer):
             CoronadoUnprocessableObjectError
         When the `spec` query is missing one or more atribute:value pairs.
         """
-
-        # TODO:  500!  404 better.
-        #     CLOfferDetails.forID('BOGUs', spec)
-
-        # TODO:  500!  404 better.
-        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
-        #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
-
         if 'spec' in args:
             # Uses spec, backward compatibility; new implementation is for
             # people who don't want to initialize the spec payload (FI
