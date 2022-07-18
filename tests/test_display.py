@@ -169,3 +169,6 @@ def test_CLOfferDetails_forID():
     with pytest.raises(CoronadoAPIError):
         CLOfferDetails.forID(KNOWN_OFFER_ID, postalCode = '94123')
 
+
+test_CLOfferDetails_forID()
+
