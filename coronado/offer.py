@@ -52,7 +52,7 @@ class OfferCategory(TripleEnum):
     UTILITIES_AND_TELECOM = 'UTILITIES_AND_TELECOM'
 
 
-class OfferDeliveryModes(TripleEnum):
+class OfferDeliveryMode(TripleEnum):
     """
     Offer delivery mode.
     """
@@ -62,8 +62,11 @@ class OfferDeliveryModes(TripleEnum):
 
 
 class OfferType(TripleEnum):
-    CARD_LINKED = 'CARD_LINKED'
+    """
+    Offer type definitions.
+    """
     AFFILIATE = 'AFFILIATE'
+    CARD_LINKED = 'CARD_LINKED'
     CATEGORICAL = 'CATEGORICAL'
 
 

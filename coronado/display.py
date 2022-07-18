@@ -12,7 +12,7 @@ from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
 from coronado.offer import Offer
 from coronado.offer import OfferCategory
-from coronado.offer import OfferDeliveryModes
+from coronado.offer import OfferDeliveryMode
 from coronado.offer import OfferType
 
 import json
@@ -39,7 +39,34 @@ class OfferSearchResult(Offer):
     always the result from running a query against the triple API.
     """
 
-    
+    # +++ private +++
+
+    @classmethod
+    def _queryWith(klass, spec):
+        endpoint = '/'.join([ klass._serviceURL, klass._servicePath, ])
+        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+
+        if response.status_code == 200:
+            result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
+        elif response.status_code == 404:
+            result = None
+        elif response.status_code == 422:
+            raise CoronadoUnprocessableObjectError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
+
+        return result
+
+
+    @classmethod
+    def _error(klass, someErrorClass, explanation):
+        raise someErrorClass(explanation)
+
+
+    # *** public ***
+
     requiredAttributes = [
         'objID',
         'activationRequired',
@@ -50,6 +77,7 @@ class OfferSearchResult(Offer):
         'externalID',
         'headline',
         'isActivated',
+# TODO:  Bug!
 #         'mode',
 #         'rewardType',
         'score',
@@ -69,6 +97,16 @@ class OfferSearchResult(Offer):
     @classmethod
     def forQuery(klass, spec : dict) -> list:
         """
+        DEPRECATED
+        ----------
+        Use `queryWith(objID, spec = spec)` instead.
+        """
+        return klass.queryWith(spec = spec)
+
+
+    @classmethod
+    def queryWith(klass, **args):
+        """
         Search for offers that meet the query search criteria.  The underlying
         service allows for parameterized search and plain text searches.  The
         **<a href='https://api.tripleup.dev/docs' target='_blank'>Search Offers</a>**
@@ -76,8 +114,63 @@ class OfferSearchResult(Offer):
 
         Arguments
         ---------
+            cardAccountID
+        A valid, known card account ID registered with the system
+
+            countryCode
+        The 2-letter ISO code for the country (e.g. US, MX, CA)
+
+            filterCategory
+        An offer category type filter; see coronado.offer.OfferType for details;
+        valid values:  AUTOMOTIVE, CHILDREN_AND_FAMILY, ELECTRONICS,
+        ENTERTAINMENT, FINANCIAL_SERVICES, FOOD, HEALTH_AND_BEAUTY, HOME,
+        OFFICE_AND_BUSINESS, RETAIL, TRAVEL, UTILITIES_AND_TELECOM
+
+            filterDeliveryMode
+        An offer mode; see coronado.offer.OfferDeliveryMode for details; valid
+        values:  IN_PERSON, IN_PERSON_AND_ONLINE, ONLINE,
+
+            filterType
+        An offer type filter; see coronado.offer.OfferType for details; valid
+        values: AFFILIATE, CARD_LINKED, CATEGORICAL
+
+            latitude
+        The Earth latitude in degrees, with a whole and decimal part, e.g.
+        40.46; relative to the equator
+
+            longitude
+        The Earth longitude in degrees, with a whole and decimal part, e.g.
+        -79.92; relative to Greenwich
+
+            pageSize
+        The number of search results to return
+
+            pageOffset
+        The offset from the first result (inclusive) where to start fetching 
+        results for this query
+
+            postalCode
+        The postalCode associated with the cardAccountID
+
+            radius
+        The radius, in meters, to find offers with merchants established
+        within that distance to the centroid of the postal code
+
             spec
         A snake_case dictionary with the query request body.
+
+            textQuery
+        A text query to assist the back-end in further refinement of the query;
+        free form text is allowed
+
+        Sample spec (incomplete, for illustrative purposes only; see
+        documentation for full spec):
+
+        **Important**
+
+        If `spec` is present, it overrides all other arguments used within its
+        scope.  This implementation will ignore all other arguments and try to
+        fetch the card linked offer details against the `spec` payload.
 
         Sample spec (incomplete, for illustrative purposes only; see
         documentation for full spec):
@@ -99,6 +192,7 @@ class OfferSearchResult(Offer):
             'type': 'CARD_LINKED'
           }
         }
+
         ```
 
         Returns
@@ -121,21 +215,58 @@ class OfferSearchResult(Offer):
         When this object implementation is unable to handle a server response 
         error not covered by existing exceptions.
         """
-        endpoint = '/'.join([ klass._serviceURL, klass._servicePath, ])
-        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+        if 'spec' in args:
+            # Uses spec, backward compatibility; new implementation is for
+            # people who don't want to initialize the spec payload (FI
+            # requirement).
+            return klass._queryWith(args['spec'])
 
-        if response.status_code == 200:
-            result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
-        elif response.status_code == 404:
-            result = None
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
-        else:
-            raise CoronadoUnexpectedError(response.text)
+        requiredArgs = [
+            'cardAccountID',
+            'pageSize',
+            'pageOffset',
+        ]
 
-        return result
+        if not all(arg in args.keys() for arg in requiredArgs):
+            missing = set(requiredArgs)-set(args.keys())
+            raise CoronadoAPIError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
+
+        filters = dict()
+        if 'filterCategory' in args:
+            isinstance(args['filterCategory'], OfferCategory) \
+                or klass._error(CoronadoAPIError, 'filterCategory must be an instance of %s' % OfferCategory)
+            filters['category'] = str(args['filterCategory'])
+        if 'filterMode' in args:
+            isinstance(args['filterMode'], OfferDeliveryMode) \
+                or klass._error(CoronadoAPIError, 'filterMode must be an instance of %s' % OfferDeliveryMode)
+            filters['mode'] = str(args['filterMode'])
+        if 'filterType' in args:
+            isinstance(args['filterType'], OfferType) \
+                or klass._error(CoronadoAPIError, 'filterType must be an instance of %s' % OfferType)
+            filters['type'] = str(args['filterType'])
+
+        # TODO:  the proximity target only works for lat, long; lat and long
+        #        use strings in the examples instead of floats or Decimal, and 
+        #        the API doesn't barf on it.  Do we want to enforce float or
+        #        Decimal?
+        spec = {
+            # TODO:  what's the behavior if both coordinates and postal code +
+            #        country code are specified?
+            'proximity_target': {
+                'latitude': args['latitude'],
+                'longitude': args['longitude'],
+                'radius': args['radius'],
+            },
+            'card_account_identifier': {
+                'card_account_id': args['cardAccountID'],
+            },
+            'text_query': args.get('textQuery', '').lower(),
+            'page_size': args['pageSize'],
+            'page_offset': args['pageOffset'],
+            'apply_filter': filters,
+        }
+
+        return klass._queryWith(spec)
 
 
     @classmethod
@@ -184,7 +315,7 @@ def _assembleDetailsFrom(payload):
     # TODO: the rewardType attribute is missing from the result
     # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
-    offer.offerMode = OfferDeliveryModes(offer.offerMode)
+    offer.offerMode = OfferDeliveryMode(offer.offerMode)
     offer.type = OfferType(offer.type)
 
     merchantLocations = [ MerchantLocation(l) for l in d['merchant_locations'] ]
@@ -201,12 +332,33 @@ def _assembleDetailsFrom(payload):
 
 
 class CardLinkedOfferDetails(Offer):
-    # --- private ---
-
     """
     Object representation of the offer details and associated merchant
     locations for an offer.
     """
+
+    # --- private ---
+
+    @classmethod
+    def _forIDwithSpec(klass, objID: str, spec: dict, includeLocations: bool) -> object:
+        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details', objID, ])
+        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+
+        if response.status_code == 200:
+            result = _assembleDetailsFrom(response.content)
+        elif response.status_code == 404:
+            result = None
+        elif response.status_code == 422:
+            raise CoronadoUnprocessableObjectError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
+
+        return result
+
+
+    # +++ public +++
 
     requiredAttributes = [
         'offer',
@@ -219,9 +371,8 @@ class CardLinkedOfferDetails(Offer):
         TripleObject.__init__(self, obj)
 
 
-
     @classmethod
-    def forID(klass, objID : str, spec : dict, includeLocations = False) -> object:
+    def forID(klass, objID : str, **args) -> object:
         """
         Get the details and merchant locations for an offer.
 
@@ -230,11 +381,38 @@ class CardLinkedOfferDetails(Offer):
             objID
         A known, valid offer ID
 
+            cardAccountID
+        A valid, known card account ID registered with the system
+
+            countryCode
+        The 2-letter ISO code for the country (e.g. US, MX, CA)
+
+            latitude
+        The Earth latitude in degrees, with a whole and decimal part, e.g.
+        40.46; relative to the equator
+
+            longitude
+        The Earth longitude in degrees, with a whole and decimal part, e.g.
+        -79.92; relative to Greenwich
+
+            postalCode
+        The postalCode associated with the cardAccountID
+
+            radius
+        The radius, in meters, to find offers with merchants established
+        within that distance to the centroid of the postal code
+
             spec
-        A snake_case dictionary with the query request body.
+        A snake_case dictionary with the query request body
 
             includeLocations
         Set to `True` to include the merchant locations in the response.
+
+        **Important**
+
+        If `spec` is present, it overrides all other arguments used within its
+        scope.  This implementation will ignore all other arguments and try to
+        fetch the card linked offer details against the `spec` payload.
 
         Sample spec (incomplete, for illustrative purposes only; see
         documentation for full spec):
@@ -270,21 +448,43 @@ class CardLinkedOfferDetails(Offer):
             CoronadoUnprocessableObjectError
         When the `spec` query is missing one or more atribute:value pairs.
         """
-        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details', objID, ])
-        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
-        if response.status_code == 200:
-            result = _assembleDetailsFrom(response.content)
-        elif response.status_code == 404:
-            result = None
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
-        else:
-            raise CoronadoUnexpectedError(response.text)
+        # TODO:  500!  404 better.
+        #     CLOfferDetails.forID('BOGUs', spec)
 
-        return result
+        # TODO:  500!  404 better.
+        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
+        #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
+
+        if 'spec' in args:
+            # Uses spec, backward compatibility; new implementation is for
+            # people who don't want to initialize the spec payload (FI
+            # requirement).
+            return klass._forIDwithSpec(objID, args['spec'], args.get('includeLocations', False))
+
+        requiredArgs = [
+            'cardAccountID',
+            'countryCode',
+            'postalCode',
+            'radius',
+        ]
+
+        if not all(arg in args.keys() for arg in requiredArgs):
+            missing = set(requiredArgs)-set(args.keys())
+            raise CoronadoAPIError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
+
+        spec = {
+            'proximity_target': {
+                'postal_code': args['postalCode'],
+                'country_code': args['countryCode'],
+                'radius': args['radius'],
+            },
+            'card_account_identifier': {
+                'card_account_id': args['cardAccountID'],
+            },
+        }
+
+        return klass._forIDwithSpec(spec, args.get('includeLocations', False))
 
 
     @classmethod

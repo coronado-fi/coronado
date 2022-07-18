@@ -83,6 +83,7 @@ package:
 #
 # PyPI user name:  ciurana; pypi AT cime_net
 publish:
+	pip install -U twine
 	twine --no-color check $(DIST)/*
 	twine --no-color upload --verbose $(DIST)/*
 
