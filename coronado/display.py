@@ -442,14 +442,6 @@ class CardLinkedOfferDetails(Offer):
             CoronadoUnprocessableObjectError
         When the `spec` query is missing one or more atribute:value pairs.
         """
-
-        # TODO:  500!  404 better -- 20220718 - not sure if it's ticketed 404 or 422
-        #     CLOfferDetails.forID('BOGUs', spec)
-
-        # TODO:  500!  404 better.
-        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz' -- 20220718 returns 422 if failed
-        #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
-
         if 'spec' in args:
             # Uses spec, backward compatibility; new implementation is for
             # people who don't want to initialize the spec payload (FI
