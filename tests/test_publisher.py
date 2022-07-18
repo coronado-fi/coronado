@@ -20,7 +20,7 @@ import coronado.auth as auth
 
 # *** constants ***
 
-KNOWN_PUB_ID = '4'
+KNOWN_PUB_ID = '10'
 KNOWN_ASSUMED_NAME = 'Kukla Enterprises, Inc.'
 
 

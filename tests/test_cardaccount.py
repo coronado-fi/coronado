@@ -21,9 +21,9 @@ import coronado.auth as auth
 # +++ constants +++
 
 KNOWN_ACCT_EXT_ID = 'pnc-card-69-3149b4780d6f4c2fa21fb45d2637efbb'
-KNOWN_ACCT_ID = '2'
-KNOWN_CARD_PROG_EXT_ID = 'prog-5a4d1563410c4ff687d8a6fa8c208fe8'
-KNOWN_PUB_EXT_ID = '4269'
+KNOWN_ACCT_ID = '1270'
+KNOWN_CARD_PROG_EXT_ID = 'prog-66'
+KNOWN_PUB_EXTERNAL_ID = '0d7c608a3df5'
 
 
 # *** globals ***
@@ -48,7 +48,7 @@ def test_CardAccount_create():
     spec = {
         'card_program_external_id': KNOWN_CARD_PROG_EXT_ID,
         'external_id': 'pnc-card-69-%s' % uuid.uuid4().hex,
-        'publisher_external_id': KNOWN_PUB_EXT_ID,
+        'publisher_external_id': KNOWN_PUB_EXTERNAL_ID,
         'status': str(CardAccountStatus.ENROLLED),
     }
 
@@ -78,10 +78,10 @@ def test_CardAccount_list():
         assert isinstance(account, TripleObject)
         assert account.objID
 
-    accounts = CardAccount.list(pubExternalID = KNOWN_PUB_EXT_ID)
+    accounts = CardAccount.list(pubExternalID = KNOWN_PUB_EXTERNAL_ID)
     assert accounts[0].status == CardAccountStatus.ENROLLED.value
 
-    accounts = CardAccount.list(pubExternalID = KNOWN_PUB_EXT_ID, cardAccountExternalID = KNOWN_ACCT_EXT_ID)
+    accounts = CardAccount.list(pubExternalID = KNOWN_PUB_EXTERNAL_ID, cardAccountExternalID = KNOWN_ACCT_EXT_ID)
     assert accounts[0].status == CardAccountStatus.ENROLLED.value
 
 
@@ -103,4 +103,7 @@ def test_CardAccount_updateWith():
     # Reset:
     payload['status'] = 'ENROLLED'
     CardAccount.updateWith(KNOWN_ACCT_ID, payload)
+
+
+# test_CardAccount_create()
 
