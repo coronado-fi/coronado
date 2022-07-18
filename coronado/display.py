@@ -325,7 +325,7 @@ def _assembleDetailsFrom(payload):
     return offerDetails
 
 
-class CardLinkedOfferDetails(Offer):
+class CardLinkedOfferDetails(TripleObject):
     """
     Object representation of the offer details and associated merchant
     locations for an offer.
