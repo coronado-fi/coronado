@@ -72,12 +72,10 @@ class OfferSearchResult(Offer):
         'activationRequired',
         'currencyCode',
         'effectiveDate',
-# TODO:  Bug!
-#         'expirationDate',
         'externalID',
         'headline',
         'isActivated',
-# TODO:  Bug!
+# TODO:  Bug! -- 20220718
 #         'mode',
 #         'rewardType',
         'score',
@@ -245,12 +243,8 @@ class OfferSearchResult(Offer):
                 or klass._error(CoronadoAPIError, 'filterType must be an instance of %s' % OfferType)
             filters['type'] = str(args['filterType'])
 
-        # TODO:  the proximity target only works for lat, long; lat and long
-        #        use strings in the examples instead of floats or Decimal, and 
-        #        the API doesn't barf on it.  Do we want to enforce float or
-        #        Decimal?
         spec = {
-            # TODO:  what's the behavior if both coordinates and postal code +
+            # TODO:  what's the behavior if both coordinates and postal code + # 20220718 -- lat,long used; the rest is ignored
             #        country code are specified?
             'proximity_target': {
                 'latitude': args['latitude'],
@@ -310,9 +304,9 @@ def _assembleDetailsFrom(payload):
 
     offer = CardLinkedOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
-    # TODO: the category attribute is missing from the result
+    # TODO: the category attribute is missing from the result - 20220718
     # offer.category = OfferCategory(offer.category)
-    # TODO: the rewardType attribute is missing from the result
+    # TODO: the rewardType attribute is missing from the result - 20220718
     # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
     offer.offerMode = OfferDeliveryMode(offer.offerMode)
@@ -449,11 +443,11 @@ class CardLinkedOfferDetails(Offer):
         When the `spec` query is missing one or more atribute:value pairs.
         """
 
-        # TODO:  500!  404 better.
+        # TODO:  500!  404 better -- 20220718 - not sure if it's ticketed 404 or 422
         #     CLOfferDetails.forID('BOGUs', spec)
 
         # TODO:  500!  404 better.
-        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
+        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz' -- 20220718 returns 422 if failed
         #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
 
         if 'spec' in args:
