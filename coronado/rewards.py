@@ -2,6 +2,7 @@
 
 
 from coronado import TripleEnum
+from coronado import TripleObject
 
 
 # *** classes and objects ***
