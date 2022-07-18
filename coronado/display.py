@@ -12,7 +12,7 @@ from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
 from coronado.merchant import MerchantCategoryCode as MCC
 from coronado.offer import Offer
 from coronado.offer import OfferCategory
-from coronado.offer import OfferDeliveryModes
+from coronado.offer import OfferDeliveryMode
 from coronado.offer import OfferType
 
 import json
@@ -60,6 +60,11 @@ class OfferSearchResult(Offer):
         return result
 
 
+    @classmethod
+    def _error(klass, someErrorClass, explanation):
+        raise someErrorClass(explanation)
+
+
     # *** public ***
 
     requiredAttributes = [
@@ -72,6 +77,7 @@ class OfferSearchResult(Offer):
         'externalID',
         'headline',
         'isActivated',
+# TODO:  Bug!
 #         'mode',
 #         'rewardType',
         'score',
@@ -108,8 +114,63 @@ class OfferSearchResult(Offer):
 
         Arguments
         ---------
+            cardAccountID
+        A valid, known card account ID registered with the system
+
+            countryCode
+        The 2-letter ISO code for the country (e.g. US, MX, CA)
+
+            filterCategory
+        An offer category type filter; see coronado.offer.OfferType for details;
+        valid values:  AUTOMOTIVE, CHILDREN_AND_FAMILY, ELECTRONICS,
+        ENTERTAINMENT, FINANCIAL_SERVICES, FOOD, HEALTH_AND_BEAUTY, HOME,
+        OFFICE_AND_BUSINESS, RETAIL, TRAVEL, UTILITIES_AND_TELECOM
+
+            filterDeliveryMode
+        An offer mode; see coronado.offer.OfferDeliveryMode for details; valid
+        values:  IN_PERSON, IN_PERSON_AND_ONLINE, ONLINE,
+
+            filterType
+        An offer type filter; see coronado.offer.OfferType for details; valid
+        values: AFFILIATE, CARD_LINKED, CATEGORICAL
+
+            latitude
+        The Earth latitude in degrees, with a whole and decimal part, e.g.
+        40.46; relative to the equator
+
+            longitude
+        The Earth longitude in degrees, with a whole and decimal part, e.g.
+        -79.92; relative to Greenwich
+
+            pageSize
+        The number of search results to return
+
+            pageOffset
+        The offset from the first result (inclusive) where to start fetching 
+        results for this query
+
+            postalCode
+        The postalCode associated with the cardAccountID
+
+            radius
+        The radius, in meters, to find offers with merchants established
+        within that distance to the centroid of the postal code
+
             spec
         A snake_case dictionary with the query request body.
+
+            textQuery
+        A text query to assist the back-end in further refinement of the query;
+        free form text is allowed
+
+        Sample spec (incomplete, for illustrative purposes only; see
+        documentation for full spec):
+
+        **Important**
+
+        If `spec` is present, it overrides all other arguments used within its
+        scope.  This implementation will ignore all other arguments and try to
+        fetch the card linked offer details against the `spec` payload.
 
         Sample spec (incomplete, for illustrative purposes only; see
         documentation for full spec):
@@ -131,6 +192,7 @@ class OfferSearchResult(Offer):
             'type': 'CARD_LINKED'
           }
         }
+
         ```
 
         Returns
@@ -161,31 +223,47 @@ class OfferSearchResult(Offer):
 
         requiredArgs = [
             'cardAccountID',
-            'countryCode',
-            'filterOfferType', # filters aren't required; fix later
-            'filterCategory',
-            'filterLocation',
-            'pageOffset',
             'pageSize',
-            'postalCode',
-            'radius',
-            'textQuery',
+            'pageOffset',
         ]
 
         if not all(arg in args.keys() for arg in requiredArgs):
             missing = set(requiredArgs)-set(args.keys())
             raise CoronadoAPIError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
 
-        # TODO: Implement arguments and unit test!
+        filters = dict()
+        if 'filterCategory' in args:
+            isinstance(args['filterCategory'], OfferCategory) \
+                or klass._error(CoronadoAPIError, 'filterCategory must be an instance of %s' % OfferCategory)
+            filters['category'] = str(args['filterCategory'])
+        if 'filterMode' in args:
+            isinstance(args['filterMode'], OfferDeliveryMode) \
+                or klass._error(CoronadoAPIError, 'filterMode must be an instance of %s' % OfferDeliveryMode)
+            filters['mode'] = str(args['filterMode'])
+        if 'filterType' in args:
+            isinstance(args['filterType'], OfferType) \
+                or klass._error(CoronadoAPIError, 'filterType must be an instance of %s' % OfferType)
+            filters['type'] = str(args['filterType'])
+
+        # TODO:  the proximity target only works for lat, long; lat and long
+        #        use strings in the examples instead of floats or Decimal, and 
+        #        the API doesn't barf on it.  Do we want to enforce float or
+        #        Decimal?
         spec = {
+            # TODO:  what's the behavior if both coordinates and postal code +
+            #        country code are specified?
             'proximity_target': {
-                'postal_code': args['postalCode'],
-                'country_code': args['countryCode'],
+                'latitude': args['latitude'],
+                'longitude': args['longitude'],
                 'radius': args['radius'],
             },
             'card_account_identifier': {
                 'card_account_id': args['cardAccountID'],
             },
+            'text_query': args.get('textQuery', '').lower(),
+            'page_size': args['pageSize'],
+            'page_offset': args['pageOffset'],
+            'apply_filter': filters,
         }
 
         return klass._queryWith(spec)
@@ -237,7 +315,7 @@ def _assembleDetailsFrom(payload):
     # TODO: the rewardType attribute is missing from the result
     # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
-    offer.offerMode = OfferDeliveryModes(offer.offerMode)
+    offer.offerMode = OfferDeliveryMode(offer.offerMode)
     offer.type = OfferType(offer.type)
 
     merchantLocations = [ MerchantLocation(l) for l in d['merchant_locations'] ]
@@ -309,6 +387,14 @@ class CardLinkedOfferDetails(Offer):
             countryCode
         The 2-letter ISO code for the country (e.g. US, MX, CA)
 
+            latitude
+        The Earth latitude in degrees, with a whole and decimal part, e.g.
+        40.46; relative to the equator
+
+            longitude
+        The Earth longitude in degrees, with a whole and decimal part, e.g.
+        -79.92; relative to Greenwich
+
             postalCode
         The postalCode associated with the cardAccountID
 
@@ -362,6 +448,13 @@ class CardLinkedOfferDetails(Offer):
             CoronadoUnprocessableObjectError
         When the `spec` query is missing one or more atribute:value pairs.
         """
+
+        # TODO:  500!  404 better.
+        #     CLOfferDetails.forID('BOGUs', spec)
+
+        # TODO:  500!  404 better.
+        #     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
+        #     CLOfferDetails.forID(KNOWN_OFFER_ID, spec)
 
         if 'spec' in args:
             # Uses spec, backward compatibility; new implementation is for
