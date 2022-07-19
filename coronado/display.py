@@ -23,7 +23,32 @@ import requests
 # +++ constants +++
 
 FETCH_RPC_SERVICE_PATH = 'partners/offer-display/details'
+"""
+The default service path associated with CardLinkedOfferDetails operations.
+
+Usage:
+
+```
+CardLinkedOfferDetails.initialize(serviceURL, FETCH_RPC_SERVICE_PATH, auth)
+```
+
+Users are welcome to initialize the class' service path from regular strings.
+This constant is defined for convenience.
+"""
+
 SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
+"""
+The default service path associated with OfferSearchResult operations.
+
+Usage:
+
+```
+OfferSearchResult.initialize(serviceURL, SEARCH_RPC_SERVICE_PATH, auth)
+```
+
+Users are welcome to initialize the class' service path from regular strings.
+This constant is defined for convenience.
+"""
 
 
 # *** classes and objects ***

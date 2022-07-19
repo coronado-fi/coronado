@@ -18,12 +18,12 @@ import requests
 
 SERVICE_PATH = 'partner/publishers'
 """
-The default service path associated with CardAccount operations.
+The default service path associated with Publisher operations.
 
 Usage:
 
 ```
-CardAccount.initialize(serviceURL, SERVICE_PATH, auth)
+Publisher.initialize(serviceURL, SERVICE_PATH, auth)
 ```
 
 Users are welcome to initialize the class' service path from regular strings.

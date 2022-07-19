@@ -21,7 +21,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.8'
+__VERSION__ = '1.1.9'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -349,7 +349,7 @@ class TripleObject(object):
         """
         params = None
         if paramMap:
-            params = dict([ (paramMap[k], v) for k, v in args.items() ])
+            params = dict([ (paramMap[k], str(v)) for k, v in args.items() ])
 
         endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
