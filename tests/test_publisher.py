@@ -94,7 +94,7 @@ def test_Publisher_byID():
     assert not Publisher.byID('bogus')
 
 
-def test_publisher_createDuplicateFail():
+def test_Publisher_createDuplicateFail():
     p = Publisher.byID(KNOWN_PUB_ID)
     address = Address(p.address)
     pubSpec = {
