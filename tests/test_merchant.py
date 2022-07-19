@@ -1,16 +1,12 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
-from coronado import TripleObject
 from coronado.auth import Auth
-from coronado.auth import Scopes
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.merchant import Merchant
 from coronado.merchant import MerchantCategoryCode as MCC
-# from coronado.merchant import MerchantStatus
 from coronado.merchant import SERVICE_PATH
 
 import json
@@ -27,9 +23,7 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
-# TODO:  file this bug:
-# _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'])
 
 
 Merchant.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
@@ -58,7 +52,7 @@ def test_MCC_inSnakeCaseJSON():
 def test_Merchant_create():
     spec = {
         "external_id": uuid.uuid4().hex,
-        "assumed_name": "Malwart Stores %s" % uuid.uuid4().hex,
+        "assumed_name": "Patrón Mexican Food %s" % uuid.uuid4().hex,
         "address": {
             "complete_address": "7370 BAKER ST STE 100\nPITTSBURGH, PA 15206",
             "line_1": "7370 BAKER ST STE 100",
@@ -71,7 +65,7 @@ def test_Merchant_create():
             "longitude": -79.995888
         },
         "merchant_category_code": {
-            "code": "7998"
+            "code": "4930"
         },
         "logo_url": "https://assets.website-files.com/6287e9b993a42a7dcb001b99/6287eb0b156c574ac578dab3_Triple-Logo-Full-Color.svg"
     }
@@ -89,4 +83,14 @@ def test_Merchant_create():
     spec['external_id'] = '****'
     with pytest.raises(CoronadoUnprocessableObjectError):
         Merchant.create(spec)
+
+
+@pytest.mark.skip('501 - not implemented in underlying API')
+def test_Merchant_list():
+    # merchants = Merchant.list()
+    # merchants = Merchant.list(status = MerchantStatus.DISTRIBUTED_TO_CARDHOLDER)
+    None
+
+
+test_Merchant_list()
 

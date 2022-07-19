@@ -354,6 +354,9 @@ class TripleObject(object):
         endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
 
+        if response.status_code != 200:
+            raise CoronadoUnexpectedError('%s - %s on endpoint = %s' % (response.status_code, response.text, endpoint))
+
         return response
 
 
