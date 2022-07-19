@@ -21,7 +21,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.7'
+__VERSION__ = '1.1.8'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
