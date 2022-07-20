@@ -104,6 +104,3 @@ def test_CardAccount_updateWith():
     payload['status'] = 'ENROLLED'
     CardAccount.updateWith(KNOWN_ACCT_ID, payload)
 
-
-# test_CardAccount_create()
-

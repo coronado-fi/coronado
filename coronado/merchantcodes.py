@@ -15,16 +15,20 @@ class MerchantCategoryCode(TripleObject):
     ISO-18245 merchant category codes implementation.  Leverages the Python
     package <a href='https://pypi.org/project/iso18245/' target='_blank'>iso18245</a> for code resolution and validation.
     """
-    def __init__(self, code):
-        TripleObject.__init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT)
+    def __init__(self, obj):
+        if isinstance(obj, TripleObject):
+            TripleObject.__init__(self, obj = obj)
+            return
+        else:
+            TripleObject.__init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT)
 
         try:
             self.description = None
-            categoryInfo = iso18245.get_mcc(code)
+            categoryInfo = iso18245.get_mcc(obj)
         except iso18245.MCCNotFound:
-            self.description = str(iso18245.get_mcc_range(code).description)
+            self.description = str(iso18245.get_mcc_range(obj).description)
 
-        self.code = code
+        self.code = obj 
         if not self.description:
             self.description = str(
                 categoryInfo.iso_description

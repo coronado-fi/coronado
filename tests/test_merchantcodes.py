@@ -17,7 +17,11 @@ KNOWN_MCC = '1740'
 
 def test_MerchantCategoryCode():
     merchantCode = MerchantCategoryCode(KNOWN_MCC)
+    assert isinstance(merchantCode, MerchantCategoryCode)
+    assert 'Masonry' in merchantCode.description
 
+    # Create object from existing MCC or TripleObject
+    merchantCode = MerchantCategoryCode(merchantCode)
     assert isinstance(merchantCode, MerchantCategoryCode)
     assert 'Masonry' in merchantCode.description
 
