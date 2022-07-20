@@ -76,33 +76,37 @@ class MerchantCategoryCode(TripleObject):
 class Merchant(TripleObject):
     """
     """
-    def __init__(self, obj = BASE_MERCHANT_CATEGORY_CODE_DICT):
+    def __init__(self, obj = BASE_MERCHANT_DICT):
         """
         Create a new Merchant instance.
-
-        spec:
-
-        ```
-        {
-          "externalID": "string",
-          "assumedName": "string",
-          "address": {
-            "completeAddress": "7370 BAKER ST STE 100\nPITTSBURGH, PA 15206",
-            "line1": "7370 BAKER ST STE 100",
-            "line2": "string",
-            "locality": "PITTSBURGH",
-            "province": "PA",
-            "postalCode": "15206",
-            "countryCode": "US",
-            "latitude": 40.440624,
-            "longitude": -79.995888
-          },
-          "merchantCategoryCode": {
-            "code": "7998"
-          },
-          "logoURL": "string"
-        }
-        ```
         """
         TripleObject.__init__(self, obj)
+
+
+    @classmethod
+    def list(klass: object, paramMap = None, **args) -> list:
+        """
+        List all merchants that match any of the criteria set by the 
+        arguments to this method.
+
+        Arguments
+        ---------
+            merchantExternalID
+        String, 1-50 characters partner-provided external ID
+
+        Returns
+        -------
+            list
+        A list of Merchant objects; can be `None`.
+        """
+        paramMap = {
+            'merchantExternalID': 'merchant_external_id',
+        }
+        response = super().list(paramMap, **args)
+
+        if response.status_code != 200:
+            raise CoronadoUnexpectedError(response.text)
+        result = [ TripleObject(obj) for obj in json.loads(response.content)['card_accounts'] ]
+
+        return result
 

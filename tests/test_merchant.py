@@ -90,3 +90,40 @@ def test_Merchant_create():
     with pytest.raises(CoronadoUnprocessableObjectError):
         Merchant.create(spec)
 
+
+@pytest.mark.skip('501 - not implemented in underlying API')
+def test_Merchant_list():
+    merchants = Merchant.list()
+
+    assert isinstance(merchants, list)
+
+    if len(merchants):
+        merchant = merchants[0]
+        assert isinstance(merchant, TripleObject)
+        assert merchant.objID
+
+#     merchants = Merchant.list(cardAccountExternalID = KNOWN_CARD_ACCT_EXT_ID)
+#     assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     merchants = Merchant.list(cardProgramExternalID = KNOWN_CARD_PROG_EXT_ID)
+#     assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     # TODO:  Not implemented, no end dates known
+# #     merchants = Merchant.list(endDate = KNOWN_CARD_PROG_EXT_ID)
+# #     assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     merchants = Merchant.list(matched = True)
+#     if len(merchants):
+#         assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     merchants = Merchant.list(matched = False)
+#     if len(merchants):
+#         assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     # TODO:  Not implemented, no start dates known
+# #     merchants = Merchant.list(startDate = KNOWN_CARD_PROG_EXT_ID)
+# #     assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+# 
+#     merchants = Merchant.list(transactionExternalID = KNOWN_TRANSACTION_EXTERNAL_ID)
+#     assert merchants[0].matchingStatus == MatchingStatus.NO_ACTIVE_OFFER
+
