@@ -45,16 +45,7 @@
                                 <a class="variable" href="#Publisher.requiredAttributes">requiredAttributes</a>
                         </li>
                         <li>
-                                <a class="function" href="#Publisher.create">create</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#Publisher.list">list</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Publisher.byID">byID</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Publisher.updateWith">updateWith</a>
                         </li>
                 </ul>
 
@@ -62,7 +53,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.7</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.9</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -182,55 +173,6 @@ in JSON or a <code>dict</code>.</p>
 
 
                             </div>
-                            <div id="Publisher.create" class="classattr">
-                                <div class="attr function">
-                    <div class="decorator">@classmethod</div>
-
-        <span class="def">def</span>
-        <span class="name">create</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Publisher.create"></a>
-    
-            <div class="docstring"><p>Create a new Publisher instance using the spec.</p>
-
-<p>spec:</p>
-
-<pre><code>spec = {
-    'address': address.asSnakeCaseDictionary(),
-    'assumed_name': 'Some Company Name',
-    'external_id': 'someID',
-    'revenue_share': 1.5,
-}
-</code></pre>
-
-<h2 id="arguments">Arguments</h2>
-
-<pre><code>spec : dict
-</code></pre>
-
-<p>A snake_case publisher input as expected by the triple API
-operation:  <a href="https://api.partners.dev.tripleupdev.com/docs#operation/createPublisher">https://api.partners.dev.tripleupdev.com/docs#operation/createPublisher</a></p>
-
-<h2 id="returns">Returns</h2>
-
-<p>A new Publisher instance</p>
-
-<h2 id="raises">Raises</h2>
-
-<pre><code>CoronadoUnprocessableObjectError
-</code></pre>
-
-<p>When the payload syntax is correct but the semantics are invalid
-    CoronadoAPIError
-When the service endpoint has an error (500 series)
-    CoronadoMalformedObjectError
-When the payload syntax and/or semantics are incorrect, or otherwise the method fails</p>
-</div>
-
-
-                            </div>
                             <div id="Publisher.list" class="classattr">
                                 <div class="attr function">
                     <div class="decorator">@classmethod</div>
@@ -254,97 +196,20 @@ When the payload syntax and/or semantics are incorrect, or otherwise the method 
 
 
                             </div>
-                            <div id="Publisher.byID" class="classattr">
-                                <div class="attr function">
-                    <div class="decorator">@classmethod</div>
-
-        <span class="def">def</span>
-        <span class="name">byID</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Publisher.byID"></a>
-    
-            <div class="docstring"><p>Return the publisher associated with objID.</p>
-
-<h2 id="arguments">Arguments</h2>
-
-<pre><code>objID : str
-</code></pre>
-
-<p>The account ID associated with the resource to fetch</p>
-
-<h2 id="returns">Returns</h2>
-
-<pre><code>a Publisher
-</code></pre>
-
-<p>The Publisher object associated with objID or None</p>
-</div>
-
-
-                            </div>
-                            <div id="Publisher.updateWith" class="classattr">
-                                <div class="attr function">
-                    <div class="decorator">@classmethod</div>
-
-        <span class="def">def</span>
-        <span class="name">updateWith</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#Publisher.updateWith"></a>
-    
-            <div class="docstring"><p>Update the receiver with a new assumed name or update its address.</p>
-
-<p>spec:</p>
-
-<pre><code>spec = {
-    'assumed_name': 'Something Meaningful and New',
-    'address': addressObject.asSnakeCaseDictionary(),
-}
-</code></pre>
-
-<h2 id="arguments">Arguments</h2>
-
-<pre><code>objID : str
-</code></pre>
-
-<p>The Publisher ID to update</p>
-
-<pre><code>spec : dict
-</code></pre>
-
-<p>A dict object with the appropriate object references:</p>
-
-<ul>
-<li>assumed_name</li>
-<li>address
-The address should be generated using a Coronado Address object and
-then calling its asSnakeCaseDictionary() method</li>
-</ul>
-
-<h2 id="returns">Returns</h2>
-
-<pre><code>a Publisher
-</code></pre>
-
-<p>An updated instance of the Publisher associated with objID, or None
-if the objID isn't associated with an existing resource.</p>
-</div>
-
-
-                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="../coronado.html#TripleObject">coronado.TripleObject</a></dt>
-                                <dd id="Publisher.initialize" class="function"><a href="../coronado.html#TripleObject.initialize">initialize</a></dd>
-                <dd id="Publisher.assertAll" class="function"><a href="../coronado.html#TripleObject.assertAll">assertAll</a></dd>
+                                <dd id="Publisher.assertAll" class="function"><a href="../coronado.html#TripleObject.assertAll">assertAll</a></dd>
                 <dd id="Publisher.listAttributes" class="function"><a href="../coronado.html#TripleObject.listAttributes">listAttributes</a></dd>
-                <dd id="Publisher.headers" class="variable"><a href="../coronado.html#TripleObject.headers">headers</a></dd>
+                <dd id="Publisher.asDict" class="function"><a href="../coronado.html#TripleObject.asDict">asDict</a></dd>
                 <dd id="Publisher.inSnakeCaseJSON" class="function"><a href="../coronado.html#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a></dd>
                 <dd id="Publisher.asSnakeCaseDictionary" class="function"><a href="../coronado.html#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a></dd>
+                <dd id="Publisher.initialize" class="function"><a href="../coronado.html#TripleObject.initialize">initialize</a></dd>
+                <dd id="Publisher.headers" class="variable"><a href="../coronado.html#TripleObject.headers">headers</a></dd>
+                <dd id="Publisher.create" class="function"><a href="../coronado.html#TripleObject.create">create</a></dd>
+                <dd id="Publisher.byID" class="function"><a href="../coronado.html#TripleObject.byID">byID</a></dd>
+                <dd id="Publisher.updateWith" class="function"><a href="../coronado.html#TripleObject.updateWith">updateWith</a></dd>
 
             </div>
                                 </dl>

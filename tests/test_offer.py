@@ -63,4 +63,4 @@ def test_Offer():
     x = Offer()
 
     assert isinstance(x, Offer)
-    
+

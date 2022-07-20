@@ -34,11 +34,13 @@
                 <li><a href="coronado/display.html">display</a></li>
                 <li><a href="coronado/healthmonitor.html">healthmonitor</a></li>
                 <li><a href="coronado/merchant.html">merchant</a></li>
+                <li><a href="coronado/merchantcodes.html">merchantcodes</a></li>
                 <li><a href="coronado/offer.html">offer</a></li>
                 <li><a href="coronado/publisher.html">publisher</a></li>
                 <li><a href="coronado/reward.html">reward</a></li>
                 <li><a href="coronado/todo.html">todo</a></li>
                 <li><a href="coronado/tools.html">tools</a></li>
+                <li><a href="coronado/transaction.html">transaction</a></li>
         </ul>
 
         <h2>API Documentation</h2>
@@ -59,13 +61,22 @@
                                 <a class="variable" href="#TripleObject.requiredAttributes">requiredAttributes</a>
                         </li>
                         <li>
-                                <a class="function" href="#TripleObject.initialize">initialize</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#TripleObject.assertAll">assertAll</a>
                         </li>
                         <li>
                                 <a class="function" href="#TripleObject.listAttributes">listAttributes</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TripleObject.asDict">asDict</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TripleObject.initialize">initialize</a>
                         </li>
                         <li>
                                 <a class="variable" href="#TripleObject.headers">headers</a>
@@ -81,12 +92,6 @@
                         </li>
                         <li>
                                 <a class="function" href="#TripleObject.list">list</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a>
                         </li>
                 </ul>
 
@@ -130,7 +135,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.7</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.9</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -261,31 +266,6 @@ in JSON or a <code>dict</code>.</p>
 
 
                             </div>
-                            <div id="TripleObject.initialize" class="classattr">
-                                <div class="attr function">
-                    <div class="decorator">@classmethod</div>
-
-        <span class="def">def</span>
-        <span class="name">initialize</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">serviceURL</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">servicePath</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">auth</span><span class="p">:</span> <span class="nb">object</span></span>)</span>
-
-        
-    </div>
-    <a class="headerlink" href="#TripleObject.initialize"></a>
-    
-            <div class="docstring"><p>Initialize the class to use an appropriate service URL or authentication
-object.</p>
-
-<h2 id="arguments">Arguments</h2>
-
-<p>serviceURL
-    A string with an https locator pointing at the service top level URL
-auth
-    An instance of Auth configured to use the the serviceURL within the
-    defined scope</p>
-</div>
-
-
-                            </div>
                             <div id="TripleObject.assertAll" class="classattr">
                                 <div class="attr function">
             
@@ -336,6 +316,137 @@ Boolean.</p>
 
 <pre><code>A dictionary of objects and types
 </code></pre>
+</div>
+
+
+                            </div>
+                            <div id="TripleObject.asDict" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">asDict</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TripleObject.asDict"></a>
+    
+            <div class="docstring"><p>Returns the receiver as a Python dictionary.  The dictionary is a deep
+copy of the receiver's contents, so it can be manipulated without
+affecting the original object.</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>aDictionary
+</code></pre>
+
+<p>A dictionary mapping of attributes and their states.</p>
+</div>
+
+
+                            </div>
+                            <div id="TripleObject.inSnakeCaseJSON" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">inSnakeCaseJSON</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TripleObject.inSnakeCaseJSON"></a>
+    
+            <div class="docstring"><p>Return a JSON representation of the receiver with the attributes
+written in snake_case format.</p>
+
+<h2 id="return">Return</h2>
+
+<pre><code>string
+</code></pre>
+
+<p>A string with a JSON representation of the receiver.</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>NotImplementedError
+</code></pre>
+
+<p>If the instance doesn't implement the <code><a href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary()</a></code>
+method.  Only classes used for building triple API objects
+require that method implementation.</p>
+</div>
+
+
+                            </div>
+                            <div id="TripleObject.asSnakeCaseDictionary" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">asSnakeCaseDictionary</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#TripleObject.asSnakeCaseDictionary"></a>
+    
+            <div class="docstring"><p>Return a dict representation of the receiver with the attributes
+written in snake_case format.</p>
+
+<h2 id="return">Return</h2>
+
+<pre><code>dict
+</code></pre>
+
+<p>A dictionary representation of the receiver.</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>NotImplementedError
+</code></pre>
+
+<p>If the instance doesn't implement the <code><a href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary()</a></code>
+method.  Only classes used for building triple API objects
+require that method implementation.</p>
+
+<p>Typical implementation (from a TripleObject specialization that
+represents an address-like object):</p>
+
+<pre><code>result = {
+    'complete_address': self.complete,
+    'country_code': self.countryCode,
+    'latitude': self.latitude,
+    'line_1': self.line1,
+    'line_2': self.line2,
+    'locality': self.locality,
+    'longitude': self.longitude,
+    'postal_code': self.postalCode,
+    'province': self.province,
+}
+
+return result
+</code></pre>
+</div>
+
+
+                            </div>
+                            <div id="TripleObject.initialize" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">initialize</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">serviceURL</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">servicePath</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">auth</span><span class="p">:</span> <span class="nb">object</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#TripleObject.initialize"></a>
+    
+            <div class="docstring"><p>Initialize the class to use an appropriate service URL or authentication
+object.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<p>serviceURL
+    A string with an https locator pointing at the service top level URL
+auth
+    An instance of Auth configured to use the the serviceURL within the
+    defined scope</p>
 </div>
 
 
@@ -521,88 +632,6 @@ use case.
 </code></pre>
 
 <p>A list of TripleObjects</p>
-</div>
-
-
-                            </div>
-                            <div id="TripleObject.inSnakeCaseJSON" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">inSnakeCaseJSON</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#TripleObject.inSnakeCaseJSON"></a>
-    
-            <div class="docstring"><p>Return a JSON representation of the receiver with the attributes
-written in snake_case format.</p>
-
-<h2 id="return">Return</h2>
-
-<pre><code>string
-</code></pre>
-
-<p>A string with a JSON representation of the receiver.</p>
-
-<h2 id="raises">Raises</h2>
-
-<pre><code>NotImplementedError
-</code></pre>
-
-<p>If the instance doesn't implement the <code><a href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary()</a></code>
-method.  Only classes used for building triple API objects
-require that method implementation.</p>
-</div>
-
-
-                            </div>
-                            <div id="TripleObject.asSnakeCaseDictionary" class="classattr">
-                                <div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">asSnakeCaseDictionary</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
-
-        
-    </div>
-    <a class="headerlink" href="#TripleObject.asSnakeCaseDictionary"></a>
-    
-            <div class="docstring"><p>Return a dict representation of the receiver with the attributes
-written in snake_case format.</p>
-
-<h2 id="return">Return</h2>
-
-<pre><code>dict
-</code></pre>
-
-<p>A dictionary representation of the receiver.</p>
-
-<h2 id="raises">Raises</h2>
-
-<pre><code>NotImplementedError
-</code></pre>
-
-<p>If the instance doesn't implement the <code><a href="#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary()</a></code>
-method.  Only classes used for building triple API objects
-require that method implementation.</p>
-
-<p>Typical implementation (from a TripleObject specialization that
-represents an address-like object):</p>
-
-<pre><code>result = {
-    'complete_address': self.complete,
-    'country_code': self.countryCode,
-    'latitude': self.latitude,
-    'line_1': self.line1,
-    'line_2': self.line2,
-    'locality': self.locality,
-    'longitude': self.longitude,
-    'postal_code': self.postalCode,
-    'province': self.province,
-}
-
-return result
-</code></pre>
 </div>
 
 

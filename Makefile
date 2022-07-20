@@ -116,10 +116,12 @@ test: ALWAYS
 	pytest -v ./tests/test_cardprog.py
 	pytest -v ./tests/test_display.py
 	pytest -v ./tests/test_merchant.py
+	pytest -v ./tests/test_merchantcodes.py
 	pytest -v ./tests/test_offer.py
 	pytest -v ./tests/test_publisher.py
 	pytest -v ./tests/test_reward.py
 	pytest -v ./tests/test_tools.py
+	pytest -v ./tests/test_transaction.py
 	pip uninstall -y $(PACKAGE)==$(VERSION) || true
 	rm -Rfv $$(find $(PACKAGE)/ | awk '/__pycache__$$/')
 	rm -Rfv $$(find tests | awk '/__pycache__$$/')
