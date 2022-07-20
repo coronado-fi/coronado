@@ -120,25 +120,6 @@ class TripleObject(object):
         self.assertAll()
 
 
-    @classmethod
-    def initialize(klass, serviceURL : str, servicePath : str, auth : object):
-        """
-        Initialize the class to use an appropriate service URL or authentication
-        object.
-
-        Arguments
-        ---------
-        serviceURL
-            A string with an https locator pointing at the service top level URL
-        auth
-            An instance of Auth configured to use the the serviceURL within the
-            defined scope
-        """
-        klass._auth = auth
-        klass._servicePath = servicePath
-        klass._serviceURL = serviceURL
-
-
     def assertAll(self) -> bool:
         """
         Asserts that all the attributes listed in the `requiredAttributes` list
@@ -178,6 +159,127 @@ class TripleObject(object):
         result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
 
         return result
+
+
+    def asDict(self) -> dict:
+        """
+        Returns the receiver as a Python dictionary.  The dictionary is a deep
+        copy of the receiver's contents, so it can be manipulated without
+        affecting the original object.
+
+        Returns
+        -------
+            aDictionary
+        A dictionary mapping of attributes and their states.
+        """
+        result = deepcopy(self.__dict__)
+        # TODO:  If this method proves to be popular/useful, implement recursion
+        #        for embedded TripleObject instances.
+
+        return result
+
+
+    def inSnakeCaseJSON(self) -> str:
+        """
+        Return a JSON representation of the receiver with the attributes
+        written in snake_case format.
+
+        Return
+        ------
+            string
+        A string with a JSON representation of the receiver.
+
+        Raises
+        ------
+            NotImplementedError
+        If the instance doesn't implement the `asSnakeCaseDictionary()`
+        method.  Only classes used for building triple API objects
+        require that method implementation.
+        """
+        return json.dumps(self.asSnakeCaseDictionary())
+
+
+    def asSnakeCaseDictionary(self) -> dict:
+        """
+        Return a dict representation of the receiver with the attributes
+        written in snake_case format.
+
+        Return
+        ------
+            dict
+        A dictionary representation of the receiver.
+
+        Raises
+        ------
+            NotImplementedError
+        If the instance doesn't implement the `asSnakeCaseDictionary()`
+        method.  Only classes used for building triple API objects
+        require that method implementation.
+
+        Typical implementation (from a TripleObject specialization that
+        represents an address-like object):
+
+        ```
+        result = {
+            'complete_address': self.complete,
+            'country_code': self.countryCode,
+            'latitude': self.latitude,
+            'line_1': self.line1,
+            'line_2': self.line2,
+            'locality': self.locality,
+            'longitude': self.longitude,
+            'postal_code': self.postalCode,
+            'province': self.province,
+        }
+
+        return result
+        ```
+        """
+        raise NotImplementedError('subclasses must implement this if required')
+
+
+    def __str__(self) -> str:
+        """
+        Creates a human-readable string representation of the receiver.
+
+        Returns
+        -------
+            str
+        A human-readable string representation of the receiver.
+        """
+        result = ''
+        keys = sorted(self.__dict__.keys())
+        longest = max((len(k) for k in keys))
+        formatTrunc = '%%-%ds: %%s... <snip>' % longest
+        formatFull = '%%-%ds: %%s' % longest
+
+        for k in keys:
+            v = self.__dict__[k]
+            if isinstance(v, str) and len(v) > 60:
+                result = '\n'.join([ result, formatTrunc % (k, v[:60]), ])
+            else:
+                result = '\n'.join([ result, formatFull % (k, v), ])
+
+        return result
+
+
+    @classmethod
+    def initialize(klass, serviceURL : str, servicePath : str, auth : object):
+        """
+        Initialize the class to use an appropriate service URL or authentication
+        object.
+
+        Arguments
+        ---------
+        serviceURL
+            A string with an https locator pointing at the service top level URL
+        auth
+            An instance of Auth configured to use the the serviceURL within the
+            defined scope
+        """
+        klass._auth = auth
+        klass._servicePath = servicePath
+        klass._serviceURL = serviceURL
 
 
     @classmethod
@@ -355,90 +457,6 @@ class TripleObject(object):
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
 
         return response
-
-
-    def inSnakeCaseJSON(self) -> str:
-        """
-        Return a JSON representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            string
-        A string with a JSON representation of the receiver.
-
-        Raises
-        ------
-            NotImplementedError
-        If the instance doesn't implement the `asSnakeCaseDictionary()`
-        method.  Only classes used for building triple API objects
-        require that method implementation.
-        """
-        return json.dumps(self.asSnakeCaseDictionary())
-
-
-    def asSnakeCaseDictionary(self) -> dict:
-        """
-        Return a dict representation of the receiver with the attributes
-        written in snake_case format.
-
-        Return
-        ------
-            dict
-        A dictionary representation of the receiver.
-
-        Raises
-        ------
-            NotImplementedError
-        If the instance doesn't implement the `asSnakeCaseDictionary()`
-        method.  Only classes used for building triple API objects
-        require that method implementation.
-
-        Typical implementation (from a TripleObject specialization that
-        represents an address-like object):
-
-        ```
-        result = {
-            'complete_address': self.complete,
-            'country_code': self.countryCode,
-            'latitude': self.latitude,
-            'line_1': self.line1,
-            'line_2': self.line2,
-            'locality': self.locality,
-            'longitude': self.longitude,
-            'postal_code': self.postalCode,
-            'province': self.province,
-        }
-
-        return result
-        ```
-        """
-        raise NotImplementedError('subclasses must implement this if required')
-
-
-    def __str__(self) -> str:
-        """
-        Creates a human-readable string representation of the receiver.
-
-        Returns
-        -------
-            str
-        A human-readable string representation of the receiver.
-        """
-        result = ''
-        keys = sorted(self.__dict__.keys())
-        longest = max((len(k) for k in keys))
-        formatTrunc = '%%-%ds: %%s... <snip>' % longest
-        formatFull = '%%-%ds: %%s' % longest
-
-        for k in keys:
-            v = self.__dict__[k]
-            if isinstance(v, str) and len(v) > 60:
-                result = '\n'.join([ result, formatTrunc % (k, v[:60]), ])
-            else:
-                result = '\n'.join([ result, formatFull % (k, v), ])
-
-        return result
 
 
 class CoronadoAPIError(Exception):
