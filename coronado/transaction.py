@@ -83,5 +83,3 @@ class Transaction(TripleObject):
     def __init__(self, obj = BASE_TRANSACTION_DICT):
         TripleObject.__init__(self, obj)
 
-
-

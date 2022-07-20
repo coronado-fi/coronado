@@ -5,12 +5,13 @@
 from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
-from coronado.transaction import ProcessorMIDType
+from coronado.address import Address
 from coronado.transaction import MatchingStatusType
+from coronado.transaction import MatchingStatusType
+from coronado.transaction import ProcessorMIDType
 from coronado.transaction import SERVICE_PATH
 from coronado.transaction import Transaction
 from coronado.transaction import TransactionType
-from coronado.transaction import MatchingStatusType
 
 import uuid
 
@@ -25,8 +26,8 @@ KNOWN_ACCT_EXT_ID = 'pnc-card-69-3149b4780d6f4c2fa21fb45d2637efbb'
 KNOWN_ACCT_ID = '1270'
 KNOWN_CARD_PROG_EXT_ID = 'prog-66'
 KNOWN_PUB_EXTERNAL_ID = '0d7c608a3df5'
-KNOWN_CARD_ACCT_EXT_ID = 'NANANANA'
-KNOWN_MCC = 'fjfjfj'
+KNOWN_CARD_ACCT_EXT_ID = 'pnc-card-69-0b10aa350dec4201be3107f7aca060f2'
+KNOWN_MCC = '0780'
 
 
 # *** globals ***
@@ -70,31 +71,33 @@ def test_Transaction():
     assert t.objID
 
 
-@pytest.mark.skip("Bugs in underlying implementation")
 def test_Transaction_create():
     spec = {
-        'publisher_external_id': KNOWN_PUB_EXTERNAL_ID,
-        'card_program_external_id': KNOWN_CARD_PROG_EXT_ID,
+        'amount': 41.95,
         'card_account_external_id': KNOWN_CARD_ACCT_EXT_ID,
-        'external_id': 'TX-%s' % uuid.uuid4().hex,
         'card_bin': '425907',
         'card_last_4': '3301',
+        'card_program_external_id': KNOWN_CARD_PROG_EXT_ID,
+        'currency_code': 'USD',
+        'debit': True,
+        'description': 'Miscellaneous crap',
+        'external_id': 'tx-%s' % uuid.uuid4().hex,
         'local_date': '2022-07-19',
         'local_time': '09:26:51',
-        'debit': True,
-        'acmount': 41.95,
-        'currency_code': 'USD',
-        'transaction_type': 'PURCHASE',
-        'description': 'Miscellaneous crap',
         'merchant_category_code': {
             'code': KNOWN_MCC,
         },
+        'merchant_address': {
+            'complete_address': Address().complete,
+        },
+        'publisher_external_id': KNOWN_PUB_EXTERNAL_ID,
+        'transaction_type': 'PURCHASE',
         'processor_mid': uuid.uuid4().hex,
         'processor_mid_type': 'VISA_VSID',
     }
 
-    account = Transaction.create(spec)
-    assert account
+    transaction = Transaction.create(spec)
+    assert transaction
 
     with pytest.raises(CoronadoMalformedObjectError):
         Transaction.create(None)
@@ -107,4 +110,6 @@ def test_Transaction_create():
     with pytest.raises(CoronadoUnprocessableObjectError):
         Transaction.create(spec)
 
+
+test_Transaction_create()
 
