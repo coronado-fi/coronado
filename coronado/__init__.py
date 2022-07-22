@@ -21,7 +21,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.9'
+__VERSION__ = '1.1.11'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -277,8 +277,8 @@ class TripleObject(object):
             An instance of Auth configured to use the the serviceURL within the
             defined scope
         """
+        klass._servicePath = servicePath.strip('/')
         klass._auth = auth
-        klass._servicePath = servicePath
         klass._serviceURL = serviceURL
 
 
@@ -448,6 +448,16 @@ class TripleObject(object):
         -------
             list
         A list of TripleObjects
+
+        Raises
+        ------
+            CoronadoForbiddenError
+        When trying to list items outside of the correct security scope.  See 
+        `coronado.auth.Scope` for details.
+
+            CoronadoUnexpectedError
+        When the service or the gateway aren't available, or the service path
+        isn't available in the underlying service.
         """
         params = None
         if paramMap:
@@ -455,6 +465,11 @@ class TripleObject(object):
 
         endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
+
+        if response.status_code == 403 or response.status_code == 401:
+            raise CoronadoForbiddenError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoUnexpectedError(response.text)
 
         return response
 
@@ -483,6 +498,13 @@ class CoronadoMalformedObjectError(Exception):
     a string describing the cause of the exception.
     """
     pass
+
+
+class CoronadoForbiddenError(Exception):
+    """
+    Raised when requesting access to a triple API resource without credentials
+    or with credentials with insufficient privileges.
+    """
 
 
 class CoronadoNotFoundError(Exception):

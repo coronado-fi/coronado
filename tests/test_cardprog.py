@@ -5,7 +5,7 @@ from coronado import CoronadoDuplicatesDisallowedError
 from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.auth import Scope
 from coronado.cardprog import CardProgram
 from coronado.cardprog import SERVICE_PATH
 
@@ -28,7 +28,7 @@ KNOWN_PUB_EXTERNAL_ID = '0d7c608a3df5'
 # *** globals ***
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.PUBLISHERS)
 
 
 CardProgram.initialize(_config['serviceURL'], SERVICE_PATH, _auth)

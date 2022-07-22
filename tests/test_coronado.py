@@ -32,7 +32,7 @@ from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.address import Address
 from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.auth import Scope
 from coronado.baseobjects import BASE_ADDRESS_DICT
 from coronado.baseobjects import BASE_ADDRESS_JSON
 from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
@@ -59,7 +59,7 @@ import coronado.auth as auth
 # *** globals ***
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.PUBLISHERS)
 
 
 # --- tests ---
@@ -132,11 +132,24 @@ def test_TripleObject_classVariables():
 
 
 def test_TripleObject_initialize():
-    TripleObject.initialize(_config['serviceURL'], 'BOGUS', _auth)
+    control = 'BOGUS'
+    TripleObject.initialize(_config['serviceURL'], control, _auth)
 
     assert TripleObject._serviceURL == _config['serviceURL']
-    assert TripleObject._servicePath == 'BOGUS'
+    assert TripleObject._servicePath == control
     assert 'python-coronado' in TripleObject.headers['User-Agent']
+
+    badPath = '/%s' % control 
+    TripleObject.initialize(_config['serviceURL'], badPath, _auth)
+    assert TripleObject._servicePath == control
+
+    badPath = '%s/' % control 
+    TripleObject.initialize(_config['serviceURL'], badPath, _auth)
+    assert TripleObject._servicePath == control
+
+    badPath = '/%s/' % control 
+    TripleObject.initialize(_config['serviceURL'], badPath, _auth)
+    assert TripleObject._servicePath == control
 
 
 def test_TripleObject_headers():

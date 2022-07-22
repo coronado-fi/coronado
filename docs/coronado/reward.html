@@ -30,8 +30,57 @@
 
 
 
+        <h2>API Documentation</h2>
+            <ul class="memberlist">
+            <li>
+                    <a class="variable" href="#SERVICE_PATH">SERVICE_PATH</a>
+            </li>
+            <li>
+                    <a class="class" href="#Reward">Reward</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#Reward.__init__">Reward</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Reward.requiredAttributes">requiredAttributes</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Reward.list">list</a>
+                        </li>
+                </ul>
 
-    <footer>Coronado - the triple API wrapper version 1.1.9</footer>
+            </li>
+            <li>
+                    <a class="class" href="#RewardStatus">RewardStatus</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="variable" href="#RewardStatus.DENIED_BY_MERCHANT">DENIED_BY_MERCHANT</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.DISTRIBUTED_TO_CARDHOLDER">DISTRIBUTED_TO_CARDHOLDER</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.DISTRIBUTED_TO_PUBLISHER">DISTRIBUTED_TO_PUBLISHER</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.PENDING_MERCHANT_APPROVAL">PENDING_MERCHANT_APPROVAL</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.PENDING_MERCHANT_FUNDING">PENDING_MERCHANT_FUNDING</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.PENDING_TRANSFER_TO_PUBLISHER">PENDING_TRANSFER_TO_PUBLISHER</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#RewardStatus.REJECTED">REJECTED</a>
+                        </li>
+                </ul>
+
+            </li>
+    </ul>
+
+
+    <footer>Coronado - the triple API wrapper version 1.1.11</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -50,6 +99,276 @@
                 
                 
             </section>
+                <section id="SERVICE_PATH">
+                    <div class="attr variable">
+            <span class="name">SERVICE_PATH</span><span class="default_value"> = &#39;/partner/rewards&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#SERVICE_PATH"></a>
+    
+            <div class="docstring"><p>The default service path associated with Reward operations.</p>
+
+<p>Usage:</p>
+
+<pre><code><a href="#Reward.initialize">Reward.initialize</a>(serviceURL, SERVICE_PATH, auth)
+</code></pre>
+
+<p>Users are welcome to initialize the class' service path from regular strings.
+This constant is defined for convenience.</p>
+</div>
+
+
+                </section>
+                <section id="Reward">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Reward</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#Reward"></a>
+    
+            <div class="docstring"><p>Reward instances represent exchanges between buyers and sellers that 
+may have a linked offer.</p>
+</div>
+
+
+                            <div id="Reward.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">Reward</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;card_bin&#39;</span><span class="p">:</span> <span class="s1">&#39;444789&#39;</span><span class="p">,</span> <span class="s1">&#39;card_last_4&#39;</span><span class="p">:</span> <span class="s1">&#39;stri&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_complete_address&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST STE 100</span><span class="se">\n</span><span class="s1">PITTSBURGH, PA 15206&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_name&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_external_id&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_headline&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;reward_amount&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;reward_currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;reward_details&#39;</span><span class="p">:</span> <span class="s1">&#39;Lorem ipsum dolot sit hamet with a cherry.&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;REJECTED&#39;</span><span class="p">,</span> <span class="s1">&#39;transaction_amount&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;transaction_currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;transaction_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2022-05-31T15:34:22-0400&#39;</span><span class="p">,</span> <span class="s1">&#39;transaction_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">}</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Reward.__init__"></a>
+    
+            <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
+valid, existing object ID if it's not a collection or JSON.  The
+constructor only returns a valid object if a subclass is instantiated;
+TripleObject is an abstract class, and passing it an object ID will
+raise an error.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>obj
+</code></pre>
+
+<p>An object used for building a valid triple object.  The object can
+be one of:</p>
+
+<ul>
+<li>A dictionary - a dictionary with instantiation values as described
+in the API documentation</li>
+<li>A JSON string</li>
+<li>A triple objectID</li>
+</ul>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>If obj represents an objectID and the ID isn't
+associated with a valid object</p>
+
+<pre><code>CoronadoMalformedError
+</code></pre>
+
+<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+</div>
+
+
+                            </div>
+                            <div id="Reward.requiredAttributes" class="classattr">
+                                <div class="attr variable">
+            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;merchantName&#39;, &#39;offerID&#39;, &#39;status&#39;, &#39;transactionAmount&#39;, &#39;transactionCurrencyCode&#39;, &#39;transactionDate&#39;, &#39;transactionID&#39;]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Reward.requiredAttributes"></a>
+    
+            <div class="docstring"><p>A list or tuple of attribute names that are required to be present in the
+JSON or <code>dict</code> object during object construction.  See the <code><a href="#Reward.assertAll">assertAll</a></code>()
+method.</p>
+
+<p><strong>NB:</strong> The attribute names _must_ be in camelCase; these refer to the
+object's internal attributes, not the snake_case initialization payload
+in JSON or a <code>dict</code>.</p>
+</div>
+
+
+                            </div>
+                            <div id="Reward.list" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span>, </span><span class="param"><span class="n">paramMap</span><span class="o">=</span><span class="kc">None</span>, </span><span class="param"><span class="o">**</span><span class="n">args</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Reward.list"></a>
+    
+            <div class="docstring"><p>List all rewards that match any of the criteria set by the 
+arguments to this method.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>status
+</code></pre>
+
+<p>A <code><a href="#RewardStatus">coronado.reward.RewardStatus</a></code> instance.  May be blank for a list of 
+everything.</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>list
+</code></pre>
+
+<p>A list of Reward objects; can be <code>None</code>.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="../coronado.html#TripleObject">coronado.TripleObject</a></dt>
+                                <dd id="Reward.assertAll" class="function"><a href="../coronado.html#TripleObject.assertAll">assertAll</a></dd>
+                <dd id="Reward.listAttributes" class="function"><a href="../coronado.html#TripleObject.listAttributes">listAttributes</a></dd>
+                <dd id="Reward.asDict" class="function"><a href="../coronado.html#TripleObject.asDict">asDict</a></dd>
+                <dd id="Reward.inSnakeCaseJSON" class="function"><a href="../coronado.html#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a></dd>
+                <dd id="Reward.asSnakeCaseDictionary" class="function"><a href="../coronado.html#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a></dd>
+                <dd id="Reward.initialize" class="function"><a href="../coronado.html#TripleObject.initialize">initialize</a></dd>
+                <dd id="Reward.headers" class="variable"><a href="../coronado.html#TripleObject.headers">headers</a></dd>
+                <dd id="Reward.create" class="function"><a href="../coronado.html#TripleObject.create">create</a></dd>
+                <dd id="Reward.byID" class="function"><a href="../coronado.html#TripleObject.byID">byID</a></dd>
+                <dd id="Reward.updateWith" class="function"><a href="../coronado.html#TripleObject.updateWith">updateWith</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="RewardStatus">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">RewardStatus</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus"></a>
+    
+            <div class="docstring"><p>An enumeration.</p>
+</div>
+
+
+                            <div id="RewardStatus.DENIED_BY_MERCHANT" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DENIED_BY_MERCHANT</span><span class="default_value"> = &lt;<a href="#RewardStatus.DENIED_BY_MERCHANT">RewardStatus.DENIED_BY_MERCHANT</a>: &#39;DENIED_BY_MERCHANT&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.DENIED_BY_MERCHANT"></a>
+    
+            <div class="docstring"><p>The merchant or content provider denied the reward.  The `Reward.rewardDetails
+field will include information about the denial.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.DISTRIBUTED_TO_CARDHOLDER" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DISTRIBUTED_TO_CARDHOLDER</span><span class="default_value"> = &lt;<a href="#RewardStatus.DISTRIBUTED_TO_CARDHOLDER">RewardStatus.DISTRIBUTED_TO_CARDHOLDER</a>: &#39;DISTRIBUTED_TO_CARDHOLDER&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.DISTRIBUTED_TO_CARDHOLDER"></a>
+    
+            <div class="docstring"><p>The publisher has reported that the reward was given to the cardholder.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.DISTRIBUTED_TO_PUBLISHER" class="classattr">
+                                <div class="attr variable">
+            <span class="name">DISTRIBUTED_TO_PUBLISHER</span><span class="default_value"> = &lt;<a href="#RewardStatus.DISTRIBUTED_TO_PUBLISHER">RewardStatus.DISTRIBUTED_TO_PUBLISHER</a>: &#39;DISTRIBUTED_TO_PUBLISHER&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.DISTRIBUTED_TO_PUBLISHER"></a>
+    
+            <div class="docstring"><p>Reward funds have been sent to the publisher.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.PENDING_MERCHANT_APPROVAL" class="classattr">
+                                <div class="attr variable">
+            <span class="name">PENDING_MERCHANT_APPROVAL</span><span class="default_value"> = &lt;<a href="#RewardStatus.PENDING_MERCHANT_APPROVAL">RewardStatus.PENDING_MERCHANT_APPROVAL</a>: &#39;PENDING_MERCHANT_APPROVAL&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.PENDING_MERCHANT_APPROVAL"></a>
+    
+            <div class="docstring"><p>The transaction awaits for the merchant or content provider to approve or
+deny the reward.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.PENDING_MERCHANT_FUNDING" class="classattr">
+                                <div class="attr variable">
+            <span class="name">PENDING_MERCHANT_FUNDING</span><span class="default_value"> = &lt;<a href="#RewardStatus.PENDING_MERCHANT_FUNDING">RewardStatus.PENDING_MERCHANT_FUNDING</a>: &#39;PENDING_MERCHANT_FUNDING&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.PENDING_MERCHANT_FUNDING"></a>
+    
+            <div class="docstring"><p>The reward was approved and awaits funding by the merchant.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.PENDING_TRANSFER_TO_PUBLISHER" class="classattr">
+                                <div class="attr variable">
+            <span class="name">PENDING_TRANSFER_TO_PUBLISHER</span><span class="default_value"> = &lt;<a href="#RewardStatus.PENDING_TRANSFER_TO_PUBLISHER">RewardStatus.PENDING_TRANSFER_TO_PUBLISHER</a>: &#39;PENDING_TRANSFER_TO_PUBLISHER&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.PENDING_TRANSFER_TO_PUBLISHER"></a>
+    
+            <div class="docstring"><p>The reward is funded and funds await distribution to the publisher.</p>
+</div>
+
+
+                            </div>
+                            <div id="RewardStatus.REJECTED" class="classattr">
+                                <div class="attr variable">
+            <span class="name">REJECTED</span><span class="default_value"> = &lt;<a href="#RewardStatus.REJECTED">RewardStatus.REJECTED</a>: &#39;REJECTED&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#RewardStatus.REJECTED"></a>
+    
+            <div class="docstring"><p>The transaction did not meet the offer terms.</p>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>enum.Enum</dt>
+                                <dd id="RewardStatus.name" class="variable">name</dd>
+                <dd id="RewardStatus.value" class="variable">value</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
     </main>
 <script>
     function escapeHTML(html) {

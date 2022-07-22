@@ -115,6 +115,12 @@
 
             </li>
             <li>
+                    <a class="class" href="#CoronadoForbiddenError">CoronadoForbiddenError</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#CoronadoNotFoundError">CoronadoNotFoundError</a>
                             <ul class="memberlist">
                 </ul>
@@ -135,7 +141,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.9</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.11</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -632,6 +638,20 @@ use case.
 </code></pre>
 
 <p>A list of TripleObjects</p>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoForbiddenError
+</code></pre>
+
+<p>When trying to list items outside of the correct security scope.  See 
+<code><a href="coronado/auth.html#Scope">coronado.auth.Scope</a></code> for details.</p>
+
+<pre><code>CoronadoUnexpectedError
+</code></pre>
+
+<p>When the service or the gateway aren't available, or the service path
+isn't available in the underlying service.</p>
 </div>
 
 
@@ -727,6 +747,36 @@ a string describing the cause of the exception.</p>
             <div><dt>builtins.BaseException</dt>
                                 <dd id="CoronadoMalformedObjectError.with_traceback" class="function">with_traceback</dd>
                 <dd id="CoronadoMalformedObjectError.args" class="variable">args</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="CoronadoForbiddenError">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">CoronadoForbiddenError</span><wbr>(<span class="base">builtins.Exception</span>):
+
+        
+    </div>
+    <a class="headerlink" href="#CoronadoForbiddenError"></a>
+    
+            <div class="docstring"><p>Raised when requesting access to a triple API resource without credentials
+or with credentials with insufficient privileges.</p>
+</div>
+
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>builtins.Exception</dt>
+                                <dd id="CoronadoForbiddenError.__init__" class="function">Exception</dd>
+
+            </div>
+            <div><dt>builtins.BaseException</dt>
+                                <dd id="CoronadoForbiddenError.with_traceback" class="function">with_traceback</dd>
+                <dd id="CoronadoForbiddenError.args" class="variable">args</dd>
 
             </div>
                                 </dl>

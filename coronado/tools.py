@@ -55,6 +55,8 @@ def tripleKeysToCamelCase(d: dict):
         v = camelCaseOf(k)
         if 'api' in v:
             v = v.replace('api', 'API')
+        if '_bin' in v:
+            v = v.replace('_bin', 'BIN')
         if v == 'id':
             v = 'objID'
         elif 'Id' in v and 'Ident' not in v and 'Idio' not in v:

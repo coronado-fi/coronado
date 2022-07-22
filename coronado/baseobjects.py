@@ -353,7 +353,6 @@ BASE_OFFER_SEARCH_RESULT_JSON = """{
     "mode": "ONLINE",
     "type": "CARD_LINKED",
 
-
     "external_id": "string",
     "maximum_reward_per_transaction": 0,
     "merchant_id": "triple-abc-123",
@@ -420,20 +419,21 @@ BASE_PUBLISHER_DICT = json.loads(BASE_PUBLISHER_JSON)
 
 
 BASE_REWARD_JSON = """{
-    "transaction_id": "triple-abc-123",
-    "offer_id": "triple-abc-123",
-    "offer_external_id": "string",
-    "transaction_date": "2022-05-31T15:34:22-0400",
     "card_bin": "444789",
     "card_last_4": "stri",
-    "transaction_amount": 12,
-    "transaction_currency_code": "USD",
+    "merchant_complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
+    "merchant_name": "string",
+    "offer_external_id": "string",
+    "offer_headline": "string",
+    "offer_id": "triple-abc-123",
     "reward_amount": 0,
     "reward_currency_code": "USD",
-    "offer_headline": "string",
-    "merchant_name": "string",
-    "merchant_complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-    "status": "REJECTED"
+    "reward_details": "Lorem ipsum dolot sit hamet with a cherry.",
+    "status": "REJECTED",
+    "transaction_amount": 12,
+    "transaction_currency_code": "USD",
+    "transaction_date": "2022-05-31T15:34:22-0400",
+    "transaction_id": "triple-abc-123"
 }"""
 BASE_REWARD_DICT = json.loads(BASE_REWARD_JSON)
 

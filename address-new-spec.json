@@ -1,0 +1,10 @@
+{
+-  "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206", # not required
+*  "street_address": "7370 BAKER ST", # multi-line
+  "locality": "PITTSBURGH",
+  "country_subdivision_code": "PA", # ISO-3166-2; 2 or more-letters code
+*  "postal_code": "15206",
+*   "country_code": "US",
+  "latitude": 40.440624,
+  "longitude": -79.995888
+}

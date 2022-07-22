@@ -27,7 +27,7 @@ from coronado.offer import OfferType
 
 # TODO: Pending Offer implementation
 # _config = auth.loadConfig()
-# _auth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scopes.PORTFOLIOS)
+# _auth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.PORTFOLIOS)
 # 
 # Offer.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 

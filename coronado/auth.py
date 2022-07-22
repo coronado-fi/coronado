@@ -66,7 +66,7 @@ def emptyConfig():
 
 # +++ classes +++
 
-class Scopes(TripleEnum):
+class Scope(TripleEnum):
     """
     Client credentials OAuth2 flow scopes.
 
@@ -93,7 +93,7 @@ class Scopes(TripleEnum):
 
 class Auth(object):
     def _buildScopeStrFrom(self, scopes):
-        if isinstance(scopes, Scopes):
+        if isinstance(scopes, Scope):
             return scopes.value
         elif isinstance(scopes, list):
             return ' '.join([ s.value for s in scopes ])
@@ -129,15 +129,15 @@ class Auth(object):
     def _resolveScopeFrom(self, scope):
         if not scope:
             return
-        if isinstance(scope, Scopes):
+        if isinstance(scope, Scope):
             return scope
         elif isinstance(scope, list):
             for item in scope:
-                if not isinstance(item, Scopes):
-                    raise CoronadoAuthInvalidScopes(str(scope))
+                if not isinstance(item, Scope):
+                    raise CoronadoAuthInvalidScope(str(scope))
             return scope
         else:
-            raise CoronadoAuthInvalidScopes(str(scope))
+            raise CoronadoAuthInvalidScope(str(scope))
 
     # --------------------
 
@@ -157,12 +157,12 @@ class Auth(object):
             clientSecret : str
         The unique client ID associated secret
 
-            scope : coronado.auth.Scopes
+            scope : coronado.auth.Scope
         The client credentials OAuth2 scope for which access is granted. `scope`
         is one of:
 
-        - A single `Scopes` value
-        - A list of two or more `Scopes` values
+        - A single `Scope` value
+        - A list of two or more `Scope` values
         - `None`
 
         If `None`, the receiver will grant access to all available scopes.
@@ -278,7 +278,7 @@ class Auth(object):
         return tripleKeysToCamelCase(claimSet)
 
 
-class CoronadoAuthInvalidScopes(Exception):
+class CoronadoAuthInvalidScope(Exception):
     """
     Raised during `Auth` token instantiation if an invalid scopes list is used.
     """
