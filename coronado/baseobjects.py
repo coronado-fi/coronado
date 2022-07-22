@@ -353,7 +353,6 @@ BASE_OFFER_SEARCH_RESULT_JSON = """{
     "mode": "ONLINE",
     "type": "CARD_LINKED",
 
-
     "external_id": "string",
     "maximum_reward_per_transaction": 0,
     "merchant_id": "triple-abc-123",

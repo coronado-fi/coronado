@@ -30,14 +30,14 @@ def test_RewardType():
     None
 
 
-@pytest.mark.skip('The service throws 500-series errors on some calls')
+# @pytest.mark.skip('The service throws 500-series errors on some calls')
 def test_Reward_list():
-#     rewards = Reward.list()
-#     assert isinstance(rewards, list)
-#     if len(rewards):
-#         reward = rewards[0]
-#         assert isinstance(reward, TripleObject)
-#         assert reward.objID
+    rewards = Reward.list()
+    assert isinstance(rewards, list)
+    if len(rewards):
+        reward = rewards[0]
+        assert isinstance(reward, TripleObject)
+        assert reward.objID
 
     rewards = Reward.list(status = RewardStatus.DENIED_BY_MERCHANT)
     assert isinstance(rewards, list)
@@ -111,6 +111,6 @@ def test_Reward_outOfScope():
     Reward.list()
 
 
-# test_Reward_list()
+test_Reward_list()
 # test_Reward_outOfScope()
 
