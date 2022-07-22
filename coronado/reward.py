@@ -1,12 +1,16 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado import CoronadoAPIError
+from coronado import CoronadoUnexpectedError
+from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.baseobjects import BASE_REWARD_DICT
-from coronado import CoronadoAPIError
 
 import json
+
+import requests
 
 
 # +++ constants +++
@@ -24,6 +28,19 @@ Reward.initialize(serviceURL, SERVICE_PATH, auth)
 Users are welcome to initialize the class' service path from regular strings.
 This constant is defined for convenience.
 """
+
+
+# --- functions ---
+
+def _assembleDetailsFrom(payload):
+    result = json.loads(payload)
+
+    if isinstance(result, dict):
+        result = result['ok']
+    elif isinstance(result, list):
+        result = [ TripleObject(x) for x in result ]
+
+    return result
 
 
 # *** classes and objects ***
@@ -75,7 +92,7 @@ class Reward(TripleObject):
             args['status'] = str(args['status'])
 
         response = super().list(paramMap, **args)
-        result = [ TripleObject(obj) for obj in json.loads(response.content)['rewards'] ]
+        result = [ Reward(obj) for obj in json.loads(response.content)['rewards'] ]
 #         for t in result:
 #             t.matchingStatus = MatchingStatus(t.matchingStatus)
 #             t.merchantCategoryCode = MCC(t.merchantCategoryCode)
@@ -85,6 +102,166 @@ class Reward(TripleObject):
 
         return result
 
+
+    @classmethod
+    def _action(klass, transactionID: str, offerID: str, notes:str = None, action:str = 'approve') -> object:
+        """
+        Transition a reward status from `PENDING_MERCHANT_APPROVAL` to
+        `PENDING_MERCHANT_FUNDING`.
+
+        Arguments
+        ---------
+            transactionID
+        The transaction to which the reward applied
+
+            offerID
+        The offer associated with the reward
+
+            action
+        Whether to approve or deny the offer
+
+
+        Returns
+        -------
+            list || str
+        A free from object that may contain one of:
+        
+        - a sequence of TripleObject instances; OR
+        - one or more strings; OR
+        - a string with an informative message
+        - a Boolean value when the operation is successful
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the underlying service is unable to serve the response.  The text 
+        in the exception explains the possible reason.
+
+            CoronadoUnexpectedError
+        When this object implementation is unable to handle a server response 
+        error not covered by existing exceptions.
+
+            CoronadoUnprocessableObjectError
+        When the reward action cannot be completed.
+        """
+        if action not in ( 'approve', 'deny'):
+            raise CoronadoUnprocessableObjectError('allowed actions:  approve, deny')
+
+        spec = {
+            'transaction_id': transactionID,
+            'offer_id': offerID,
+        }
+        if notes:
+            spec['notes'] = notes
+
+        endpoint = '/'.join([ klass._serviceURL, 'partner/rewards.%s' % action ])
+        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+
+        if response.status_code == 200:
+            result = _assembleDetailsFrom(response.content)
+        elif response.status_code == 404:
+            result = None
+        elif response.status_code == 422:
+            # TODO: Decide between these two:
+            result = False
+            # raise CoronadoUnprocessableObjectError(response.text)
+        elif response.status_code >= 500:
+            raise CoronadoAPIError(response.text)
+        else:
+            raise CoronadoUnexpectedError(response.text)
+
+        return result
+
+
+    @classmethod
+    def approve(klass, transactionID: str, offerID: str) -> object:
+        """
+        Transition a reward status from `PENDING_MERCHANT_APPROVAL` to
+        `PENDING_MERCHANT_FUNDING`.
+
+        Arguments
+        ---------
+            transactionID
+        The transaction to which the reward applied
+
+            offerID
+        The offer associated with the reward
+
+            action
+        Whether to approve or deny the offer
+
+
+        Returns
+        -------
+            list || str
+        A free from object that may contain one of:
+        
+        - a sequence of TripleObject instances; OR
+        - one or more strings; OR
+        - a string with an informative message
+        - a Boolean value when the operation is successful
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the underlying service is unable to serve the response.  The text 
+        in the exception explains the possible reason.
+
+            CoronadoUnexpectedError
+        When this object implementation is unable to handle a server response 
+        error not covered by existing exceptions.
+
+            CoronadoUnprocessableObjectError
+        When the `spec` query is missing one or more atribute:value pairs.
+        """
+        return klass._action(transactionID, offerID, action = 'approve')
+        
+        
+
+    @classmethod
+    def deny(klass, transactionID: str, offerID: str, notes: str) -> object:
+        """
+        Transition a reward status from `PENDING_MERCHANT_APPROVAL` to
+        `PENDING_MERCHANT_FUNDING`.
+
+        Arguments
+        ---------
+            transactionID
+        The transaction to which the reward applied
+
+            offerID
+        The offer associated with the reward
+
+            action
+        Whether to approve or deny the offer
+
+
+        Returns
+        -------
+            list || str
+        A free from object that may contain one of:
+        
+        - a sequence of TripleObject instances; OR
+        - one or more strings; OR
+        - a string with an informative message
+        - a Boolean value when a reward is denied successfully
+
+        Raises
+        ------
+            CoronadoAPIError
+        When the underlying service is unable to serve the response.  The text 
+        in the exception explains the possible reason.
+
+            CoronadoUnexpectedError
+        When this object implementation is unable to handle a server response 
+        error not covered by existing exceptions.
+
+            CoronadoUnprocessableObjectError
+        When the `spec` query is missing one or more atribute:value pairs.
+        """
+        return klass._action(transactionID, offerID, notes, action = 'deny')
+        
+        
 
 class RewardStatus(TripleEnum):
     DENIED_BY_MERCHANT = 'DENIED_BY_MERCHANT'

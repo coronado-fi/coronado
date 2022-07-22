@@ -60,19 +60,19 @@ def test_Reward_list():
         assert isinstance(reward, TripleObject)
         assert reward.transactionID
 
-#     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)
-#     assert isinstance(rewards, list)
-#     if len(rewards):
-#         reward = rewards[0]
-#         assert isinstance(reward, TripleObject)
-#         assert reward.transactionID
+    rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)
+    assert isinstance(rewards, list)
+    if len(rewards):
+        reward = rewards[0]
+        assert isinstance(reward, TripleObject)
+        assert reward.transactionID
 
-#     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)
-#     assert isinstance(rewards, list)
-#     if len(rewards):
-#         reward = rewards[0]
-#         assert isinstance(reward, TripleObject)
-#         assert reward.transactionID
+    rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)
+    assert isinstance(rewards, list)
+    if len(rewards):
+        reward = rewards[0]
+        assert isinstance(reward, TripleObject)
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.PENDING_TRANSFER_TO_PUBLISHER)
     assert isinstance(rewards, list)
@@ -88,16 +88,12 @@ def test_Reward_list():
         assert isinstance(reward, TripleObject)
         assert reward.transactionID
 
+
+def test_Reward_approve():
+    result = Reward.approve('40', '6068')
+    assert not result
+
  
-# def test_Reward_byID():
-#     result = Reward.byID(KNOWN_TRANSACTION_ID)
-#     assert isinstance(result, Reward)
-# 
-#     assert not Reward.byID({ 'bogus': 'test'})
-#     assert not Reward.byID(None)
-#     assert not Reward.byID('bogus')
-
-
 @pytest.mark.skip('The service throws 500-series errors on some calls')
 def test_Reward_outOfScope():
     localAuth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.VIEW_OFFERS)
@@ -112,4 +108,6 @@ def test_Reward_outOfScope():
 
 # test_Reward_list()
 # test_Reward_outOfScope()
+
+test_Reward_approve()
 
