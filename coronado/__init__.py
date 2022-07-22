@@ -277,8 +277,7 @@ class TripleObject(object):
             An instance of Auth configured to use the the serviceURL within the
             defined scope
         """
-        servicePath = servicePath if servicePath[0] != '/' else servicePath[1:]
-        klass._servicePath = servicePath if servicePath[-1] != '/' else servicePath[:-1]
+        klass._servicePath = servicePath.strip('/')
         klass._auth = auth
         klass._serviceURL = serviceURL
 
