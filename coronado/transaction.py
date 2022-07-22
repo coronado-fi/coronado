@@ -3,8 +3,9 @@
 
 from coronado import TripleEnum
 from coronado import TripleObject
-from coronado.merchantcodes import MerchantCategoryCode as MCC
+from coronado.address import Address
 from coronado.baseobjects import BASE_TRANSACTION_DICT
+from coronado.merchantcodes import MerchantCategoryCode as MCC
 
 import json
 
@@ -101,6 +102,8 @@ class Transaction(TripleObject):
         for t in result:
             t.matchingStatus = MatchingStatus(t.matchingStatus)
             t.merchantCategoryCode = MCC(t.merchantCategoryCode)
+            # TODO: error!
+            # t.merchantAddress = Address(t.merchantAddress)
             # TODO:  Pending triple API implementation update
             # t.transactionType = TransactionType(t.transactionType)
 

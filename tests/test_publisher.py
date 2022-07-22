@@ -7,7 +7,7 @@ from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado.address import Address
 from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.auth import Scope
 from coronado.publisher import Publisher
 from coronado.publisher import SERVICE_PATH
 
@@ -40,7 +40,7 @@ _address = Address({
 })
 
 _config = auth.loadConfig()
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.PUBLISHERS)
 
 Publisher.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 

@@ -2,7 +2,7 @@
 
 
 from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.auth import Scope
 from coronado import TripleObject
 
 import json
@@ -74,7 +74,7 @@ def main(unitTest : bool = False) -> dict:
     API developers if running a unit test.
     """
     _config = auth.loadConfig()
-    _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PUBLISHERS)
+    _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.PUBLISHERS)
 
     HealthMonitor.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
     check = HealthMonitor.check()

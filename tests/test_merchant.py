@@ -6,7 +6,7 @@ from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.auth import Auth
-from coronado.auth import Scopes
+from coronado.auth import Scope
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.merchant import Merchant
 from coronado.merchant import MerchantCategoryCode as MCC
@@ -28,8 +28,8 @@ import coronado.auth as auth
 
 _config = auth.loadConfig()
 # TODO:  file this bug:
-# _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.VIEW_OFFERS)
-_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scopes.PORTFOLIOS)
+# _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.VIEW_OFFERS)
+_auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.PORTFOLIOS)
 
 
 Merchant.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
