@@ -170,3 +170,6 @@ def test_Transaction_byID():
     assert not Transaction.byID(None)
     assert not Transaction.byID('bogus')
 
+
+test_Transaction_list()
+

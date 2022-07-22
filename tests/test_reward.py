@@ -37,58 +37,57 @@ def test_Reward_list():
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.DENIED_BY_MERCHANT)
     assert isinstance(rewards, list)
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.DISTRIBUTED_TO_CARDHOLDER)
     assert isinstance(rewards, list)
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.DISTRIBUTED_TO_PUBLISHER)
     assert isinstance(rewards, list)
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
 #     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)
 #     assert isinstance(rewards, list)
 #     if len(rewards):
 #         reward = rewards[0]
 #         assert isinstance(reward, TripleObject)
-#         assert reward.objID
+#         assert reward.transactionID
 
 #     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)
 #     assert isinstance(rewards, list)
 #     if len(rewards):
 #         reward = rewards[0]
 #         assert isinstance(reward, TripleObject)
-#         assert reward.objID
+#         assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.PENDING_TRANSFER_TO_PUBLISHER)
     assert isinstance(rewards, list)
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.REJECTED)
     assert isinstance(rewards, list)
     if len(rewards):
         reward = rewards[0]
         assert isinstance(reward, TripleObject)
-        assert reward.objID
+        assert reward.transactionID
 
- 
  
 # def test_Reward_byID():
 #     result = Reward.byID(KNOWN_TRANSACTION_ID)
@@ -111,6 +110,6 @@ def test_Reward_outOfScope():
     Reward.list()
 
 
-test_Reward_list()
+# test_Reward_list()
 # test_Reward_outOfScope()
 

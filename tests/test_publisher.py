@@ -138,6 +138,3 @@ def test_Publisher_updateWith():
 def test_Publisher_instanceByID():
     assert Publisher(KNOWN_PUB_ID).assumedName == KNOWN_ASSUMED_NAME
 
-
-test_Publisher_create()
-
