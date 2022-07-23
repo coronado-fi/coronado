@@ -106,45 +106,6 @@ class Reward(TripleObject):
 
     @classmethod
     def _action(klass, transactionID: str, offerID: str, notes:str = None, action:str = 'approve') -> object:
-        """
-        Transition a reward status from `PENDING_MERCHANT_APPROVAL` to
-        `PENDING_MERCHANT_FUNDING`.
-
-        Arguments
-        ---------
-            transactionID
-        The transaction to which the reward applied
-
-            offerID
-        The offer associated with the reward
-
-            action
-        Whether to approve or deny the offer
-
-
-        Returns
-        -------
-            list || str
-        A free from object that may contain one of:
-        
-        - a sequence of TripleObject instances; OR
-        - one or more strings; OR
-        - a string with an informative message
-        - a Boolean value when the operation is successful
-
-        Raises
-        ------
-            CoronadoAPIError
-        When the underlying service is unable to serve the response.  The text 
-        in the exception explains the possible reason.
-
-            CoronadoUnexpectedError
-        When this object implementation is unable to handle a server response 
-        error not covered by existing exceptions.
-
-            CoronadoUnprocessableObjectError
-        When the reward action cannot be completed.
-        """
         if action not in ( 'approve', 'deny'):
             raise CoronadoUnprocessableObjectError('allowed actions:  approve, deny')
 
@@ -190,7 +151,7 @@ class Reward(TripleObject):
 
         Returns
         -------
-            list || str
+            Boolean || list || str
         A free from object that may contain one of:
         
         - a sequence of TripleObject instances; OR
@@ -235,7 +196,7 @@ class Reward(TripleObject):
 
         Returns
         -------
-            list || str
+            Boolean || list || str
         A free from object that may contain one of:
         
         - a sequence of TripleObject instances; OR
