@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoAPIError
+from coronado import CoronadoMalformedObjectError
 from coronado import CoronadoUnexpectedError
 from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleEnum
@@ -116,15 +117,24 @@ class Reward(TripleObject):
         if notes:
             spec['notes'] = notes
 
+        # TODO: This is a legit 422; the others aren't.
+        if None == notes and 'deny' == action:
+            raise CoronadoMalformedObjectError('notes attribute missing or set to None')
+
+        if '' == notes and 'deny' == action:
+            raise CoronadoMalformedObjectError('notes attribute must have some text; empty strings disallowed')
+
         endpoint = '/'.join([ klass._serviceURL, 'partner/rewards.%s' % action ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 200:
             result = _assembleDetailsFrom(response.content)
         elif response.status_code == 404:
-            result = None
+            result = False
         elif response.status_code == 422:
+            # TODO: THIS 404! {"detail":"No reward found for transaction_id \"129\" and offer_id \"bogus-offer-id\"."} 
             # TODO: Decide between these two:
+            klass.responseDDT = json.loads(response.text)
             result = False
             # raise CoronadoUnprocessableObjectError(response.text)
         elif response.status_code >= 500:

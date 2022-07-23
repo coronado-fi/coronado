@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoForbiddenError
+from coronado import CoronadoMalformedObjectError
 from coronado import TripleObject
 from coronado.reward import Reward
 from coronado.reward import RewardStatus
@@ -98,6 +99,35 @@ def test_Reward_approve():
 
     result = Reward.approve(reward.transactionID, reward.offerID) # already approved
     assert not result
+
+    result = Reward.approve('bogus-transaction', reward.offerID)
+    assert not result
+
+    result = Reward.approve(reward.transactionID, 'bogus-offer-id')
+    assert not result
+
+ 
+def test_Reward_deny():
+    deniedCount = len(Reward.list(status = RewardStatus.DENIED_BY_MERCHANT))
+    reward = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)[0]
+    result = Reward.deny(reward.transactionID, reward.offerID, notes = 'The cardholder wears ugly shoes')
+    assert result
+    assert len(Reward.list(status = RewardStatus.DENIED_BY_MERCHANT)) == deniedCount+1
+
+    result = Reward.deny(reward.transactionID, reward.offerID, notes = "NOOP - this code shouldn't work") # already denied
+    assert not result
+
+    result = Reward.deny('bogus-transaction', reward.offerID, notes = "NOOP - this code shouldn't work")
+    assert not result
+
+    result = Reward.deny(reward.transactionID, 'bogus-offer-id', notes = "NOOP - this code shouldn't work")
+    assert not result
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Reward.deny(reward.transactionID, reward.offerID, notes = '')
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Reward.deny(reward.transactionID, reward.offerID, notes = None)
 
  
 def test_Reward_outOfScope():
