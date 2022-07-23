@@ -90,11 +90,16 @@ def test_Reward_list():
 
 
 def test_Reward_approve():
-    result = Reward.approve('40', '6068')
+    approvedCount = len(Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING))
+    reward = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)[0]
+    result = Reward.approve(reward.transactionID, reward.offerID)
+    assert result
+    assert len(Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)) == approvedCount+1
+
+    result = Reward.approve(reward.transactionID, reward.offerID) # already approved
     assert not result
 
  
-@pytest.mark.skip('The service throws 500-series errors on some calls')
 def test_Reward_outOfScope():
     localAuth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.VIEW_OFFERS)
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, localAuth)
@@ -104,10 +109,4 @@ def test_Reward_outOfScope():
 
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
     Reward.list()
-
-
-# test_Reward_list()
-# test_Reward_outOfScope()
-
-test_Reward_approve()
 

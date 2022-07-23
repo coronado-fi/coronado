@@ -93,6 +93,7 @@ class Reward(TripleObject):
 
         response = super().list(paramMap, **args)
         result = [ Reward(obj) for obj in json.loads(response.content)['rewards'] ]
+# TODO: Map the inner objects!
 #         for t in result:
 #             t.matchingStatus = MatchingStatus(t.matchingStatus)
 #             t.merchantCategoryCode = MCC(t.merchantCategoryCode)
@@ -187,10 +188,6 @@ class Reward(TripleObject):
             offerID
         The offer associated with the reward
 
-            action
-        Whether to approve or deny the offer
-
-
         Returns
         -------
             list || str
@@ -221,8 +218,8 @@ class Reward(TripleObject):
     @classmethod
     def deny(klass, transactionID: str, offerID: str, notes: str) -> object:
         """
-        Transition a reward status from `PENDING_MERCHANT_APPROVAL` to
-        `PENDING_MERCHANT_FUNDING`.
+        Transition a reward from PENDING_MERCHANT_APPROVAL to DENIED_BY_MERCHANT 
+        status.
 
         Arguments
         ---------
@@ -232,9 +229,9 @@ class Reward(TripleObject):
             offerID
         The offer associated with the reward
 
-            action
-        Whether to approve or deny the offer
-
+            notes
+        Additional information about why the merchant rejected the offer.  This
+        field is not intended for display to cardholders.
 
         Returns
         -------
@@ -260,8 +257,7 @@ class Reward(TripleObject):
         When the `spec` query is missing one or more atribute:value pairs.
         """
         return klass._action(transactionID, offerID, notes, action = 'deny')
-        
-        
+
 
 class RewardStatus(TripleEnum):
     DENIED_BY_MERCHANT = 'DENIED_BY_MERCHANT'
