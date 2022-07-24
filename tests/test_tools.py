@@ -35,9 +35,10 @@ def test_camelCaseOf():
 
 def test_tripleKeysToCamelCase():
     d = deepcopy(BASE_CARD_ACCOUNT_DICT)
-    d['user_identity'] = 'secret'
-    d['processor_mid'] = 4269
+    d['card_bins'] = ['4444', '5555', ]
     d['mid'] = 6942
+    d['processor_mid'] = 4269
+    d['user_identity'] = 'secret'
 
     x = tripleKeysToCamelCase(d)
 
@@ -46,4 +47,5 @@ def test_tripleKeysToCamelCase():
     assert 'cardProgramID' in x
     assert 'userIdentity' in x
     assert 'processorMID' in x
+    assert 'cardBINs' in x
 

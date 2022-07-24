@@ -55,8 +55,8 @@ def tripleKeysToCamelCase(d: dict):
         v = camelCaseOf(k)
         if 'api' in v:
             v = v.replace('api', 'API')
-        if '_bin' in v:
-            v = v.replace('_bin', 'BIN')
+        if 'Bin' in v and v != 'binary' and v != 'binder' and v != 'bind' and v != 'cubing':
+            v = v.replace('Bin', 'BIN')
         if v == 'id':
             v = 'objID'
         elif 'Id' in v and 'Ident' not in v and 'Idio' not in v:
@@ -75,6 +75,9 @@ def tripleKeysToCamelCase(d: dict):
         elif v == 'sub':
             v = 'subject'
         # TODO: from Matt - fix this for realz next version
+        #       Use a library for camelCase <--> snake_case.
+        #       Something like stringcase but that can interpret
+        #       acronyms.
         elif 'Url' in v and v[0] not in [ 'c', 'h', ]:
             v = v.replace('Url', 'URL')
 
