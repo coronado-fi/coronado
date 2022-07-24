@@ -2,6 +2,7 @@
 
 
 from coronado import CoronadoForbiddenError
+from coronado import CoronadoMalformedObjectError
 from coronado import TripleObject
 from coronado.reward import Reward
 from coronado.reward import RewardStatus
@@ -60,19 +61,19 @@ def test_Reward_list():
         assert isinstance(reward, TripleObject)
         assert reward.transactionID
 
-#     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)
-#     assert isinstance(rewards, list)
-#     if len(rewards):
-#         reward = rewards[0]
-#         assert isinstance(reward, TripleObject)
-#         assert reward.transactionID
+    rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)
+    assert isinstance(rewards, list)
+    if len(rewards):
+        reward = rewards[0]
+        assert isinstance(reward, TripleObject)
+        assert reward.transactionID
 
-#     rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)
-#     assert isinstance(rewards, list)
-#     if len(rewards):
-#         reward = rewards[0]
-#         assert isinstance(reward, TripleObject)
-#         assert reward.transactionID
+    rewards = Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)
+    assert isinstance(rewards, list)
+    if len(rewards):
+        reward = rewards[0]
+        assert isinstance(reward, TripleObject)
+        assert reward.transactionID
 
     rewards = Reward.list(status = RewardStatus.PENDING_TRANSFER_TO_PUBLISHER)
     assert isinstance(rewards, list)
@@ -88,17 +89,47 @@ def test_Reward_list():
         assert isinstance(reward, TripleObject)
         assert reward.transactionID
 
+
+def test_Reward_approve():
+    approvedCount = len(Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING))
+    reward = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)[0]
+    result = Reward.approve(reward.transactionID, reward.offerID)
+    assert result
+    assert len(Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)) == approvedCount+1
+
+    result = Reward.approve(reward.transactionID, reward.offerID) # already approved
+    assert not result
+
+    result = Reward.approve('bogus-transaction', reward.offerID)
+    assert not result
+
+    result = Reward.approve(reward.transactionID, 'bogus-offer-id')
+    assert not result
+
  
-# def test_Reward_byID():
-#     result = Reward.byID(KNOWN_TRANSACTION_ID)
-#     assert isinstance(result, Reward)
-# 
-#     assert not Reward.byID({ 'bogus': 'test'})
-#     assert not Reward.byID(None)
-#     assert not Reward.byID('bogus')
+def test_Reward_deny():
+    deniedCount = len(Reward.list(status = RewardStatus.DENIED_BY_MERCHANT))
+    reward = Reward.list(status = RewardStatus.PENDING_MERCHANT_APPROVAL)[0]
+    result = Reward.deny(reward.transactionID, reward.offerID, notes = 'The cardholder wears ugly shoes')
+    assert result
+    assert len(Reward.list(status = RewardStatus.DENIED_BY_MERCHANT)) == deniedCount+1
 
+    result = Reward.deny(reward.transactionID, reward.offerID, notes = "NOOP - this code shouldn't work") # already denied
+    assert not result
 
-@pytest.mark.skip('The service throws 500-series errors on some calls')
+    result = Reward.deny('bogus-transaction', reward.offerID, notes = "NOOP - this code shouldn't work")
+    assert not result
+
+    result = Reward.deny(reward.transactionID, 'bogus-offer-id', notes = "NOOP - this code shouldn't work")
+    assert not result
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Reward.deny(reward.transactionID, reward.offerID, notes = '')
+
+    with pytest.raises(CoronadoMalformedObjectError):
+        Reward.deny(reward.transactionID, reward.offerID, notes = None)
+
+ 
 def test_Reward_outOfScope():
     localAuth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.VIEW_OFFERS)
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, localAuth)
@@ -108,8 +139,4 @@ def test_Reward_outOfScope():
 
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
     Reward.list()
-
-
-# test_Reward_list()
-# test_Reward_outOfScope()
 

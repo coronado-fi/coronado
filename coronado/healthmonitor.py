@@ -4,6 +4,7 @@
 from coronado.auth import Auth
 from coronado.auth import Scope
 from coronado import TripleObject
+from coronado import __VERSION__
 
 import json
 
@@ -28,6 +29,7 @@ class HealthMonitor(TripleObject):
     
     - `APIVersion`
     - `build`
+    - `coronadoVersion`
 
 
     Raises
@@ -45,7 +47,9 @@ class HealthMonitor(TripleObject):
     def check(klass) -> object:
         response = super().list()
 
-        return TripleObject(json.loads(response.content))
+        healthCheck = TripleObject(json.loads(response.content))
+        healthCheck.coronadoVersion = __VERSION__
+        return healthCheck
 
 
 # --- functions ---

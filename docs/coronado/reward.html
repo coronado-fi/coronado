@@ -47,6 +47,12 @@
                         <li>
                                 <a class="function" href="#Reward.list">list</a>
                         </li>
+                        <li>
+                                <a class="function" href="#Reward.approve">approve</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Reward.deny">deny</a>
+                        </li>
                 </ul>
 
             </li>
@@ -80,7 +86,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.11</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.12</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -228,6 +234,136 @@ everything.</p>
 </code></pre>
 
 <p>A list of Reward objects; can be <code>None</code>.</p>
+</div>
+
+
+                            </div>
+                            <div id="Reward.approve" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">approve</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">transactionID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">offerID</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Reward.approve"></a>
+    
+            <div class="docstring"><p>Transition a reward status from <code>PENDING_MERCHANT_APPROVAL</code> to
+<code>PENDING_MERCHANT_FUNDING</code>.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>transactionID
+</code></pre>
+
+<p>The transaction to which the reward applied</p>
+
+<pre><code>offerID
+</code></pre>
+
+<p>The offer associated with the reward</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>Boolean || list || str
+</code></pre>
+
+<p>A free from object that may contain one of:</p>
+
+<ul>
+<li>a sequence of TripleObject instances; OR</li>
+<li>one or more strings; OR</li>
+<li>a string with an informative message</li>
+<li>a Boolean value when the operation is successful</li>
+</ul>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the underlying service is unable to serve the response.  The text 
+in the exception explains the possible reason.</p>
+
+<pre><code>CoronadoUnexpectedError
+</code></pre>
+
+<p>When this object implementation is unable to handle a server response 
+error not covered by existing exceptions.</p>
+
+<pre><code>CoronadoUnprocessableObjectError
+</code></pre>
+
+<p>When the <code>spec</code> query is missing one or more atribute:value pairs.</p>
+</div>
+
+
+                            </div>
+                            <div id="Reward.deny" class="classattr">
+                                <div class="attr function">
+                    <div class="decorator">@classmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">deny</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">transactionID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">offerID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">notes</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#Reward.deny"></a>
+    
+            <div class="docstring"><p>Transition a reward from PENDING_MERCHANT_APPROVAL to DENIED_BY_MERCHANT 
+status.</p>
+
+<h2 id="arguments">Arguments</h2>
+
+<pre><code>transactionID
+</code></pre>
+
+<p>The transaction to which the reward applied</p>
+
+<pre><code>offerID
+</code></pre>
+
+<p>The offer associated with the reward</p>
+
+<pre><code>notes
+</code></pre>
+
+<p>Additional information about why the merchant rejected the offer.  This
+field is not intended for display to cardholders.</p>
+
+<h2 id="returns">Returns</h2>
+
+<pre><code>Boolean || list || str
+</code></pre>
+
+<p>A free from object that may contain one of:</p>
+
+<ul>
+<li>a sequence of TripleObject instances; OR</li>
+<li>one or more strings; OR</li>
+<li>a string with an informative message</li>
+<li>a Boolean value when a reward is denied successfully</li>
+</ul>
+
+<h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoAPIError
+</code></pre>
+
+<p>When the underlying service is unable to serve the response.  The text 
+in the exception explains the possible reason.</p>
+
+<pre><code>CoronadoUnexpectedError
+</code></pre>
+
+<p>When this object implementation is unable to handle a server response 
+error not covered by existing exceptions.</p>
+
+<pre><code>CoronadoUnprocessableObjectError
+</code></pre>
+
+<p>When the <code>spec</code> query is missing one or more atribute:value pairs.</p>
 </div>
 
 
