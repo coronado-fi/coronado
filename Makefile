@@ -13,6 +13,10 @@ MANPAGES=./manpages
 MAN_SECTION=5
 PACKAGE=$(shell cat package.txt)
 REQUIREMENTS=requirements.txt
+TWINEPASSWD_FILE_NAME="$(HOME)/.twinepasswd"
+TWINE_CREDENTIALS_DEFINED=$(shell test -e $(TWINEPASSWD_FILE_NAME) ; echo "$$?")
+TWINE_USER=$(shell [[ -e $(TWINEPASSWD_FILE_NAME) ]] && jq -r ".user" "$(TWINEPASSWD_FILE_NAME)")
+TWINE_PASSWORD=$(shell [[ -e $(TWINEPASSWD_FILE_NAME) ]] && jq -r ".password" "$(TWINEPASSWD_FILE_NAME)")
 VERSION=$(shell echo "from $(PACKAGE) import __VERSION__; print(__VERSION__)" | python)
 
 
@@ -83,13 +87,16 @@ package:
 #
 # PyPI user name:  ciurana; pypi AT cime_net
 publish:
+ifeq ($(TWINE_CREDENTIALS_DEFINED), 1)   # shell exit code! 1 == false, 0 == true
+	@echo "Unable to build - please ensure $(TWINEPASSWD_FILE_NAME) exists"
+	@exit 1
+endif
 	pip install -U twine
 	twine --no-color check $(DIST)/*
-	twine --no-color upload --verbose $(DIST)/*
+	@twine --no-color upload -u $(TWINE_USER) -p $(TWINE_PASSWORD) --verbose $(DIST)/*
 
 
 refresh: ALWAYS
-	pip install -U -r requirements.txt
 
 
 # Delete the Python virtual environment - necessary when updating the
