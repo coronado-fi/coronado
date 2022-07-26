@@ -1,4 +1,19 @@
 # vim: set fileencoding=utf-8:
+"""
+DEPRECATED
+==========
+This implementation of Address is invalid and will stop working by 01.Aug.2022.
+The Address class (like most objects in this package), its attributes, and 
+semantics conform to the **triple Card Linked Offer Ontology**.
+
+Please review `coronado.address_cloo.AddressCLOO` for details on how the objects
+and behaviors in this module changed.
+
+Also review:
+
+- `coronado.baseobjects.BASE_ADDRESS_DICT`
+- `coronado.baseobjects.BASE_ADDRESS_JSON`
+"""
 
 
 from coronado import TripleObject

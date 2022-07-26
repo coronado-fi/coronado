@@ -21,11 +21,10 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.12'
+__VERSION__ = '1.1.13'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
-
 
 
 # +++ classes and objects +++
@@ -61,8 +60,6 @@ class TripleObject(object):
     in JSON or a `dict`.
     """
 
-
-    # +++ implementation +++
 
     # +++ public +++
 

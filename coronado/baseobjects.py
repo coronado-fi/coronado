@@ -7,7 +7,7 @@ import json
 # If you copy/paste the JSON spec here, remember to escape the \n to prevent
 # JSON parser errros.
 BASE_ADDRESS_JSON = """{
-    "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
+    "complete_address": "DEPRECATE AND ELIMINATE THIS FIELD",
     "line_1": "7370 BAKER ST",
     "line_2": "SUITE 100",
     "locality": "PITTSBURGH",
@@ -18,6 +18,37 @@ BASE_ADDRESS_JSON = """{
     "longitude": -79.995888
 }"""
 BASE_ADDRESS_DICT = json.loads(BASE_ADDRESS_JSON)
+
+
+# TODO:  Replaces BASE_ADDRESS_JSON and BASE_ADDRESS_DICT once the back-end
+#        implements this.
+#
+# Notes:
+#
+# * See ISO-3166-2 for country subdivision codes; can be 2 or more letters
+# * Street address became a multi-line field, free form
+# * The complete address is optional AND assembled by the implementing classes,
+#   not by the service
+BASE_ADDRESS_CLOO_JSON = """
+{
+    "country_code": "US",
+    "country_subdivision_code": "PA",
+    "latitude": 40.440624,
+    "city": "PITTSBURGH",
+    "longitude": -79.995888,
+    "postal_code": "15206",
+    "street_address": "7370 BAKER ST\\nSUITE 42"
+}
+"""
+"""
+Base Address object specification, from the triple API JSON payload.
+"""
+BASE_ADDRESS_CLOO_DICT = json.loads(BASE_ADDRESS_CLOO_JSON)
+"""
+Base Address object specification, a `dict` representation of the triple API
+JSON payload.
+"""
+
 
 
 BASE_CARD_ACCOUNT_JSON = """{

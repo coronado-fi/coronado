@@ -28,6 +28,11 @@
             <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
                    pattern=".+" required>
 
+        <h2>Contents</h2>
+        <ul>
+  <li><a href="#deprecated">DEPRECATED</a></li>
+</ul>
+
 
 
         <h2>API Documentation</h2>
@@ -53,7 +58,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.12</footer>
+    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -67,7 +72,23 @@
                     <h1 class="modulename">
 <a href="./../coronado.html">coronado</a><wbr>.address    </h1>
 
-                
+                        <div class="docstring"><h1 id="deprecated">DEPRECATED</h1>
+
+<p>This implementation of Address is invalid and will stop working by 01.Aug.2022.
+The Address class (like most objects in this package), its attributes, and 
+semantics conform to the <strong>triple Card Linked Offer Ontology</strong>.</p>
+
+<p>Please review <code><a href="address_cloo.html#AddressCLOO">coronado.address_cloo.AddressCLOO</a></code> for details on how the objects
+and behaviors in this module changed.</p>
+
+<p>Also review:</p>
+
+<ul>
+<li><code>coronado.baseobjects.BASE_ADDRESS_DICT</code></li>
+<li><code>coronado.baseobjects.BASE_ADDRESS_JSON</code></li>
+</ul>
+</div>
+
                 
                 
                 
@@ -103,7 +124,7 @@ class.</p>
                             <div id="Address.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">Address</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST STE 100</span><span class="se">\n</span><span class="s1">PITTSBURGH, PA 15206&#39;</span><span class="p">,</span> <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST&#39;</span><span class="p">,</span> <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="s1">&#39;SUITE 100&#39;</span><span class="p">,</span> <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="s1">&#39;PITTSBURGH&#39;</span><span class="p">,</span> <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="s1">&#39;15206&#39;</span><span class="p">,</span> <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="mf">40.440624</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">79.995888</span><span class="p">}</span></span>)</span>
+        <span class="name">Address</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="s1">&#39;DEPRECATE AND ELIMINATE THIS FIELD&#39;</span><span class="p">,</span> <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST&#39;</span><span class="p">,</span> <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="s1">&#39;SUITE 100&#39;</span><span class="p">,</span> <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="s1">&#39;PITTSBURGH&#39;</span><span class="p">,</span> <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="s1">&#39;15206&#39;</span><span class="p">,</span> <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="mf">40.440624</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">79.995888</span><span class="p">}</span></span>)</span>
 
         
     </div>

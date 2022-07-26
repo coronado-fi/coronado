@@ -1,4 +1,4 @@
-% coronado(5) Version 1.1.12 | triple API Python wrapper
+% coronado(5) Version 1.1.13 | triple API Python wrapper
 
 
 
@@ -71,7 +71,7 @@ pip list | awk 'NR < 3 { print; next; } /coronado/'
 
 _JVM - Kotlin, Java, Scala_
 
-```
+```html
 <dependency>
   <groupId>io.github.coronado-fi</groupId>
   <artifactId>coronado-jvm</artifactId>
@@ -84,7 +84,7 @@ mvn build
 
 _Typescript/Javascript_
 
-```
+```bash
 npm install coronado
 ```
 
@@ -109,7 +109,7 @@ a new token without user or programmer intervention.
 
 General use:
 
-```
+```python
 auth = Auth( tokenURL,
              clientID = 'somevalue',
              clientSecret = '53cr3+',
@@ -124,7 +124,7 @@ here apply to all the Coronado API business objects.  A better, more detailed
 explanation is available via https://github.com/coronado-fi/coronado/quick-start-guide.ipynb
 or by running the same notebook in Lucyfer or Jupyter.
 
-```
+```python
 # Once per run-time, per Coronado class:
 Publisher.initialize(serviceURL, auth)
 
@@ -140,7 +140,7 @@ print(pubObject.address)
 All Coronado TripleObject classes and subclasses can be imported into pandas or
 Kotlin DataFrame objects straight from the API, without further modifications:
 
-```
+```python
 import pandas as pd
 
 panel = pd.DataFrame([ publisher.__dict__ for publisher in pubsList ])
