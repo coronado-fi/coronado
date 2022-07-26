@@ -118,6 +118,7 @@ test: ALWAYS
 	pip install -e .
 	pytest -v ./tests/test_$(PACKAGE).py
 	pytest -v ./tests/test_address.py
+	pytest -v ./tests/test_address_cloo.py
 	pytest -v ./tests/test_auth.py
 	pytest -v ./tests/test_cardaccount.py
 	pytest -v ./tests/test_cardprog.py

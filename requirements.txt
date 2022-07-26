@@ -1,4 +1,5 @@
 appdirs
+google-i18n-address
 iso18245
 python-jose
 requests
