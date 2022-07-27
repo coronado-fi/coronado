@@ -7,6 +7,7 @@ from i18naddress import normalize_address as normalizeAddress
 
 from coronado import TripleObject
 from coronado.baseobjects import BASE_ADDRESS_CLOO_DICT
+from coronado.exceptions import CallError
 from coronado.exceptions import InvalidPayloadError
 
 
@@ -78,7 +79,7 @@ class AddressCLOO(TripleObject):
         """
         TripleObject.__init__(self, obj)
         if 'completeAddress' in self.__dict__:
-            raise InvalidPayloadError('completeAddress (complete_address) is a deprecated invalid attribute')
+            raise CallError('completeAddress (complete_address) is a deprecated invalid attribute')
 
 
     @property

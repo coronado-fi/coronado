@@ -1,4 +1,4 @@
-# vim: set fileencoding=utf-8:
+#  vim: set fileencoding=utf-8:
 
 """
 Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' target='_blank'>triple services API</a>.
@@ -12,9 +12,6 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 from copy import deepcopy
 
 from coronado.exceptions import CallError
-from coronado.exceptions import ForbiddenError
-from coronado.exceptions import InvalidPayloadError
-from coronado.exceptions import UnexpectedError
 from coronado.exceptions import errorFor
 from coronado.tools import tripleKeysToCamelCase
 
@@ -97,17 +94,17 @@ class TripleObject(object):
         if isinstance(obj, str):
             if '{' in obj:
                 d = json.loads(obj)
-            else:  # ValueError JSON test is untenable
+            else:
                 try:
                     d = self.__class__.byID(obj).__dict__
-                except:
-                    raise InvalidPayloadError('invalid object ID')
+                except Exception:  # Python, triple, or Coronado exceptions can happen here; unsure of how it'll blow up
+                    raise CallError('obj initializer is set to None or an invalid value type; obj = %s ' % obj)
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         elif isinstance(obj, TripleObject):
             d = deepcopy(obj.__dict__)
         else:
-            raise InvalidPayloadError()
+            raise CallError('Invalid constructor obj type; it must be a string, a JSON payload, a dictionary, or a TripleObject')
 
         d = tripleKeysToCamelCase(d)
 
@@ -457,10 +454,8 @@ class TripleObject(object):
         endpoint = '/'.join([ klass._serviceURL, klass._servicePath ])
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
 
-        if response.status_code == 403 or response.status_code == 401:
-            raise ForbiddenError(response.text)
-        elif response.status_code >= 500:
-            raise UnexpectedError(response.text)
+        if response.status_code not in range(200, 299):
+            raise errorFor(response.status_code, response.text)
 
         return response
 
