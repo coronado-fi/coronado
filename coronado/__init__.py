@@ -11,6 +11,11 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 
 from copy import deepcopy
 
+from coronado.exceptions import CallError
+from coronado.exceptions import ForbiddenError
+from coronado.exceptions import InvalidPayloadError
+from coronado.exceptions import UnexpectedError
+from coronado.exceptions import errorFor
 from coronado.tools import tripleKeysToCamelCase
 
 import json
@@ -21,7 +26,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.13'
+__VERSION__ = '1.2.0'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -84,12 +89,10 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoAPIError
-        If obj represents an objectID and the ID isn't
-        associated with a valid object
-
-            CoronadoMalformedError
-        If obj format is invalid (non `dict`, non JSON)
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         if isinstance(obj, str):
             if '{' in obj:
@@ -98,13 +101,13 @@ class TripleObject(object):
                 try:
                     d = self.__class__.byID(obj).__dict__
                 except:
-                    raise CoronadoAPIError('invalid object ID')
+                    raise InvalidPayloadError('invalid object ID')
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         elif isinstance(obj, TripleObject):
             d = deepcopy(obj.__dict__)
         else:
-            raise CoronadoMalformedObjectError
+            raise InvalidPayloadError()
 
         d = tripleKeysToCamelCase(d)
 
@@ -130,16 +133,16 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoMalformedObjectError if one or more attributes are missing.
-
-        This method either throws the exception or returns True; it's not a true
-        Boolean.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         if self.__class__.requiredAttributes:
             attributes = self.__dict__.keys()
             if not all(attribute in attributes for attribute in self.__class__.requiredAttributes):
                 missing = set(self.__class__.requiredAttributes)-set(attributes)
-                raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
+                raise CallError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
     def listAttributes(self) -> dict:
@@ -188,10 +191,10 @@ class TripleObject(object):
 
         Raises
         ------
-            NotImplementedError
-        If the instance doesn't implement the `asSnakeCaseDictionary()`
-        method.  Only classes used for building triple API objects
-        require that method implementation.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         return json.dumps(self.asSnakeCaseDictionary())
 
@@ -208,10 +211,10 @@ class TripleObject(object):
 
         Raises
         ------
-            NotImplementedError
-        If the instance doesn't implement the `asSnakeCaseDictionary()`
-        method.  Only classes used for building triple API objects
-        require that method implementation.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
 
         Typical implementation (from a TripleObject specialization that
         represents an address-like object):
@@ -314,35 +317,25 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoUnprocessableObjectError
-        When the payload syntax is correct but the semantics are invalid
-            CoronadoAPIError
-        When the service endpoint has an error (500 series)
-            CoronadoMalformedObjectError
-        When the payload syntax and/or semantics are incorrect, or otherwise the method fails
-            CoronadoUnexpectedError
-        When the underlying API throws an error not covered by this implementation
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         if klass == TripleObject:
             # Don't allow this in the abstract ancestor
-            raise NotImplementedError
+            raise errorFor(501, 'TripleObject cannot be created in the service')
 
         if not spec:
-            raise CoronadoMalformedObjectError
+            raise errorFor(400, 'spec was empty or None')
 
         endpoint = '/'.join([klass._serviceURL, klass._servicePath ]) # URL fix later
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 201:
             tripleObject = klass(response.text)
-        elif response.status_code == 409:
-            raise CoronadoDuplicatesDisallowedError(response.text)
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
         else:
-            raise CoronadoUnexpectedError(response.text)
+            raise errorFor(response.status_code, details = response.text)
 
         return tripleObject
 
@@ -364,19 +357,21 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoAPIError
-        When the service encounters some error
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
         response = requests.request('GET', endpoint, headers = klass.headers)
 
-        if response.status_code == 404:
-            result = None
-        elif response.status_code == 200:
+        if response.status_code == 200:
             result = klass(response.content.decode())
+        elif response.status_code == 404:
+            result = None
         else:
-            raise CoronadoAPIError(response.text)
-
+            raise errorFor(response.status_code, details = response.text)
+            
         return result
 
 
@@ -414,18 +409,20 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoAPIError
-        When the service encounters some error
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
         response = requests.request('PATCH', endpoint, headers = klass.headers, json = spec)
 
-        if response.status_code == 404:
-            result = None
-        elif response.status_code == 200:
+        if response.status_code == 200:
             result = klass(response.content.decode())
+        elif response.status_code == 404:
+            result = None
         else:
-            raise CoronadoAPIError(response.text)
+            raise errorFor(response.status_code, details = response.text)
 
         return result
 
@@ -448,13 +445,10 @@ class TripleObject(object):
 
         Raises
         ------
-            CoronadoForbiddenError
-        When trying to list items outside of the correct security scope.  See 
-        `coronado.auth.Scope` for details.
-
-            CoronadoUnexpectedError
-        When the service or the gateway aren't available, or the service path
-        isn't available in the underlying service.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         params = None
         if paramMap:
@@ -464,65 +458,9 @@ class TripleObject(object):
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
 
         if response.status_code == 403 or response.status_code == 401:
-            raise CoronadoForbiddenError(response.text)
+            raise ForbiddenError(response.text)
         elif response.status_code >= 500:
-            raise CoronadoUnexpectedError(response.text)
+            raise UnexpectedError(response.text)
 
         return response
-
-
-class CoronadoAPIError(Exception):
-    """
-    Raised when the API server fails for some reason (HTTP status 5xx)
-    and it's unrecoverable.  This error most often means that the
-    service itself is misconfigured, is down, or has a serious bug.
-    Printing the reason code will display as much information about why
-    the service failed as it is available from the API system.
-    """
-
-class CoronadoDuplicatesDisallowedError(Exception):
-    """
-    Raised when trying to create a Coronado/triple object based on an
-    object spec that already exists (e.g. the externalID for the object
-    is already registered with the service, or its assumed name is
-    duplicated).
-    """
-
-
-class CoronadoMalformedObjectError(Exception):
-    """
-    Raised when instantiating a Coronado object fails.  May also include
-    a string describing the cause of the exception.
-    """
-    pass
-
-
-class CoronadoForbiddenError(Exception):
-    """
-    Raised when requesting access to a triple API resource without credentials
-    or with credentials with insufficient privileges.
-    """
-
-
-class CoronadoNotFoundError(Exception):
-    """
-    Raised when performing a search or update operation and the underlying API
-    is unable to tie the `objID` to a triple object of the corresponding type.
-    """
-
-
-class CoronadoUnexpectedError(Exception):
-    """
-    Raised when performning a Coronado API call that results in an
-    unknown, unexpected, undocumented, weird AF error that nobody knows
-    how it happened.
-    """
-
-
-class CoronadoUnprocessableObjectError(Exception):
-    """
-    Raised when instantiating a Coronado object fails because the object
-    is well-formed but contains semantic or object representation errors.
-    """
-    pass
 

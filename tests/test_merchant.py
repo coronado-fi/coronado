@@ -1,16 +1,14 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
+# from coronado.merchant import MerchantStatus
 from coronado import TripleObject
 from coronado.auth import Auth
 from coronado.auth import Scope
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado.exceptions import CallError
 from coronado.merchant import Merchant
 from coronado.merchant import MerchantCategoryCode as MCC
-# from coronado.merchant import MerchantStatus
 from coronado.merchant import SERVICE_PATH
 
 import json
@@ -79,7 +77,7 @@ def test_Merchant_create():
     account = Merchant.create(spec)
     assert account
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Merchant.create(None)
 
 #     spec['external_id'] = KNOWN_ACCT_EXT_ID

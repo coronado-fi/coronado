@@ -80,22 +80,10 @@
                 </ul>
 
             </li>
-            <li>
-                    <a class="class" href="#CoronadoAuthInvalidScope">CoronadoAuthInvalidScope</a>
-                            <ul class="memberlist">
-                </ul>
-
-            </li>
-            <li>
-                    <a class="class" href="#CoronadoAuthTokenAPIError">CoronadoAuthTokenAPIError</a>
-                            <ul class="memberlist">
-                </ul>
-
-            </li>
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -110,20 +98,321 @@
 <a href="./../coronado.html">coronado</a><wbr>.auth    </h1>
 
                 
-                
-                
-                
+                        <input id="auth-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="auth-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span> <span class="nn">jose</span> <span class="kn">import</span> <span class="n">jwt</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="kn">from</span> <span class="nn">jose.exceptions</span> <span class="kn">import</span> <span class="n">ExpiredSignatureError</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="kn">from</span> <span class="nn">jose.exceptions</span> <span class="kn">import</span> <span class="n">JWTClaimsError</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="kn">from</span> <span class="nn">jose.exceptions</span> <span class="kn">import</span> <span class="n">JWTError</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="kn">from</span> <span class="nn">coronado.exceptions</span> <span class="kn">import</span> <span class="n">AuthInvalidScope</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="kn">from</span> <span class="nn">coronado.exceptions</span> <span class="kn">import</span> <span class="n">AuthTokenAPIError</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="kn">import</span> <span class="nn">enum</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="kn">import</span> <span class="nn">os</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="kn">import</span> <span class="nn">appdirs</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="kn">import</span> <span class="nn">requests</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="kn">from</span> <span class="nn">coronado.tools</span> <span class="kn">import</span> <span class="n">tripleKeysToCamelCase</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleEnum</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="c1"># --- constants ----</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="n">API_NAME</span> <span class="o">=</span> <span class="s1">&#39;coronado&#39;</span> <span class="c1"># lower case by design; used also as a namespace</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="n">EXPIRATION_OFFSET</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3900</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="n">SECRETS_PATH</span> <span class="o">=</span> <span class="n">appdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="n">API_NAME</span><span class="p">)</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="n">SECRETS_FILE_NAME</span> <span class="o">=</span> <span class="s1">&#39;config.json&#39;</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="n">SECRETS_FILE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SECRETS_PATH</span><span class="p">,</span> <span class="n">SECRETS_FILE_NAME</span><span class="p">)</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="n">TOKEN_URL</span> <span class="o">=</span> <span class="s1">&#39;https://auth.partners.dev.tripleupdev.com/oauth2/token&#39;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="c1"># --- functions ---</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="k">def</span> <span class="nf">loadConfig</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">    Load the configuration from the system-dependent config path for the current</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">    user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">    Return</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">    ------</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">    A dictionary of configuration parameters.</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">SECRETS_PATH</span><span class="p">,</span> <span class="n">exist_ok</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SECRETS_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inputStream</span><span class="p">:</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inputStream</span><span class="p">)</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>    <span class="k">return</span> <span class="n">config</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="k">def</span> <span class="nf">emptyConfig</span><span class="p">():</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">    Configuration generator builds an empty configuration to fill in the details.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">    Return</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">    ------</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">    A dictionary of configuration parameters, all the values are empty.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;clientID&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>             <span class="s2">&quot;clientName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>             <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>             <span class="s2">&quot;serviceURL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="c1"># API service URL</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>             <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>             <span class="s2">&quot;tokenURL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="c1"># +++ classes +++</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="k">class</span> <span class="nc">Scope</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">    Client credentials OAuth2 flow scopes.</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">    Enum items</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">    ----------</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        CONTENT_PROVIDERS : str</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">    API partner content provider scope</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        PORTFOLIOS : str</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">    API partner portfolios scope</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        PUBLISHERS : str</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">    API partner publishers scope</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        VIEW_OFFERS : str</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">    API partner view offers scope</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>    <span class="n">CONTENT_PROVIDERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.content_providers&#39;</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="n">NA</span> <span class="o">=</span> <span class="s1">&#39;no.scope.for.testing&#39;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>    <span class="n">PORTFOLIOS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.portfolios&#39;</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="n">PUBLISHERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.publishers&#39;</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="n">VIEW_OFFERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.view_offers&#39;</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="k">def</span> <span class="nf">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scopes</span><span class="p">):</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>            <span class="k">return</span> <span class="n">scopes</span><span class="o">.</span><span class="n">value</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>            <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scopes</span> <span class="p">])</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>    <span class="k">def</span> <span class="nf">_getTokenPayload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>        <span class="c1"># scopeStr = encoder.quote(self._buildScopeStrFrom(self._scope))</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="n">scopeStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;client_credentials&#39;</span><span class="p">,</span> <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="n">scopeStr</span><span class="p">,</span> <span class="p">}</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>        <span class="n">credentials</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clientID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clientSecret</span><span class="p">)</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenURL</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">payload</span><span class="p">,</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">)</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="s1">&#39;: &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s2">&quot;error&quot;</span><span class="p">]]))</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>    <span class="k">def</span> <span class="nf">_setState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expirationOffset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>        <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span><span class="p">)</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>        <span class="n">deltaSeconds</span> <span class="o">=</span> <span class="n">expirationOffset</span> <span class="k">if</span> <span class="n">expirationOffset</span> <span class="k">else</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">]</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>        <span class="n">now</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_expirationTime</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">now</span><span class="o">+</span><span class="n">deltaSeconds</span><span class="p">)</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenType</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;token_type&#39;</span><span class="p">]</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="k">def</span> <span class="nf">_resolveScopeFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>            <span class="k">return</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>            <span class="k">return</span> <span class="n">scope</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scope</span><span class="p">:</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>                    <span class="k">raise</span> <span class="n">AuthInvalidScope</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scope</span><span class="p">))</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>            <span class="k">return</span> <span class="n">scope</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>            <span class="k">raise</span> <span class="n">AuthInvalidScope</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scope</span><span class="p">))</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>    <span class="c1"># --------------------</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenURL</span> <span class="o">=</span> <span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">clientID</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clientSecret</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">scope</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">expirationOffset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">        Instantiates a new Auth object.  It requires URLs and configuration</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">        parameters granted by triple for use with this API.</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">        Arguments</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">        ---------</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">            tokenURL : str</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">        The URL for the access token provider</span>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">            clientID : str</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">        A unique client ID, provider by triple</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">            clientSecret : str</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">        The unique client ID associated secret</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">            scope : coronado.auth.Scope</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        The client credentials OAuth2 scope for which access is granted. `scope`</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">        is one of:</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        - A single `Scope` value</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">        - A list of two or more `Scope` values</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        - `None`</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a><span class="sd">        If `None`, the receiver will grant access to all available scopes.</span>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="sd">        See:  &lt;a href=&#39;https://aws.amazon.com/blogs/mobile/understanding-amazon-cognito-user-pool-oauth-2-0-grants/&#39; target=&#39;_blank&#39;&gt;AWS Cognito user pool grants&lt;/a&gt;</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">        for details.</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">            expirationOffset : int</span>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a><span class="sd">        Expiration time buffer, seconds to subtract from expiration time to</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a><span class="sd">        that the internal token representation is up-to-date; **used only for</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a><span class="sd">        unit testing, users should ignore this argument**.</span>
+</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a>
+</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="sd">        Raises</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a><span class="sd">        ------</span>
+</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a><span class="sd">            CoronadoError</span>
+</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenURL</span> <span class="o">=</span> <span class="n">tokenURL</span>
+</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientID</span> <span class="o">=</span> <span class="n">clientID</span>
+</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientSecret</span> <span class="o">=</span> <span class="n">clientSecret</span>
+</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolveScopeFrom</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>
+</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getTokenPayload</span><span class="p">()</span>
+</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>
+</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_setState</span><span class="p">(</span><span class="n">expirationOffset</span><span class="p">)</span>
+</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a>
+</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>
+</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a>    <span class="nd">@property</span>
+</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>    <span class="k">def</span> <span class="nf">tokenPayload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a><span class="sd">        Returns the current access token associated with the receiver.  The</span>
+</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a><span class="sd">        property is guaranteed to never return an expired token.  The underlying</span>
+</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a><span class="sd">        implementation will request a new access token to the token provider</span>
+</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a><span class="sd">        API.</span>
+</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>
+</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a><span class="sd">        Returns</span>
+</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a><span class="sd">        -------</span>
+</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a><span class="sd">        A JWT string</span>
+</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>        <span class="n">now</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expirationTime</span><span class="o">-</span><span class="n">now</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getTokenPayload</span><span class="p">()</span>
+</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_setState</span><span class="p">()</span>
+</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>
+</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span>
+</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a>    <span class="nd">@property</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a>    <span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a><span class="sd">        Return the current access token by itself.  Auth objects have a JWT</span>
+</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a><span class="sd">        representation internally, which includes the actual access token in</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a><span class="sd">        one of its attributes.  This property returns that access token</span>
+</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a><span class="sd">        sans all the rest of the JWT JSON structure.</span>
+</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a>
+</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a><span class="sd">        Returns</span>
+</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a><span class="sd">        -------</span>
+</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a><span class="sd">            A token string</span>
+</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>  <span class="c1"># This is for the refresh token side effect</span>
+</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>
+</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token</span>
+</span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a>
+</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a>
+</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a>    <span class="nd">@property</span>
+</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a>    <span class="k">def</span> <span class="nf">tokenType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-238"><a href="#L-238"><span class="linenos">238</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a><span class="sd">        Return the current token type by itself.  Auth objects have a JWT</span>
+</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="sd">        representation internally, which includes the actual access token in</span>
+</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a><span class="sd">        one of its attributes.  This property returns that token type</span>
+</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a><span class="sd">        attribute sans all the rest of the JWT JSON structure.</span>
+</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a>
+</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a><span class="sd">        Returns</span>
+</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a><span class="sd">        -------</span>
+</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a><span class="sd">            A token type string</span>
+</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>  <span class="c1"># This is for the refresh token side effect</span>
+</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a>
+</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenType</span>
+</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a>
+</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a>
+</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>    <span class="nd">@property</span>
+</span><span id="L-254"><a href="#L-254"><span class="linenos">254</span></a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-255"><a href="#L-255"><span class="linenos">255</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-256"><a href="#L-256"><span class="linenos">256</span></a><span class="sd">        Return the receiver&#39;s reserved OAuth2 claims set.</span>
+</span><span id="L-257"><a href="#L-257"><span class="linenos">257</span></a><span class="sd">        </span>
+</span><span id="L-258"><a href="#L-258"><span class="linenos">258</span></a><span class="sd">        Reference:  https://www.oauth.com/oauth2-servers/openid-connect/id-tokens/</span>
+</span><span id="L-259"><a href="#L-259"><span class="linenos">259</span></a>
+</span><span id="L-260"><a href="#L-260"><span class="linenos">260</span></a><span class="sd">        Raises</span>
+</span><span id="L-261"><a href="#L-261"><span class="linenos">261</span></a><span class="sd">        ------</span>
+</span><span id="L-262"><a href="#L-262"><span class="linenos">262</span></a><span class="sd">            CoronadoError</span>
+</span><span id="L-263"><a href="#L-263"><span class="linenos">263</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="L-264"><a href="#L-264"><span class="linenos">264</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="L-265"><a href="#L-265"><span class="linenos">265</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>
+</span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a>
+</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a>            <span class="n">claimSet</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;verify_signature&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+</span><span id="L-271"><a href="#L-271"><span class="linenos">271</span></a>        <span class="k">except</span> <span class="n">JWTError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="L-272"><a href="#L-272"><span class="linenos">272</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="L-273"><a href="#L-273"><span class="linenos">273</span></a>        <span class="k">except</span> <span class="n">ExpiredSignatureError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="L-274"><a href="#L-274"><span class="linenos">274</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="L-275"><a href="#L-275"><span class="linenos">275</span></a>        <span class="k">except</span> <span class="n">JWTClaimsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="L-276"><a href="#L-276"><span class="linenos">276</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="L-277"><a href="#L-277"><span class="linenos">277</span></a>            
+</span><span id="L-278"><a href="#L-278"><span class="linenos">278</span></a>        <span class="k">return</span> <span class="n">tripleKeysToCamelCase</span><span class="p">(</span><span class="n">claimSet</span><span class="p">)</span>
+</span></pre></div>
+
+
             </section>
                 <section id="loadConfig">
-                    <div class="attr function">
+                            <input id="loadConfig-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="def">def</span>
         <span class="name">loadConfig</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
 
-        
+                <label class="view-source-button" for="loadConfig-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#loadConfig"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="loadConfig-37"><a href="#loadConfig-37"><span class="linenos">37</span></a><span class="k">def</span> <span class="nf">loadConfig</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="loadConfig-38"><a href="#loadConfig-38"><span class="linenos">38</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="loadConfig-39"><a href="#loadConfig-39"><span class="linenos">39</span></a><span class="sd">    Load the configuration from the system-dependent config path for the current</span>
+</span><span id="loadConfig-40"><a href="#loadConfig-40"><span class="linenos">40</span></a><span class="sd">    user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</span>
+</span><span id="loadConfig-41"><a href="#loadConfig-41"><span class="linenos">41</span></a>
+</span><span id="loadConfig-42"><a href="#loadConfig-42"><span class="linenos">42</span></a><span class="sd">    Return</span>
+</span><span id="loadConfig-43"><a href="#loadConfig-43"><span class="linenos">43</span></a><span class="sd">    ------</span>
+</span><span id="loadConfig-44"><a href="#loadConfig-44"><span class="linenos">44</span></a><span class="sd">    A dictionary of configuration parameters.</span>
+</span><span id="loadConfig-45"><a href="#loadConfig-45"><span class="linenos">45</span></a>
+</span><span id="loadConfig-46"><a href="#loadConfig-46"><span class="linenos">46</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="loadConfig-47"><a href="#loadConfig-47"><span class="linenos">47</span></a>    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">SECRETS_PATH</span><span class="p">,</span> <span class="n">exist_ok</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="loadConfig-48"><a href="#loadConfig-48"><span class="linenos">48</span></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SECRETS_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inputStream</span><span class="p">:</span>
+</span><span id="loadConfig-49"><a href="#loadConfig-49"><span class="linenos">49</span></a>        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inputStream</span><span class="p">)</span>
+</span><span id="loadConfig-50"><a href="#loadConfig-50"><span class="linenos">50</span></a>
+</span><span id="loadConfig-51"><a href="#loadConfig-51"><span class="linenos">51</span></a>    <span class="k">return</span> <span class="n">config</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Load the configuration from the system-dependent config path for the current
 user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
 
@@ -135,15 +424,34 @@ user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
 
                 </section>
                 <section id="emptyConfig">
-                    <div class="attr function">
+                            <input id="emptyConfig-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="def">def</span>
         <span class="name">emptyConfig</span><span class="signature pdoc-code condensed">()</span>
 
-        
+                <label class="view-source-button" for="emptyConfig-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#emptyConfig"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="emptyConfig-54"><a href="#emptyConfig-54"><span class="linenos">54</span></a><span class="k">def</span> <span class="nf">emptyConfig</span><span class="p">():</span>
+</span><span id="emptyConfig-55"><a href="#emptyConfig-55"><span class="linenos">55</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="emptyConfig-56"><a href="#emptyConfig-56"><span class="linenos">56</span></a><span class="sd">    Configuration generator builds an empty configuration to fill in the details.</span>
+</span><span id="emptyConfig-57"><a href="#emptyConfig-57"><span class="linenos">57</span></a>
+</span><span id="emptyConfig-58"><a href="#emptyConfig-58"><span class="linenos">58</span></a>
+</span><span id="emptyConfig-59"><a href="#emptyConfig-59"><span class="linenos">59</span></a><span class="sd">    Return</span>
+</span><span id="emptyConfig-60"><a href="#emptyConfig-60"><span class="linenos">60</span></a><span class="sd">    ------</span>
+</span><span id="emptyConfig-61"><a href="#emptyConfig-61"><span class="linenos">61</span></a><span class="sd">    A dictionary of configuration parameters, all the values are empty.</span>
+</span><span id="emptyConfig-62"><a href="#emptyConfig-62"><span class="linenos">62</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="emptyConfig-63"><a href="#emptyConfig-63"><span class="linenos">63</span></a>    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;clientID&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="emptyConfig-64"><a href="#emptyConfig-64"><span class="linenos">64</span></a>             <span class="s2">&quot;clientName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="emptyConfig-65"><a href="#emptyConfig-65"><span class="linenos">65</span></a>             <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="emptyConfig-66"><a href="#emptyConfig-66"><span class="linenos">66</span></a>             <span class="s2">&quot;serviceURL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="c1"># API service URL</span>
+</span><span id="emptyConfig-67"><a href="#emptyConfig-67"><span class="linenos">67</span></a>             <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="emptyConfig-68"><a href="#emptyConfig-68"><span class="linenos">68</span></a>             <span class="s2">&quot;tokenURL&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Configuration generator builds an empty configuration to fill in the details.</p>
 
 <h2 id="return">Return</h2>
@@ -154,15 +462,42 @@ user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
 
                 </section>
                 <section id="Scope">
-                    <div class="attr class">
+                            <input id="Scope-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">Scope</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
 
-        
+                <label class="view-source-button" for="Scope-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Scope"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Scope-73"><a href="#Scope-73"><span class="linenos">73</span></a><span class="k">class</span> <span class="nc">Scope</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="Scope-74"><a href="#Scope-74"><span class="linenos">74</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Scope-75"><a href="#Scope-75"><span class="linenos">75</span></a><span class="sd">    Client credentials OAuth2 flow scopes.</span>
+</span><span id="Scope-76"><a href="#Scope-76"><span class="linenos">76</span></a>
+</span><span id="Scope-77"><a href="#Scope-77"><span class="linenos">77</span></a><span class="sd">    Enum items</span>
+</span><span id="Scope-78"><a href="#Scope-78"><span class="linenos">78</span></a><span class="sd">    ----------</span>
+</span><span id="Scope-79"><a href="#Scope-79"><span class="linenos">79</span></a><span class="sd">        CONTENT_PROVIDERS : str</span>
+</span><span id="Scope-80"><a href="#Scope-80"><span class="linenos">80</span></a><span class="sd">    API partner content provider scope</span>
+</span><span id="Scope-81"><a href="#Scope-81"><span class="linenos">81</span></a>
+</span><span id="Scope-82"><a href="#Scope-82"><span class="linenos">82</span></a><span class="sd">        PORTFOLIOS : str</span>
+</span><span id="Scope-83"><a href="#Scope-83"><span class="linenos">83</span></a><span class="sd">    API partner portfolios scope</span>
+</span><span id="Scope-84"><a href="#Scope-84"><span class="linenos">84</span></a>
+</span><span id="Scope-85"><a href="#Scope-85"><span class="linenos">85</span></a><span class="sd">        PUBLISHERS : str</span>
+</span><span id="Scope-86"><a href="#Scope-86"><span class="linenos">86</span></a><span class="sd">    API partner publishers scope</span>
+</span><span id="Scope-87"><a href="#Scope-87"><span class="linenos">87</span></a>
+</span><span id="Scope-88"><a href="#Scope-88"><span class="linenos">88</span></a><span class="sd">        VIEW_OFFERS : str</span>
+</span><span id="Scope-89"><a href="#Scope-89"><span class="linenos">89</span></a><span class="sd">    API partner view offers scope</span>
+</span><span id="Scope-90"><a href="#Scope-90"><span class="linenos">90</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Scope-91"><a href="#Scope-91"><span class="linenos">91</span></a>    <span class="n">CONTENT_PROVIDERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.content_providers&#39;</span>
+</span><span id="Scope-92"><a href="#Scope-92"><span class="linenos">92</span></a>    <span class="n">NA</span> <span class="o">=</span> <span class="s1">&#39;no.scope.for.testing&#39;</span>
+</span><span id="Scope-93"><a href="#Scope-93"><span class="linenos">93</span></a>    <span class="n">PORTFOLIOS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.portfolios&#39;</span>
+</span><span id="Scope-94"><a href="#Scope-94"><span class="linenos">94</span></a>    <span class="n">PUBLISHERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.publishers&#39;</span>
+</span><span id="Scope-95"><a href="#Scope-95"><span class="linenos">95</span></a>    <span class="n">VIEW_OFFERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.view_offers&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Client credentials OAuth2 flow scopes.</p>
 
 <h2 id="enum-items">Enum items</h2>
@@ -256,26 +591,265 @@ user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
                             </div>
                 </section>
                 <section id="Auth">
-                    <div class="attr class">
+                            <input id="Auth-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">Auth</span>:
 
-        
+                <label class="view-source-button" for="Auth-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Auth"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Auth-98"><a href="#Auth-98"><span class="linenos"> 98</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span id="Auth-99"><a href="#Auth-99"><span class="linenos"> 99</span></a>    <span class="k">def</span> <span class="nf">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scopes</span><span class="p">):</span>
+</span><span id="Auth-100"><a href="#Auth-100"><span class="linenos">100</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="Auth-101"><a href="#Auth-101"><span class="linenos">101</span></a>            <span class="k">return</span> <span class="n">scopes</span><span class="o">.</span><span class="n">value</span>
+</span><span id="Auth-102"><a href="#Auth-102"><span class="linenos">102</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="Auth-103"><a href="#Auth-103"><span class="linenos">103</span></a>            <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scopes</span> <span class="p">])</span>
+</span><span id="Auth-104"><a href="#Auth-104"><span class="linenos">104</span></a>        
+</span><span id="Auth-105"><a href="#Auth-105"><span class="linenos">105</span></a>        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span id="Auth-106"><a href="#Auth-106"><span class="linenos">106</span></a>
+</span><span id="Auth-107"><a href="#Auth-107"><span class="linenos">107</span></a>
+</span><span id="Auth-108"><a href="#Auth-108"><span class="linenos">108</span></a>    <span class="k">def</span> <span class="nf">_getTokenPayload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Auth-109"><a href="#Auth-109"><span class="linenos">109</span></a>        <span class="c1"># scopeStr = encoder.quote(self._buildScopeStrFrom(self._scope))</span>
+</span><span id="Auth-110"><a href="#Auth-110"><span class="linenos">110</span></a>        <span class="n">scopeStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">)</span>
+</span><span id="Auth-111"><a href="#Auth-111"><span class="linenos">111</span></a>        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;client_credentials&#39;</span><span class="p">,</span> <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="n">scopeStr</span><span class="p">,</span> <span class="p">}</span>
+</span><span id="Auth-112"><a href="#Auth-112"><span class="linenos">112</span></a>        <span class="n">credentials</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clientID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clientSecret</span><span class="p">)</span>
+</span><span id="Auth-113"><a href="#Auth-113"><span class="linenos">113</span></a>
+</span><span id="Auth-114"><a href="#Auth-114"><span class="linenos">114</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenURL</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">payload</span><span class="p">,</span> <span class="n">auth</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">)</span>
+</span><span id="Auth-115"><a href="#Auth-115"><span class="linenos">115</span></a>
+</span><span id="Auth-116"><a href="#Auth-116"><span class="linenos">116</span></a>        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+</span><span id="Auth-117"><a href="#Auth-117"><span class="linenos">117</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="s1">&#39;: &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s2">&quot;error&quot;</span><span class="p">]]))</span>
+</span><span id="Auth-118"><a href="#Auth-118"><span class="linenos">118</span></a>
+</span><span id="Auth-119"><a href="#Auth-119"><span class="linenos">119</span></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</span><span id="Auth-120"><a href="#Auth-120"><span class="linenos">120</span></a>
+</span><span id="Auth-121"><a href="#Auth-121"><span class="linenos">121</span></a>
+</span><span id="Auth-122"><a href="#Auth-122"><span class="linenos">122</span></a>    <span class="k">def</span> <span class="nf">_setState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expirationOffset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Auth-123"><a href="#Auth-123"><span class="linenos">123</span></a>        <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span><span class="p">)</span>
+</span><span id="Auth-124"><a href="#Auth-124"><span class="linenos">124</span></a>
+</span><span id="Auth-125"><a href="#Auth-125"><span class="linenos">125</span></a>        <span class="n">deltaSeconds</span> <span class="o">=</span> <span class="n">expirationOffset</span> <span class="k">if</span> <span class="n">expirationOffset</span> <span class="k">else</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">]</span>
+</span><span id="Auth-126"><a href="#Auth-126"><span class="linenos">126</span></a>
+</span><span id="Auth-127"><a href="#Auth-127"><span class="linenos">127</span></a>        <span class="n">now</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+</span><span id="Auth-128"><a href="#Auth-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_expirationTime</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">now</span><span class="o">+</span><span class="n">deltaSeconds</span><span class="p">)</span>
+</span><span id="Auth-129"><a href="#Auth-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+</span><span id="Auth-130"><a href="#Auth-130"><span class="linenos">130</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenType</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;token_type&#39;</span><span class="p">]</span>
+</span><span id="Auth-131"><a href="#Auth-131"><span class="linenos">131</span></a>
+</span><span id="Auth-132"><a href="#Auth-132"><span class="linenos">132</span></a>
+</span><span id="Auth-133"><a href="#Auth-133"><span class="linenos">133</span></a>    <span class="k">def</span> <span class="nf">_resolveScopeFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+</span><span id="Auth-134"><a href="#Auth-134"><span class="linenos">134</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+</span><span id="Auth-135"><a href="#Auth-135"><span class="linenos">135</span></a>            <span class="k">return</span>
+</span><span id="Auth-136"><a href="#Auth-136"><span class="linenos">136</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="Auth-137"><a href="#Auth-137"><span class="linenos">137</span></a>            <span class="k">return</span> <span class="n">scope</span>
+</span><span id="Auth-138"><a href="#Auth-138"><span class="linenos">138</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="Auth-139"><a href="#Auth-139"><span class="linenos">139</span></a>            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scope</span><span class="p">:</span>
+</span><span id="Auth-140"><a href="#Auth-140"><span class="linenos">140</span></a>                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
+</span><span id="Auth-141"><a href="#Auth-141"><span class="linenos">141</span></a>                    <span class="k">raise</span> <span class="n">AuthInvalidScope</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scope</span><span class="p">))</span>
+</span><span id="Auth-142"><a href="#Auth-142"><span class="linenos">142</span></a>            <span class="k">return</span> <span class="n">scope</span>
+</span><span id="Auth-143"><a href="#Auth-143"><span class="linenos">143</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="Auth-144"><a href="#Auth-144"><span class="linenos">144</span></a>            <span class="k">raise</span> <span class="n">AuthInvalidScope</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scope</span><span class="p">))</span>
+</span><span id="Auth-145"><a href="#Auth-145"><span class="linenos">145</span></a>
+</span><span id="Auth-146"><a href="#Auth-146"><span class="linenos">146</span></a>    <span class="c1"># --------------------</span>
+</span><span id="Auth-147"><a href="#Auth-147"><span class="linenos">147</span></a>
+</span><span id="Auth-148"><a href="#Auth-148"><span class="linenos">148</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenURL</span> <span class="o">=</span> <span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">clientID</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clientSecret</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">scope</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">expirationOffset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Auth-149"><a href="#Auth-149"><span class="linenos">149</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth-150"><a href="#Auth-150"><span class="linenos">150</span></a><span class="sd">        Instantiates a new Auth object.  It requires URLs and configuration</span>
+</span><span id="Auth-151"><a href="#Auth-151"><span class="linenos">151</span></a><span class="sd">        parameters granted by triple for use with this API.</span>
+</span><span id="Auth-152"><a href="#Auth-152"><span class="linenos">152</span></a>
+</span><span id="Auth-153"><a href="#Auth-153"><span class="linenos">153</span></a><span class="sd">        Arguments</span>
+</span><span id="Auth-154"><a href="#Auth-154"><span class="linenos">154</span></a><span class="sd">        ---------</span>
+</span><span id="Auth-155"><a href="#Auth-155"><span class="linenos">155</span></a><span class="sd">            tokenURL : str</span>
+</span><span id="Auth-156"><a href="#Auth-156"><span class="linenos">156</span></a><span class="sd">        The URL for the access token provider</span>
+</span><span id="Auth-157"><a href="#Auth-157"><span class="linenos">157</span></a>
+</span><span id="Auth-158"><a href="#Auth-158"><span class="linenos">158</span></a><span class="sd">            clientID : str</span>
+</span><span id="Auth-159"><a href="#Auth-159"><span class="linenos">159</span></a><span class="sd">        A unique client ID, provider by triple</span>
+</span><span id="Auth-160"><a href="#Auth-160"><span class="linenos">160</span></a>
+</span><span id="Auth-161"><a href="#Auth-161"><span class="linenos">161</span></a><span class="sd">            clientSecret : str</span>
+</span><span id="Auth-162"><a href="#Auth-162"><span class="linenos">162</span></a><span class="sd">        The unique client ID associated secret</span>
+</span><span id="Auth-163"><a href="#Auth-163"><span class="linenos">163</span></a>
+</span><span id="Auth-164"><a href="#Auth-164"><span class="linenos">164</span></a><span class="sd">            scope : coronado.auth.Scope</span>
+</span><span id="Auth-165"><a href="#Auth-165"><span class="linenos">165</span></a><span class="sd">        The client credentials OAuth2 scope for which access is granted. `scope`</span>
+</span><span id="Auth-166"><a href="#Auth-166"><span class="linenos">166</span></a><span class="sd">        is one of:</span>
+</span><span id="Auth-167"><a href="#Auth-167"><span class="linenos">167</span></a>
+</span><span id="Auth-168"><a href="#Auth-168"><span class="linenos">168</span></a><span class="sd">        - A single `Scope` value</span>
+</span><span id="Auth-169"><a href="#Auth-169"><span class="linenos">169</span></a><span class="sd">        - A list of two or more `Scope` values</span>
+</span><span id="Auth-170"><a href="#Auth-170"><span class="linenos">170</span></a><span class="sd">        - `None`</span>
+</span><span id="Auth-171"><a href="#Auth-171"><span class="linenos">171</span></a>
+</span><span id="Auth-172"><a href="#Auth-172"><span class="linenos">172</span></a><span class="sd">        If `None`, the receiver will grant access to all available scopes.</span>
+</span><span id="Auth-173"><a href="#Auth-173"><span class="linenos">173</span></a>
+</span><span id="Auth-174"><a href="#Auth-174"><span class="linenos">174</span></a><span class="sd">        See:  &lt;a href=&#39;https://aws.amazon.com/blogs/mobile/understanding-amazon-cognito-user-pool-oauth-2-0-grants/&#39; target=&#39;_blank&#39;&gt;AWS Cognito user pool grants&lt;/a&gt;</span>
+</span><span id="Auth-175"><a href="#Auth-175"><span class="linenos">175</span></a><span class="sd">        for details.</span>
+</span><span id="Auth-176"><a href="#Auth-176"><span class="linenos">176</span></a>
+</span><span id="Auth-177"><a href="#Auth-177"><span class="linenos">177</span></a><span class="sd">            expirationOffset : int</span>
+</span><span id="Auth-178"><a href="#Auth-178"><span class="linenos">178</span></a><span class="sd">        Expiration time buffer, seconds to subtract from expiration time to</span>
+</span><span id="Auth-179"><a href="#Auth-179"><span class="linenos">179</span></a><span class="sd">        that the internal token representation is up-to-date; **used only for</span>
+</span><span id="Auth-180"><a href="#Auth-180"><span class="linenos">180</span></a><span class="sd">        unit testing, users should ignore this argument**.</span>
+</span><span id="Auth-181"><a href="#Auth-181"><span class="linenos">181</span></a>
+</span><span id="Auth-182"><a href="#Auth-182"><span class="linenos">182</span></a><span class="sd">        Raises</span>
+</span><span id="Auth-183"><a href="#Auth-183"><span class="linenos">183</span></a><span class="sd">        ------</span>
+</span><span id="Auth-184"><a href="#Auth-184"><span class="linenos">184</span></a><span class="sd">            CoronadoError</span>
+</span><span id="Auth-185"><a href="#Auth-185"><span class="linenos">185</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="Auth-186"><a href="#Auth-186"><span class="linenos">186</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="Auth-187"><a href="#Auth-187"><span class="linenos">187</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="Auth-188"><a href="#Auth-188"><span class="linenos">188</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth-189"><a href="#Auth-189"><span class="linenos">189</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenURL</span> <span class="o">=</span> <span class="n">tokenURL</span>
+</span><span id="Auth-190"><a href="#Auth-190"><span class="linenos">190</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientID</span> <span class="o">=</span> <span class="n">clientID</span>
+</span><span id="Auth-191"><a href="#Auth-191"><span class="linenos">191</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientSecret</span> <span class="o">=</span> <span class="n">clientSecret</span>
+</span><span id="Auth-192"><a href="#Auth-192"><span class="linenos">192</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolveScopeFrom</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+</span><span id="Auth-193"><a href="#Auth-193"><span class="linenos">193</span></a>
+</span><span id="Auth-194"><a href="#Auth-194"><span class="linenos">194</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getTokenPayload</span><span class="p">()</span>
+</span><span id="Auth-195"><a href="#Auth-195"><span class="linenos">195</span></a>
+</span><span id="Auth-196"><a href="#Auth-196"><span class="linenos">196</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_setState</span><span class="p">(</span><span class="n">expirationOffset</span><span class="p">)</span>
+</span><span id="Auth-197"><a href="#Auth-197"><span class="linenos">197</span></a>
+</span><span id="Auth-198"><a href="#Auth-198"><span class="linenos">198</span></a>
+</span><span id="Auth-199"><a href="#Auth-199"><span class="linenos">199</span></a>    <span class="nd">@property</span>
+</span><span id="Auth-200"><a href="#Auth-200"><span class="linenos">200</span></a>    <span class="k">def</span> <span class="nf">tokenPayload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Auth-201"><a href="#Auth-201"><span class="linenos">201</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth-202"><a href="#Auth-202"><span class="linenos">202</span></a><span class="sd">        Returns the current access token associated with the receiver.  The</span>
+</span><span id="Auth-203"><a href="#Auth-203"><span class="linenos">203</span></a><span class="sd">        property is guaranteed to never return an expired token.  The underlying</span>
+</span><span id="Auth-204"><a href="#Auth-204"><span class="linenos">204</span></a><span class="sd">        implementation will request a new access token to the token provider</span>
+</span><span id="Auth-205"><a href="#Auth-205"><span class="linenos">205</span></a><span class="sd">        API.</span>
+</span><span id="Auth-206"><a href="#Auth-206"><span class="linenos">206</span></a>
+</span><span id="Auth-207"><a href="#Auth-207"><span class="linenos">207</span></a><span class="sd">        Returns</span>
+</span><span id="Auth-208"><a href="#Auth-208"><span class="linenos">208</span></a><span class="sd">        -------</span>
+</span><span id="Auth-209"><a href="#Auth-209"><span class="linenos">209</span></a><span class="sd">        A JWT string</span>
+</span><span id="Auth-210"><a href="#Auth-210"><span class="linenos">210</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth-211"><a href="#Auth-211"><span class="linenos">211</span></a>        <span class="n">now</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+</span><span id="Auth-212"><a href="#Auth-212"><span class="linenos">212</span></a>        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expirationTime</span><span class="o">-</span><span class="n">now</span>
+</span><span id="Auth-213"><a href="#Auth-213"><span class="linenos">213</span></a>        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="Auth-214"><a href="#Auth-214"><span class="linenos">214</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getTokenPayload</span><span class="p">()</span>
+</span><span id="Auth-215"><a href="#Auth-215"><span class="linenos">215</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_setState</span><span class="p">()</span>
+</span><span id="Auth-216"><a href="#Auth-216"><span class="linenos">216</span></a>
+</span><span id="Auth-217"><a href="#Auth-217"><span class="linenos">217</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span>
+</span><span id="Auth-218"><a href="#Auth-218"><span class="linenos">218</span></a>
+</span><span id="Auth-219"><a href="#Auth-219"><span class="linenos">219</span></a>
+</span><span id="Auth-220"><a href="#Auth-220"><span class="linenos">220</span></a>    <span class="nd">@property</span>
+</span><span id="Auth-221"><a href="#Auth-221"><span class="linenos">221</span></a>    <span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Auth-222"><a href="#Auth-222"><span class="linenos">222</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth-223"><a href="#Auth-223"><span class="linenos">223</span></a><span class="sd">        Return the current access token by itself.  Auth objects have a JWT</span>
+</span><span id="Auth-224"><a href="#Auth-224"><span class="linenos">224</span></a><span class="sd">        representation internally, which includes the actual access token in</span>
+</span><span id="Auth-225"><a href="#Auth-225"><span class="linenos">225</span></a><span class="sd">        one of its attributes.  This property returns that access token</span>
+</span><span id="Auth-226"><a href="#Auth-226"><span class="linenos">226</span></a><span class="sd">        sans all the rest of the JWT JSON structure.</span>
+</span><span id="Auth-227"><a href="#Auth-227"><span class="linenos">227</span></a>
+</span><span id="Auth-228"><a href="#Auth-228"><span class="linenos">228</span></a><span class="sd">        Returns</span>
+</span><span id="Auth-229"><a href="#Auth-229"><span class="linenos">229</span></a><span class="sd">        -------</span>
+</span><span id="Auth-230"><a href="#Auth-230"><span class="linenos">230</span></a><span class="sd">            A token string</span>
+</span><span id="Auth-231"><a href="#Auth-231"><span class="linenos">231</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth-232"><a href="#Auth-232"><span class="linenos">232</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>  <span class="c1"># This is for the refresh token side effect</span>
+</span><span id="Auth-233"><a href="#Auth-233"><span class="linenos">233</span></a>
+</span><span id="Auth-234"><a href="#Auth-234"><span class="linenos">234</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token</span>
+</span><span id="Auth-235"><a href="#Auth-235"><span class="linenos">235</span></a>
+</span><span id="Auth-236"><a href="#Auth-236"><span class="linenos">236</span></a>
+</span><span id="Auth-237"><a href="#Auth-237"><span class="linenos">237</span></a>    <span class="nd">@property</span>
+</span><span id="Auth-238"><a href="#Auth-238"><span class="linenos">238</span></a>    <span class="k">def</span> <span class="nf">tokenType</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Auth-239"><a href="#Auth-239"><span class="linenos">239</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth-240"><a href="#Auth-240"><span class="linenos">240</span></a><span class="sd">        Return the current token type by itself.  Auth objects have a JWT</span>
+</span><span id="Auth-241"><a href="#Auth-241"><span class="linenos">241</span></a><span class="sd">        representation internally, which includes the actual access token in</span>
+</span><span id="Auth-242"><a href="#Auth-242"><span class="linenos">242</span></a><span class="sd">        one of its attributes.  This property returns that token type</span>
+</span><span id="Auth-243"><a href="#Auth-243"><span class="linenos">243</span></a><span class="sd">        attribute sans all the rest of the JWT JSON structure.</span>
+</span><span id="Auth-244"><a href="#Auth-244"><span class="linenos">244</span></a>
+</span><span id="Auth-245"><a href="#Auth-245"><span class="linenos">245</span></a><span class="sd">        Returns</span>
+</span><span id="Auth-246"><a href="#Auth-246"><span class="linenos">246</span></a><span class="sd">        -------</span>
+</span><span id="Auth-247"><a href="#Auth-247"><span class="linenos">247</span></a><span class="sd">            A token type string</span>
+</span><span id="Auth-248"><a href="#Auth-248"><span class="linenos">248</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth-249"><a href="#Auth-249"><span class="linenos">249</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>  <span class="c1"># This is for the refresh token side effect</span>
+</span><span id="Auth-250"><a href="#Auth-250"><span class="linenos">250</span></a>
+</span><span id="Auth-251"><a href="#Auth-251"><span class="linenos">251</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenType</span>
+</span><span id="Auth-252"><a href="#Auth-252"><span class="linenos">252</span></a>
+</span><span id="Auth-253"><a href="#Auth-253"><span class="linenos">253</span></a>
+</span><span id="Auth-254"><a href="#Auth-254"><span class="linenos">254</span></a>    <span class="nd">@property</span>
+</span><span id="Auth-255"><a href="#Auth-255"><span class="linenos">255</span></a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="Auth-256"><a href="#Auth-256"><span class="linenos">256</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth-257"><a href="#Auth-257"><span class="linenos">257</span></a><span class="sd">        Return the receiver&#39;s reserved OAuth2 claims set.</span>
+</span><span id="Auth-258"><a href="#Auth-258"><span class="linenos">258</span></a><span class="sd">        </span>
+</span><span id="Auth-259"><a href="#Auth-259"><span class="linenos">259</span></a><span class="sd">        Reference:  https://www.oauth.com/oauth2-servers/openid-connect/id-tokens/</span>
+</span><span id="Auth-260"><a href="#Auth-260"><span class="linenos">260</span></a>
+</span><span id="Auth-261"><a href="#Auth-261"><span class="linenos">261</span></a><span class="sd">        Raises</span>
+</span><span id="Auth-262"><a href="#Auth-262"><span class="linenos">262</span></a><span class="sd">        ------</span>
+</span><span id="Auth-263"><a href="#Auth-263"><span class="linenos">263</span></a><span class="sd">            CoronadoError</span>
+</span><span id="Auth-264"><a href="#Auth-264"><span class="linenos">264</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="Auth-265"><a href="#Auth-265"><span class="linenos">265</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="Auth-266"><a href="#Auth-266"><span class="linenos">266</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="Auth-267"><a href="#Auth-267"><span class="linenos">267</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth-268"><a href="#Auth-268"><span class="linenos">268</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tokenPayload</span>
+</span><span id="Auth-269"><a href="#Auth-269"><span class="linenos">269</span></a>
+</span><span id="Auth-270"><a href="#Auth-270"><span class="linenos">270</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Auth-271"><a href="#Auth-271"><span class="linenos">271</span></a>            <span class="n">claimSet</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;verify_signature&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+</span><span id="Auth-272"><a href="#Auth-272"><span class="linenos">272</span></a>        <span class="k">except</span> <span class="n">JWTError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="Auth-273"><a href="#Auth-273"><span class="linenos">273</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="Auth-274"><a href="#Auth-274"><span class="linenos">274</span></a>        <span class="k">except</span> <span class="n">ExpiredSignatureError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="Auth-275"><a href="#Auth-275"><span class="linenos">275</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="Auth-276"><a href="#Auth-276"><span class="linenos">276</span></a>        <span class="k">except</span> <span class="n">JWTClaimsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="Auth-277"><a href="#Auth-277"><span class="linenos">277</span></a>            <span class="k">raise</span> <span class="n">AuthTokenAPIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span><span id="Auth-278"><a href="#Auth-278"><span class="linenos">278</span></a>            
+</span><span id="Auth-279"><a href="#Auth-279"><span class="linenos">279</span></a>        <span class="k">return</span> <span class="n">tripleKeysToCamelCase</span><span class="p">(</span><span class="n">claimSet</span><span class="p">)</span>
+</span></pre></div>
+
+
     
 
                             <div id="Auth.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="Auth.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">Auth</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">tokenURL</span><span class="o">=</span><span class="s1">&#39;https://auth.partners.dev.tripleupdev.com/oauth2/token&#39;</span>,</span><span class="param">	<span class="n">clientID</span><span class="o">=</span><span class="kc">None</span>,</span><span class="param">	<span class="n">clientSecret</span><span class="o">=</span><span class="kc">None</span>,</span><span class="param">	<span class="n">scope</span><span class="o">=</span><span class="kc">None</span>,</span><span class="param">	<span class="n">expirationOffset</span><span class="o">=</span><span class="kc">None</span></span>)</span>
 
-        
+                <label class="view-source-button" for="Auth.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Auth.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Auth.__init__-148"><a href="#Auth.__init__-148"><span class="linenos">148</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenURL</span> <span class="o">=</span> <span class="n">TOKEN_URL</span><span class="p">,</span> <span class="n">clientID</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clientSecret</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">scope</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">expirationOffset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Auth.__init__-149"><a href="#Auth.__init__-149"><span class="linenos">149</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Auth.__init__-150"><a href="#Auth.__init__-150"><span class="linenos">150</span></a><span class="sd">        Instantiates a new Auth object.  It requires URLs and configuration</span>
+</span><span id="Auth.__init__-151"><a href="#Auth.__init__-151"><span class="linenos">151</span></a><span class="sd">        parameters granted by triple for use with this API.</span>
+</span><span id="Auth.__init__-152"><a href="#Auth.__init__-152"><span class="linenos">152</span></a>
+</span><span id="Auth.__init__-153"><a href="#Auth.__init__-153"><span class="linenos">153</span></a><span class="sd">        Arguments</span>
+</span><span id="Auth.__init__-154"><a href="#Auth.__init__-154"><span class="linenos">154</span></a><span class="sd">        ---------</span>
+</span><span id="Auth.__init__-155"><a href="#Auth.__init__-155"><span class="linenos">155</span></a><span class="sd">            tokenURL : str</span>
+</span><span id="Auth.__init__-156"><a href="#Auth.__init__-156"><span class="linenos">156</span></a><span class="sd">        The URL for the access token provider</span>
+</span><span id="Auth.__init__-157"><a href="#Auth.__init__-157"><span class="linenos">157</span></a>
+</span><span id="Auth.__init__-158"><a href="#Auth.__init__-158"><span class="linenos">158</span></a><span class="sd">            clientID : str</span>
+</span><span id="Auth.__init__-159"><a href="#Auth.__init__-159"><span class="linenos">159</span></a><span class="sd">        A unique client ID, provider by triple</span>
+</span><span id="Auth.__init__-160"><a href="#Auth.__init__-160"><span class="linenos">160</span></a>
+</span><span id="Auth.__init__-161"><a href="#Auth.__init__-161"><span class="linenos">161</span></a><span class="sd">            clientSecret : str</span>
+</span><span id="Auth.__init__-162"><a href="#Auth.__init__-162"><span class="linenos">162</span></a><span class="sd">        The unique client ID associated secret</span>
+</span><span id="Auth.__init__-163"><a href="#Auth.__init__-163"><span class="linenos">163</span></a>
+</span><span id="Auth.__init__-164"><a href="#Auth.__init__-164"><span class="linenos">164</span></a><span class="sd">            scope : coronado.auth.Scope</span>
+</span><span id="Auth.__init__-165"><a href="#Auth.__init__-165"><span class="linenos">165</span></a><span class="sd">        The client credentials OAuth2 scope for which access is granted. `scope`</span>
+</span><span id="Auth.__init__-166"><a href="#Auth.__init__-166"><span class="linenos">166</span></a><span class="sd">        is one of:</span>
+</span><span id="Auth.__init__-167"><a href="#Auth.__init__-167"><span class="linenos">167</span></a>
+</span><span id="Auth.__init__-168"><a href="#Auth.__init__-168"><span class="linenos">168</span></a><span class="sd">        - A single `Scope` value</span>
+</span><span id="Auth.__init__-169"><a href="#Auth.__init__-169"><span class="linenos">169</span></a><span class="sd">        - A list of two or more `Scope` values</span>
+</span><span id="Auth.__init__-170"><a href="#Auth.__init__-170"><span class="linenos">170</span></a><span class="sd">        - `None`</span>
+</span><span id="Auth.__init__-171"><a href="#Auth.__init__-171"><span class="linenos">171</span></a>
+</span><span id="Auth.__init__-172"><a href="#Auth.__init__-172"><span class="linenos">172</span></a><span class="sd">        If `None`, the receiver will grant access to all available scopes.</span>
+</span><span id="Auth.__init__-173"><a href="#Auth.__init__-173"><span class="linenos">173</span></a>
+</span><span id="Auth.__init__-174"><a href="#Auth.__init__-174"><span class="linenos">174</span></a><span class="sd">        See:  &lt;a href=&#39;https://aws.amazon.com/blogs/mobile/understanding-amazon-cognito-user-pool-oauth-2-0-grants/&#39; target=&#39;_blank&#39;&gt;AWS Cognito user pool grants&lt;/a&gt;</span>
+</span><span id="Auth.__init__-175"><a href="#Auth.__init__-175"><span class="linenos">175</span></a><span class="sd">        for details.</span>
+</span><span id="Auth.__init__-176"><a href="#Auth.__init__-176"><span class="linenos">176</span></a>
+</span><span id="Auth.__init__-177"><a href="#Auth.__init__-177"><span class="linenos">177</span></a><span class="sd">            expirationOffset : int</span>
+</span><span id="Auth.__init__-178"><a href="#Auth.__init__-178"><span class="linenos">178</span></a><span class="sd">        Expiration time buffer, seconds to subtract from expiration time to</span>
+</span><span id="Auth.__init__-179"><a href="#Auth.__init__-179"><span class="linenos">179</span></a><span class="sd">        that the internal token representation is up-to-date; **used only for</span>
+</span><span id="Auth.__init__-180"><a href="#Auth.__init__-180"><span class="linenos">180</span></a><span class="sd">        unit testing, users should ignore this argument**.</span>
+</span><span id="Auth.__init__-181"><a href="#Auth.__init__-181"><span class="linenos">181</span></a>
+</span><span id="Auth.__init__-182"><a href="#Auth.__init__-182"><span class="linenos">182</span></a><span class="sd">        Raises</span>
+</span><span id="Auth.__init__-183"><a href="#Auth.__init__-183"><span class="linenos">183</span></a><span class="sd">        ------</span>
+</span><span id="Auth.__init__-184"><a href="#Auth.__init__-184"><span class="linenos">184</span></a><span class="sd">            CoronadoError</span>
+</span><span id="Auth.__init__-185"><a href="#Auth.__init__-185"><span class="linenos">185</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="Auth.__init__-186"><a href="#Auth.__init__-186"><span class="linenos">186</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="Auth.__init__-187"><a href="#Auth.__init__-187"><span class="linenos">187</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="Auth.__init__-188"><a href="#Auth.__init__-188"><span class="linenos">188</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Auth.__init__-189"><a href="#Auth.__init__-189"><span class="linenos">189</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenURL</span> <span class="o">=</span> <span class="n">tokenURL</span>
+</span><span id="Auth.__init__-190"><a href="#Auth.__init__-190"><span class="linenos">190</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientID</span> <span class="o">=</span> <span class="n">clientID</span>
+</span><span id="Auth.__init__-191"><a href="#Auth.__init__-191"><span class="linenos">191</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_clientSecret</span> <span class="o">=</span> <span class="n">clientSecret</span>
+</span><span id="Auth.__init__-192"><a href="#Auth.__init__-192"><span class="linenos">192</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolveScopeFrom</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+</span><span id="Auth.__init__-193"><a href="#Auth.__init__-193"><span class="linenos">193</span></a>
+</span><span id="Auth.__init__-194"><a href="#Auth.__init__-194"><span class="linenos">194</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenPayload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getTokenPayload</span><span class="p">()</span>
+</span><span id="Auth.__init__-195"><a href="#Auth.__init__-195"><span class="linenos">195</span></a>
+</span><span id="Auth.__init__-196"><a href="#Auth.__init__-196"><span class="linenos">196</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_setState</span><span class="p">(</span><span class="n">expirationOffset</span><span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Instantiates a new Auth object.  It requires URLs and configuration
 parameters granted by triple for use with this API.</p>
 
@@ -322,9 +896,12 @@ unit testing, users should ignore this argument</strong>.</p>
 
 <h2 id="raises">Raises</h2>
 
-<p><a href="#CoronadoAuthTokenAPIError">coronado.auth.CoronadoAuthTokenAPIError</a> if the underlying token API call
-fails.  The exception message will include details about the failure
-reason.</p>
+<pre><code>CoronadoError
+</code></pre>
+
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
@@ -405,78 +982,15 @@ attribute sans all the rest of the JWT JSON structure.</p>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAuthTokenAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If the JWT provider fails; the error text will include the reason
-for the failure.  Possible causes:</p>
-
-<ul>
-<li>The claims are invalid at the issuer</li>
-<li>The token signature might have expired (should never happen)</li>
-<li>The service provider (e.g. Cognito) may have some issue</li>
-</ul>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
-                            </div>
-                </section>
-                <section id="CoronadoAuthInvalidScope">
-                    <div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">CoronadoAuthInvalidScope</span><wbr>(<span class="base">builtins.Exception</span>):
-
-        
-    </div>
-    <a class="headerlink" href="#CoronadoAuthInvalidScope"></a>
-    
-            <div class="docstring"><p>Raised during <code><a href="#Auth">Auth</a></code> token instantiation if an invalid scopes list is used.</p>
-</div>
-
-
-                            <div class="inherited">
-                                <h5>Inherited Members</h5>
-                                <dl>
-                                    <div><dt>builtins.Exception</dt>
-                                <dd id="CoronadoAuthInvalidScope.__init__" class="function">Exception</dd>
-
-            </div>
-            <div><dt>builtins.BaseException</dt>
-                                <dd id="CoronadoAuthInvalidScope.with_traceback" class="function">with_traceback</dd>
-                <dd id="CoronadoAuthInvalidScope.args" class="variable">args</dd>
-
-            </div>
-                                </dl>
-                            </div>
-                </section>
-                <section id="CoronadoAuthTokenAPIError">
-                    <div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">CoronadoAuthTokenAPIError</span><wbr>(<span class="base">builtins.Exception</span>):
-
-        
-    </div>
-    <a class="headerlink" href="#CoronadoAuthTokenAPIError"></a>
-    
-            <div class="docstring"><p>Raised when the access token API fails to produce an access token.</p>
-</div>
-
-
-                            <div class="inherited">
-                                <h5>Inherited Members</h5>
-                                <dl>
-                                    <div><dt>builtins.Exception</dt>
-                                <dd id="CoronadoAuthTokenAPIError.__init__" class="function">Exception</dd>
-
-            </div>
-            <div><dt>builtins.BaseException</dt>
-                                <dd id="CoronadoAuthTokenAPIError.with_traceback" class="function">with_traceback</dd>
-                <dd id="CoronadoAuthTokenAPIError.args" class="variable">args</dd>
-
-            </div>
-                                </dl>
                             </div>
                 </section>
     </main>

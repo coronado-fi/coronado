@@ -1,11 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnexpectedError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 
@@ -63,12 +58,10 @@ class Publisher(TripleObject):
 
         Raises
         ------
-            CoronadoAPIError
-        If obj represents an objectID and the ID isn't
-        associated with a valid object
-
-            CoronadoMalformedError
-        If obj format is invalid (non `dict`, non JSON)
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         TripleObject.__init__(self, obj)
 

@@ -1,9 +1,9 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
+from coronado.exceptions import CallError
 
 import iso18245
 
@@ -59,7 +59,10 @@ class MerchantCategoryCode(TripleObject):
 
         Raises
         ------
-
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         begin = '0000'
         end = '9999'
@@ -68,7 +71,7 @@ class MerchantCategoryCode(TripleObject):
             requiredArgs = ['begin', 'end', ]
             if not all(arg in args.keys() for arg in requiredArgs):
                 missing = set(requiredArgs)-set(args.keys())
-                raise CoronadoAPIError("arg%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
+                raise CallError("arg%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
             begin = args['begin']
             end = args['end']
         merchantCodes = [ MerchantCategoryCode(code) for code in sorted([ catInfo.mcc for catInfo in iso18245.get_all_mccs_in_range(begin, end) ]) ]

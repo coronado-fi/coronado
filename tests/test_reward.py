@@ -1,9 +1,10 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoForbiddenError
-from coronado import CoronadoMalformedObjectError
 from coronado import TripleObject
+from coronado.exceptions import CallError
+from coronado.exceptions import ForbiddenError
+from coronado.exceptions import UnprocessablePayload
 from coronado.reward import Reward
 from coronado.reward import RewardStatus
 from coronado.reward import SERVICE_PATH
@@ -97,14 +98,14 @@ def test_Reward_approve():
     assert result
     assert len(Reward.list(status = RewardStatus.PENDING_MERCHANT_FUNDING)) == approvedCount+1
 
-    result = Reward.approve(reward.transactionID, reward.offerID) # already approved
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.approve(reward.transactionID, reward.offerID) # already approved
 
-    result = Reward.approve('bogus-transaction', reward.offerID)
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.approve('bogus-transaction', reward.offerID)
 
-    result = Reward.approve(reward.transactionID, 'bogus-offer-id')
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.approve(reward.transactionID, 'bogus-offer-id')
 
  
 def test_Reward_deny():
@@ -114,19 +115,19 @@ def test_Reward_deny():
     assert result
     assert len(Reward.list(status = RewardStatus.DENIED_BY_MERCHANT)) == deniedCount+1
 
-    result = Reward.deny(reward.transactionID, reward.offerID, notes = "NOOP - this code shouldn't work") # already denied
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.deny(reward.transactionID, reward.offerID, notes = "NOOP - this code shouldn't work") # already denied
 
-    result = Reward.deny('bogus-transaction', reward.offerID, notes = "NOOP - this code shouldn't work")
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.deny('bogus-transaction', reward.offerID, notes = "NOOP - this code shouldn't work")
 
-    result = Reward.deny(reward.transactionID, 'bogus-offer-id', notes = "NOOP - this code shouldn't work")
-    assert not result
+    with pytest.raises(UnprocessablePayload):
+        Reward.deny(reward.transactionID, 'bogus-offer-id', notes = "NOOP - this code shouldn't work")
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Reward.deny(reward.transactionID, reward.offerID, notes = '')
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Reward.deny(reward.transactionID, reward.offerID, notes = None)
 
  
@@ -134,7 +135,7 @@ def test_Reward_outOfScope():
     localAuth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.VIEW_OFFERS)
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, localAuth)
 
-    with pytest.raises(CoronadoForbiddenError):
+    with pytest.raises(ForbiddenError):
         Reward.list()
 
     Reward.initialize(_config['serviceURL'], SERVICE_PATH, _auth)

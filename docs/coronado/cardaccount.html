@@ -68,7 +68,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -83,9 +83,91 @@
 <a href="./../coronado.html">coronado</a><wbr>.cardaccount    </h1>
 
                 
-                
-                
-                
+                        <input id="cardaccount-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="cardaccount-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleEnum</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span> <span class="nn">coronado.baseobjects</span> <span class="kn">import</span> <span class="n">BASE_CARD_ACCOUNT_DICT</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s1">&#39;partner/card-accounts&#39;</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">The default service path associated with CardAccount operations.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">Usage:</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">```</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">CardAccount.initialize(serviceURL, SERVICE_PATH, auth)</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">```</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">Users are welcome to initialize the class&#39; service path from regular strings.</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">This constant is defined for convenience.</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="c1"># *** clases and objects ***</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="k">class</span> <span class="nc">CardAccountStatus</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    Account status object.</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    See:  https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="n">CLOSED</span> <span class="o">=</span> <span class="s1">&#39;CLOSED&#39;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="n">ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;ENROLLED&#39;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="n">NOT_ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;NOT_ENROLLED&#39;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="k">class</span> <span class="nc">CardAccount</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;objID&#39;</span><span class="p">,</span> <span class="s1">&#39;cardProgramID&#39;</span><span class="p">,</span> <span class="s1">&#39;externalID&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;createdAt&#39;</span><span class="p">,</span> <span class="s1">&#39;updatedAt&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CARD_ACCOUNT_DICT</span><span class="p">):</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span> <span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">        Return a list of card accounts.  The list is a sequential query from the</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">        beginning of time if no query parameters are passed:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        Arguments</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        ---------</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="sd">            pubExternalID : str</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        A publisher external ID</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">            cardProgramExternalID : str</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">        A card program external ID</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">            cardAccountExternalID : str</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">        A card account external ID</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">        Returns</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">        -------</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="sd">            list</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">        A list of TripleObjects objects with some card account attributes:</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">        - `objID`</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">        - `externalID`</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        - `status`</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="s1">&#39;pubExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;publisher_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="p">}</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;card_accounts&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span></pre></div>
+
+
             </section>
                 <section id="SERVICE_PATH">
                     <div class="attr variable">
@@ -109,15 +191,27 @@ This constant is defined for convenience.</p>
 
                 </section>
                 <section id="CardAccountStatus">
-                    <div class="attr class">
+                            <input id="CardAccountStatus-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">CardAccountStatus</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
 
-        
+                <label class="view-source-button" for="CardAccountStatus-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#CardAccountStatus"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardAccountStatus-29"><a href="#CardAccountStatus-29"><span class="linenos">29</span></a><span class="k">class</span> <span class="nc">CardAccountStatus</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="CardAccountStatus-30"><a href="#CardAccountStatus-30"><span class="linenos">30</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardAccountStatus-31"><a href="#CardAccountStatus-31"><span class="linenos">31</span></a><span class="sd">    Account status object.</span>
+</span><span id="CardAccountStatus-32"><a href="#CardAccountStatus-32"><span class="linenos">32</span></a><span class="sd">    See:  https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount</span>
+</span><span id="CardAccountStatus-33"><a href="#CardAccountStatus-33"><span class="linenos">33</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="CardAccountStatus-34"><a href="#CardAccountStatus-34"><span class="linenos">34</span></a>    <span class="n">CLOSED</span> <span class="o">=</span> <span class="s1">&#39;CLOSED&#39;</span>
+</span><span id="CardAccountStatus-35"><a href="#CardAccountStatus-35"><span class="linenos">35</span></a>    <span class="n">ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;ENROLLED&#39;</span>
+</span><span id="CardAccountStatus-36"><a href="#CardAccountStatus-36"><span class="linenos">36</span></a>    <span class="n">NOT_ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;NOT_ENROLLED&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Account status object.
 See:  <a href="https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount">https://api.partners.dev.tripleupdev.com/docs#operation/createCardAccount</a></p>
 </div>
@@ -168,28 +262,79 @@ See:  <a href="https://api.partners.dev.tripleupdev.com/docs#operation/createCar
                             </div>
                 </section>
                 <section id="CardAccount">
-                    <div class="attr class">
+                            <input id="CardAccount-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">CardAccount</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
-        
+                <label class="view-source-button" for="CardAccount-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#CardAccount"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardAccount-39"><a href="#CardAccount-39"><span class="linenos">39</span></a><span class="k">class</span> <span class="nc">CardAccount</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="CardAccount-40"><a href="#CardAccount-40"><span class="linenos">40</span></a>
+</span><span id="CardAccount-41"><a href="#CardAccount-41"><span class="linenos">41</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;objID&#39;</span><span class="p">,</span> <span class="s1">&#39;cardProgramID&#39;</span><span class="p">,</span> <span class="s1">&#39;externalID&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;createdAt&#39;</span><span class="p">,</span> <span class="s1">&#39;updatedAt&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="CardAccount-42"><a href="#CardAccount-42"><span class="linenos">42</span></a>
+</span><span id="CardAccount-43"><a href="#CardAccount-43"><span class="linenos">43</span></a>
+</span><span id="CardAccount-44"><a href="#CardAccount-44"><span class="linenos">44</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CARD_ACCOUNT_DICT</span><span class="p">):</span>
+</span><span id="CardAccount-45"><a href="#CardAccount-45"><span class="linenos">45</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="CardAccount-46"><a href="#CardAccount-46"><span class="linenos">46</span></a>
+</span><span id="CardAccount-47"><a href="#CardAccount-47"><span class="linenos">47</span></a>
+</span><span id="CardAccount-48"><a href="#CardAccount-48"><span class="linenos">48</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardAccount-49"><a href="#CardAccount-49"><span class="linenos">49</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span> <span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="CardAccount-50"><a href="#CardAccount-50"><span class="linenos">50</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardAccount-51"><a href="#CardAccount-51"><span class="linenos">51</span></a><span class="sd">        Return a list of card accounts.  The list is a sequential query from the</span>
+</span><span id="CardAccount-52"><a href="#CardAccount-52"><span class="linenos">52</span></a><span class="sd">        beginning of time if no query parameters are passed:</span>
+</span><span id="CardAccount-53"><a href="#CardAccount-53"><span class="linenos">53</span></a>
+</span><span id="CardAccount-54"><a href="#CardAccount-54"><span class="linenos">54</span></a><span class="sd">        Arguments</span>
+</span><span id="CardAccount-55"><a href="#CardAccount-55"><span class="linenos">55</span></a><span class="sd">        ---------</span>
+</span><span id="CardAccount-56"><a href="#CardAccount-56"><span class="linenos">56</span></a><span class="sd">            pubExternalID : str</span>
+</span><span id="CardAccount-57"><a href="#CardAccount-57"><span class="linenos">57</span></a><span class="sd">        A publisher external ID</span>
+</span><span id="CardAccount-58"><a href="#CardAccount-58"><span class="linenos">58</span></a><span class="sd">            cardProgramExternalID : str</span>
+</span><span id="CardAccount-59"><a href="#CardAccount-59"><span class="linenos">59</span></a><span class="sd">        A card program external ID</span>
+</span><span id="CardAccount-60"><a href="#CardAccount-60"><span class="linenos">60</span></a><span class="sd">            cardAccountExternalID : str</span>
+</span><span id="CardAccount-61"><a href="#CardAccount-61"><span class="linenos">61</span></a><span class="sd">        A card account external ID</span>
+</span><span id="CardAccount-62"><a href="#CardAccount-62"><span class="linenos">62</span></a>
+</span><span id="CardAccount-63"><a href="#CardAccount-63"><span class="linenos">63</span></a><span class="sd">        Returns</span>
+</span><span id="CardAccount-64"><a href="#CardAccount-64"><span class="linenos">64</span></a><span class="sd">        -------</span>
+</span><span id="CardAccount-65"><a href="#CardAccount-65"><span class="linenos">65</span></a><span class="sd">            list</span>
+</span><span id="CardAccount-66"><a href="#CardAccount-66"><span class="linenos">66</span></a><span class="sd">        A list of TripleObjects objects with some card account attributes:</span>
+</span><span id="CardAccount-67"><a href="#CardAccount-67"><span class="linenos">67</span></a>
+</span><span id="CardAccount-68"><a href="#CardAccount-68"><span class="linenos">68</span></a><span class="sd">        - `objID`</span>
+</span><span id="CardAccount-69"><a href="#CardAccount-69"><span class="linenos">69</span></a><span class="sd">        - `externalID`</span>
+</span><span id="CardAccount-70"><a href="#CardAccount-70"><span class="linenos">70</span></a><span class="sd">        - `status`</span>
+</span><span id="CardAccount-71"><a href="#CardAccount-71"><span class="linenos">71</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardAccount-72"><a href="#CardAccount-72"><span class="linenos">72</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="CardAccount-73"><a href="#CardAccount-73"><span class="linenos">73</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount-74"><a href="#CardAccount-74"><span class="linenos">74</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount-75"><a href="#CardAccount-75"><span class="linenos">75</span></a>            <span class="s1">&#39;pubExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;publisher_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount-76"><a href="#CardAccount-76"><span class="linenos">76</span></a>        <span class="p">}</span>
+</span><span id="CardAccount-77"><a href="#CardAccount-77"><span class="linenos">77</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="CardAccount-78"><a href="#CardAccount-78"><span class="linenos">78</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;card_accounts&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="CardAccount-79"><a href="#CardAccount-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Abstract class ancestor to all the triple API objects.</p>
 </div>
 
 
                             <div id="CardAccount.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="CardAccount.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">CardAccount</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;card_program_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;external_id&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;ENROLLED&#39;</span><span class="p">,</span> <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01T01:59:59.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;updated_at&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01T01:59:59.000Z&#39;</span><span class="p">}</span></span>)</span>
 
-        
+                <label class="view-source-button" for="CardAccount.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#CardAccount.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardAccount.__init__-44"><a href="#CardAccount.__init__-44"><span class="linenos">44</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CARD_ACCOUNT_DICT</span><span class="p">):</span>
+</span><span id="CardAccount.__init__-45"><a href="#CardAccount.__init__-45"><span class="linenos">45</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
 valid, existing object ID if it's not a collection or JSON.  The
 constructor only returns a valid object if a subclass is instantiated;
@@ -213,16 +358,12 @@ in the API documentation</li>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If obj represents an objectID and the ID isn't
-associated with a valid object</p>
-
-<pre><code>CoronadoMalformedError
-</code></pre>
-
-<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
@@ -247,16 +388,52 @@ in JSON or a <code>dict</code>.</p>
 
                             </div>
                             <div id="CardAccount.list" class="classattr">
-                                <div class="attr function">
+                                        <input id="CardAccount.list-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span>, </span><span class="param"><span class="n">paramMap</span><span class="o">=</span><span class="kc">None</span>, </span><span class="param"><span class="o">**</span><span class="n">args</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
 
-        
+                <label class="view-source-button" for="CardAccount.list-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#CardAccount.list"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardAccount.list-48"><a href="#CardAccount.list-48"><span class="linenos">48</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardAccount.list-49"><a href="#CardAccount.list-49"><span class="linenos">49</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span> <span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="CardAccount.list-50"><a href="#CardAccount.list-50"><span class="linenos">50</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardAccount.list-51"><a href="#CardAccount.list-51"><span class="linenos">51</span></a><span class="sd">        Return a list of card accounts.  The list is a sequential query from the</span>
+</span><span id="CardAccount.list-52"><a href="#CardAccount.list-52"><span class="linenos">52</span></a><span class="sd">        beginning of time if no query parameters are passed:</span>
+</span><span id="CardAccount.list-53"><a href="#CardAccount.list-53"><span class="linenos">53</span></a>
+</span><span id="CardAccount.list-54"><a href="#CardAccount.list-54"><span class="linenos">54</span></a><span class="sd">        Arguments</span>
+</span><span id="CardAccount.list-55"><a href="#CardAccount.list-55"><span class="linenos">55</span></a><span class="sd">        ---------</span>
+</span><span id="CardAccount.list-56"><a href="#CardAccount.list-56"><span class="linenos">56</span></a><span class="sd">            pubExternalID : str</span>
+</span><span id="CardAccount.list-57"><a href="#CardAccount.list-57"><span class="linenos">57</span></a><span class="sd">        A publisher external ID</span>
+</span><span id="CardAccount.list-58"><a href="#CardAccount.list-58"><span class="linenos">58</span></a><span class="sd">            cardProgramExternalID : str</span>
+</span><span id="CardAccount.list-59"><a href="#CardAccount.list-59"><span class="linenos">59</span></a><span class="sd">        A card program external ID</span>
+</span><span id="CardAccount.list-60"><a href="#CardAccount.list-60"><span class="linenos">60</span></a><span class="sd">            cardAccountExternalID : str</span>
+</span><span id="CardAccount.list-61"><a href="#CardAccount.list-61"><span class="linenos">61</span></a><span class="sd">        A card account external ID</span>
+</span><span id="CardAccount.list-62"><a href="#CardAccount.list-62"><span class="linenos">62</span></a>
+</span><span id="CardAccount.list-63"><a href="#CardAccount.list-63"><span class="linenos">63</span></a><span class="sd">        Returns</span>
+</span><span id="CardAccount.list-64"><a href="#CardAccount.list-64"><span class="linenos">64</span></a><span class="sd">        -------</span>
+</span><span id="CardAccount.list-65"><a href="#CardAccount.list-65"><span class="linenos">65</span></a><span class="sd">            list</span>
+</span><span id="CardAccount.list-66"><a href="#CardAccount.list-66"><span class="linenos">66</span></a><span class="sd">        A list of TripleObjects objects with some card account attributes:</span>
+</span><span id="CardAccount.list-67"><a href="#CardAccount.list-67"><span class="linenos">67</span></a>
+</span><span id="CardAccount.list-68"><a href="#CardAccount.list-68"><span class="linenos">68</span></a><span class="sd">        - `objID`</span>
+</span><span id="CardAccount.list-69"><a href="#CardAccount.list-69"><span class="linenos">69</span></a><span class="sd">        - `externalID`</span>
+</span><span id="CardAccount.list-70"><a href="#CardAccount.list-70"><span class="linenos">70</span></a><span class="sd">        - `status`</span>
+</span><span id="CardAccount.list-71"><a href="#CardAccount.list-71"><span class="linenos">71</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardAccount.list-72"><a href="#CardAccount.list-72"><span class="linenos">72</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="CardAccount.list-73"><a href="#CardAccount.list-73"><span class="linenos">73</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount.list-74"><a href="#CardAccount.list-74"><span class="linenos">74</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount.list-75"><a href="#CardAccount.list-75"><span class="linenos">75</span></a>            <span class="s1">&#39;pubExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;publisher_external_id&#39;</span><span class="p">,</span>
+</span><span id="CardAccount.list-76"><a href="#CardAccount.list-76"><span class="linenos">76</span></a>        <span class="p">}</span>
+</span><span id="CardAccount.list-77"><a href="#CardAccount.list-77"><span class="linenos">77</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="CardAccount.list-78"><a href="#CardAccount.list-78"><span class="linenos">78</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;card_accounts&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="CardAccount.list-79"><a href="#CardAccount.list-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Return a list of card accounts.  The list is a sequential query from the
 beginning of time if no query parameters are passed:</p>
 

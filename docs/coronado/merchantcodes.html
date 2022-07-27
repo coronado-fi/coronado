@@ -56,7 +56,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -71,34 +71,261 @@
 <a href="./../coronado.html">coronado</a><wbr>.merchantcodes    </h1>
 
                 
-                
-                
-                
+                        <input id="merchantcodes-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="merchantcodes-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="kn">from</span> <span class="nn">coronado.baseobjects</span> <span class="kn">import</span> <span class="n">BASE_MERCHANT_CATEGORY_CODE_DICT</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span> <span class="nn">coronado.exceptions</span> <span class="kn">import</span> <span class="n">CallError</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="kn">import</span> <span class="nn">iso18245</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="c1"># +++ classes +++</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="k">class</span> <span class="nc">MerchantCategoryCode</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">    ISO-18245 merchant category codes implementation.  Leverages the Python</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">    package &lt;a href=&#39;https://pypi.org/project/iso18245/&#39; target=&#39;_blank&#39;&gt;iso18245&lt;/a&gt; for code resolution and validation.</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>            <span class="k">return</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_MERCHANT_CATEGORY_CODE_DICT</span><span class="p">)</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>            <span class="n">categoryInfo</span> <span class="o">=</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>        <span class="k">except</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">MCCNotFound</span><span class="p">:</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc_range</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">obj</span> 
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>                <span class="n">categoryInfo</span><span class="o">.</span><span class="n">iso_description</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">stripe_description</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">visa_description</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">range</span><span class="o">.</span><span class="n">description</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>            <span class="p">)</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">        List all the MCCs known to the triple systems.  Full range is between 0000 and </span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">        9999, inclusive.  Ranges must be expressed as 4-digit strings.</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">        Arguments</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        ---------</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">            begin : str</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        The starting code for listing a range (inclusive).</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">            end : str</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">        The ending code for listing a range (inclusive).</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        Returns</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">        -------</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">            list</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        A list of `MerchantCategoryCode` objects, or `None` if empty.</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        Raises</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">        ------</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">            CoronadoError</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>        <span class="n">begin</span> <span class="o">=</span> <span class="s1">&#39;0000&#39;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>        <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;9999&#39;</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>            <span class="n">requiredArgs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">requiredArgs</span><span class="p">):</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>                <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">requiredArgs</span><span class="p">)</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>                <span class="k">raise</span> <span class="n">CallError</span><span class="p">(</span><span class="s2">&quot;arg</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> missing during instantiation&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">missing</span><span class="p">))</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>            <span class="n">begin</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>            <span class="n">end</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>        <span class="n">merchantCodes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">MerchantCategoryCode</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">([</span> <span class="n">catInfo</span><span class="o">.</span><span class="n">mcc</span> <span class="k">for</span> <span class="n">catInfo</span> <span class="ow">in</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_all_mccs_in_range</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="p">])</span> <span class="p">]</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>        <span class="k">return</span> <span class="n">merchantCodes</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>        <span class="kc">None</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>        <span class="kc">None</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             </section>
                 <section id="MerchantCategoryCode">
-                    <div class="attr class">
+                            <input id="MerchantCategoryCode-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">MerchantCategoryCode</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode-14"><a href="#MerchantCategoryCode-14"><span class="linenos"> 14</span></a><span class="k">class</span> <span class="nc">MerchantCategoryCode</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode-15"><a href="#MerchantCategoryCode-15"><span class="linenos"> 15</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-16"><a href="#MerchantCategoryCode-16"><span class="linenos"> 16</span></a><span class="sd">    ISO-18245 merchant category codes implementation.  Leverages the Python</span>
+</span><span id="MerchantCategoryCode-17"><a href="#MerchantCategoryCode-17"><span class="linenos"> 17</span></a><span class="sd">    package &lt;a href=&#39;https://pypi.org/project/iso18245/&#39; target=&#39;_blank&#39;&gt;iso18245&lt;/a&gt; for code resolution and validation.</span>
+</span><span id="MerchantCategoryCode-18"><a href="#MerchantCategoryCode-18"><span class="linenos"> 18</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-19"><a href="#MerchantCategoryCode-19"><span class="linenos"> 19</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode-20"><a href="#MerchantCategoryCode-20"><span class="linenos"> 20</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode-21"><a href="#MerchantCategoryCode-21"><span class="linenos"> 21</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode-22"><a href="#MerchantCategoryCode-22"><span class="linenos"> 22</span></a>            <span class="k">return</span>
+</span><span id="MerchantCategoryCode-23"><a href="#MerchantCategoryCode-23"><span class="linenos"> 23</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-24"><a href="#MerchantCategoryCode-24"><span class="linenos"> 24</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_MERCHANT_CATEGORY_CODE_DICT</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode-25"><a href="#MerchantCategoryCode-25"><span class="linenos"> 25</span></a>
+</span><span id="MerchantCategoryCode-26"><a href="#MerchantCategoryCode-26"><span class="linenos"> 26</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-27"><a href="#MerchantCategoryCode-27"><span class="linenos"> 27</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="MerchantCategoryCode-28"><a href="#MerchantCategoryCode-28"><span class="linenos"> 28</span></a>            <span class="n">categoryInfo</span> <span class="o">=</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode-29"><a href="#MerchantCategoryCode-29"><span class="linenos"> 29</span></a>        <span class="k">except</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">MCCNotFound</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-30"><a href="#MerchantCategoryCode-30"><span class="linenos"> 30</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc_range</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode-31"><a href="#MerchantCategoryCode-31"><span class="linenos"> 31</span></a>
+</span><span id="MerchantCategoryCode-32"><a href="#MerchantCategoryCode-32"><span class="linenos"> 32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">obj</span> 
+</span><span id="MerchantCategoryCode-33"><a href="#MerchantCategoryCode-33"><span class="linenos"> 33</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-34"><a href="#MerchantCategoryCode-34"><span class="linenos"> 34</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="MerchantCategoryCode-35"><a href="#MerchantCategoryCode-35"><span class="linenos"> 35</span></a>                <span class="n">categoryInfo</span><span class="o">.</span><span class="n">iso_description</span>
+</span><span id="MerchantCategoryCode-36"><a href="#MerchantCategoryCode-36"><span class="linenos"> 36</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">stripe_description</span>
+</span><span id="MerchantCategoryCode-37"><a href="#MerchantCategoryCode-37"><span class="linenos"> 37</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">visa_description</span>
+</span><span id="MerchantCategoryCode-38"><a href="#MerchantCategoryCode-38"><span class="linenos"> 38</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">range</span><span class="o">.</span><span class="n">description</span>
+</span><span id="MerchantCategoryCode-39"><a href="#MerchantCategoryCode-39"><span class="linenos"> 39</span></a>            <span class="p">)</span>
+</span><span id="MerchantCategoryCode-40"><a href="#MerchantCategoryCode-40"><span class="linenos"> 40</span></a>
+</span><span id="MerchantCategoryCode-41"><a href="#MerchantCategoryCode-41"><span class="linenos"> 41</span></a>
+</span><span id="MerchantCategoryCode-42"><a href="#MerchantCategoryCode-42"><span class="linenos"> 42</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode-43"><a href="#MerchantCategoryCode-43"><span class="linenos"> 43</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-44"><a href="#MerchantCategoryCode-44"><span class="linenos"> 44</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-45"><a href="#MerchantCategoryCode-45"><span class="linenos"> 45</span></a><span class="sd">        List all the MCCs known to the triple systems.  Full range is between 0000 and </span>
+</span><span id="MerchantCategoryCode-46"><a href="#MerchantCategoryCode-46"><span class="linenos"> 46</span></a><span class="sd">        9999, inclusive.  Ranges must be expressed as 4-digit strings.</span>
+</span><span id="MerchantCategoryCode-47"><a href="#MerchantCategoryCode-47"><span class="linenos"> 47</span></a>
+</span><span id="MerchantCategoryCode-48"><a href="#MerchantCategoryCode-48"><span class="linenos"> 48</span></a><span class="sd">        Arguments</span>
+</span><span id="MerchantCategoryCode-49"><a href="#MerchantCategoryCode-49"><span class="linenos"> 49</span></a><span class="sd">        ---------</span>
+</span><span id="MerchantCategoryCode-50"><a href="#MerchantCategoryCode-50"><span class="linenos"> 50</span></a><span class="sd">            begin : str</span>
+</span><span id="MerchantCategoryCode-51"><a href="#MerchantCategoryCode-51"><span class="linenos"> 51</span></a><span class="sd">        The starting code for listing a range (inclusive).</span>
+</span><span id="MerchantCategoryCode-52"><a href="#MerchantCategoryCode-52"><span class="linenos"> 52</span></a>
+</span><span id="MerchantCategoryCode-53"><a href="#MerchantCategoryCode-53"><span class="linenos"> 53</span></a><span class="sd">            end : str</span>
+</span><span id="MerchantCategoryCode-54"><a href="#MerchantCategoryCode-54"><span class="linenos"> 54</span></a><span class="sd">        The ending code for listing a range (inclusive).</span>
+</span><span id="MerchantCategoryCode-55"><a href="#MerchantCategoryCode-55"><span class="linenos"> 55</span></a>
+</span><span id="MerchantCategoryCode-56"><a href="#MerchantCategoryCode-56"><span class="linenos"> 56</span></a><span class="sd">        Returns</span>
+</span><span id="MerchantCategoryCode-57"><a href="#MerchantCategoryCode-57"><span class="linenos"> 57</span></a><span class="sd">        -------</span>
+</span><span id="MerchantCategoryCode-58"><a href="#MerchantCategoryCode-58"><span class="linenos"> 58</span></a><span class="sd">            list</span>
+</span><span id="MerchantCategoryCode-59"><a href="#MerchantCategoryCode-59"><span class="linenos"> 59</span></a><span class="sd">        A list of `MerchantCategoryCode` objects, or `None` if empty.</span>
+</span><span id="MerchantCategoryCode-60"><a href="#MerchantCategoryCode-60"><span class="linenos"> 60</span></a>
+</span><span id="MerchantCategoryCode-61"><a href="#MerchantCategoryCode-61"><span class="linenos"> 61</span></a><span class="sd">        Raises</span>
+</span><span id="MerchantCategoryCode-62"><a href="#MerchantCategoryCode-62"><span class="linenos"> 62</span></a><span class="sd">        ------</span>
+</span><span id="MerchantCategoryCode-63"><a href="#MerchantCategoryCode-63"><span class="linenos"> 63</span></a><span class="sd">            CoronadoError</span>
+</span><span id="MerchantCategoryCode-64"><a href="#MerchantCategoryCode-64"><span class="linenos"> 64</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="MerchantCategoryCode-65"><a href="#MerchantCategoryCode-65"><span class="linenos"> 65</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="MerchantCategoryCode-66"><a href="#MerchantCategoryCode-66"><span class="linenos"> 66</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="MerchantCategoryCode-67"><a href="#MerchantCategoryCode-67"><span class="linenos"> 67</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-68"><a href="#MerchantCategoryCode-68"><span class="linenos"> 68</span></a>        <span class="n">begin</span> <span class="o">=</span> <span class="s1">&#39;0000&#39;</span>
+</span><span id="MerchantCategoryCode-69"><a href="#MerchantCategoryCode-69"><span class="linenos"> 69</span></a>        <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;9999&#39;</span>
+</span><span id="MerchantCategoryCode-70"><a href="#MerchantCategoryCode-70"><span class="linenos"> 70</span></a>
+</span><span id="MerchantCategoryCode-71"><a href="#MerchantCategoryCode-71"><span class="linenos"> 71</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode-72"><a href="#MerchantCategoryCode-72"><span class="linenos"> 72</span></a>            <span class="n">requiredArgs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="MerchantCategoryCode-73"><a href="#MerchantCategoryCode-73"><span class="linenos"> 73</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">requiredArgs</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode-74"><a href="#MerchantCategoryCode-74"><span class="linenos"> 74</span></a>                <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">requiredArgs</span><span class="p">)</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</span><span id="MerchantCategoryCode-75"><a href="#MerchantCategoryCode-75"><span class="linenos"> 75</span></a>                <span class="k">raise</span> <span class="n">CallError</span><span class="p">(</span><span class="s2">&quot;arg</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> missing during instantiation&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">missing</span><span class="p">))</span>
+</span><span id="MerchantCategoryCode-76"><a href="#MerchantCategoryCode-76"><span class="linenos"> 76</span></a>            <span class="n">begin</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span>
+</span><span id="MerchantCategoryCode-77"><a href="#MerchantCategoryCode-77"><span class="linenos"> 77</span></a>            <span class="n">end</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span>
+</span><span id="MerchantCategoryCode-78"><a href="#MerchantCategoryCode-78"><span class="linenos"> 78</span></a>        <span class="n">merchantCodes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">MerchantCategoryCode</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">([</span> <span class="n">catInfo</span><span class="o">.</span><span class="n">mcc</span> <span class="k">for</span> <span class="n">catInfo</span> <span class="ow">in</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_all_mccs_in_range</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="p">])</span> <span class="p">]</span>
+</span><span id="MerchantCategoryCode-79"><a href="#MerchantCategoryCode-79"><span class="linenos"> 79</span></a>
+</span><span id="MerchantCategoryCode-80"><a href="#MerchantCategoryCode-80"><span class="linenos"> 80</span></a>        <span class="k">return</span> <span class="n">merchantCodes</span>
+</span><span id="MerchantCategoryCode-81"><a href="#MerchantCategoryCode-81"><span class="linenos"> 81</span></a>
+</span><span id="MerchantCategoryCode-82"><a href="#MerchantCategoryCode-82"><span class="linenos"> 82</span></a>
+</span><span id="MerchantCategoryCode-83"><a href="#MerchantCategoryCode-83"><span class="linenos"> 83</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode-84"><a href="#MerchantCategoryCode-84"><span class="linenos"> 84</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-85"><a href="#MerchantCategoryCode-85"><span class="linenos"> 85</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-86"><a href="#MerchantCategoryCode-86"><span class="linenos"> 86</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode-87"><a href="#MerchantCategoryCode-87"><span class="linenos"> 87</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-88"><a href="#MerchantCategoryCode-88"><span class="linenos"> 88</span></a>        <span class="kc">None</span>
+</span><span id="MerchantCategoryCode-89"><a href="#MerchantCategoryCode-89"><span class="linenos"> 89</span></a>
+</span><span id="MerchantCategoryCode-90"><a href="#MerchantCategoryCode-90"><span class="linenos"> 90</span></a>
+</span><span id="MerchantCategoryCode-91"><a href="#MerchantCategoryCode-91"><span class="linenos"> 91</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode-92"><a href="#MerchantCategoryCode-92"><span class="linenos"> 92</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-93"><a href="#MerchantCategoryCode-93"><span class="linenos"> 93</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-94"><a href="#MerchantCategoryCode-94"><span class="linenos"> 94</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode-95"><a href="#MerchantCategoryCode-95"><span class="linenos"> 95</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-96"><a href="#MerchantCategoryCode-96"><span class="linenos"> 96</span></a>        <span class="kc">None</span>
+</span><span id="MerchantCategoryCode-97"><a href="#MerchantCategoryCode-97"><span class="linenos"> 97</span></a>
+</span><span id="MerchantCategoryCode-98"><a href="#MerchantCategoryCode-98"><span class="linenos"> 98</span></a>
+</span><span id="MerchantCategoryCode-99"><a href="#MerchantCategoryCode-99"><span class="linenos"> 99</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode-100"><a href="#MerchantCategoryCode-100"><span class="linenos">100</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode-101"><a href="#MerchantCategoryCode-101"><span class="linenos">101</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-102"><a href="#MerchantCategoryCode-102"><span class="linenos">102</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode-103"><a href="#MerchantCategoryCode-103"><span class="linenos">103</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode-104"><a href="#MerchantCategoryCode-104"><span class="linenos">104</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>ISO-18245 merchant category codes implementation.  Leverages the Python
 package <a href='https://pypi.org/project/iso18245/' target='_blank'>iso18245</a> for code resolution and validation.</p>
 </div>
 
 
                             <div id="MerchantCategoryCode.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="MerchantCategoryCode.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">MerchantCategoryCode</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">obj</span></span>)</span>
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode.__init__-19"><a href="#MerchantCategoryCode.__init__-19"><span class="linenos">19</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode.__init__-20"><a href="#MerchantCategoryCode.__init__-20"><span class="linenos">20</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode.__init__-21"><a href="#MerchantCategoryCode.__init__-21"><span class="linenos">21</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode.__init__-22"><a href="#MerchantCategoryCode.__init__-22"><span class="linenos">22</span></a>            <span class="k">return</span>
+</span><span id="MerchantCategoryCode.__init__-23"><a href="#MerchantCategoryCode.__init__-23"><span class="linenos">23</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.__init__-24"><a href="#MerchantCategoryCode.__init__-24"><span class="linenos">24</span></a>            <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_MERCHANT_CATEGORY_CODE_DICT</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode.__init__-25"><a href="#MerchantCategoryCode.__init__-25"><span class="linenos">25</span></a>
+</span><span id="MerchantCategoryCode.__init__-26"><a href="#MerchantCategoryCode.__init__-26"><span class="linenos">26</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.__init__-27"><a href="#MerchantCategoryCode.__init__-27"><span class="linenos">27</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="MerchantCategoryCode.__init__-28"><a href="#MerchantCategoryCode.__init__-28"><span class="linenos">28</span></a>            <span class="n">categoryInfo</span> <span class="o">=</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode.__init__-29"><a href="#MerchantCategoryCode.__init__-29"><span class="linenos">29</span></a>        <span class="k">except</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">MCCNotFound</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.__init__-30"><a href="#MerchantCategoryCode.__init__-30"><span class="linenos">30</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iso18245</span><span class="o">.</span><span class="n">get_mcc_range</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</span><span id="MerchantCategoryCode.__init__-31"><a href="#MerchantCategoryCode.__init__-31"><span class="linenos">31</span></a>
+</span><span id="MerchantCategoryCode.__init__-32"><a href="#MerchantCategoryCode.__init__-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">obj</span> 
+</span><span id="MerchantCategoryCode.__init__-33"><a href="#MerchantCategoryCode.__init__-33"><span class="linenos">33</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.__init__-34"><a href="#MerchantCategoryCode.__init__-34"><span class="linenos">34</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+</span><span id="MerchantCategoryCode.__init__-35"><a href="#MerchantCategoryCode.__init__-35"><span class="linenos">35</span></a>                <span class="n">categoryInfo</span><span class="o">.</span><span class="n">iso_description</span>
+</span><span id="MerchantCategoryCode.__init__-36"><a href="#MerchantCategoryCode.__init__-36"><span class="linenos">36</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">stripe_description</span>
+</span><span id="MerchantCategoryCode.__init__-37"><a href="#MerchantCategoryCode.__init__-37"><span class="linenos">37</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">visa_description</span>
+</span><span id="MerchantCategoryCode.__init__-38"><a href="#MerchantCategoryCode.__init__-38"><span class="linenos">38</span></a>                <span class="ow">or</span> <span class="n">categoryInfo</span><span class="o">.</span><span class="n">range</span><span class="o">.</span><span class="n">description</span>
+</span><span id="MerchantCategoryCode.__init__-39"><a href="#MerchantCategoryCode.__init__-39"><span class="linenos">39</span></a>            <span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
 valid, existing object ID if it's not a collection or JSON.  The
 constructor only returns a valid object if a subclass is instantiated;
@@ -122,31 +349,70 @@ in the API documentation</li>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If obj represents an objectID and the ID isn't
-associated with a valid object</p>
-
-<pre><code>CoronadoMalformedError
-</code></pre>
-
-<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
                             </div>
                             <div id="MerchantCategoryCode.list" class="classattr">
-                                <div class="attr function">
+                                        <input id="MerchantCategoryCode.list-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">paraMap</span><span class="o">=</span><span class="kc">None</span>, </span><span class="param"><span class="o">**</span><span class="n">args</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode.list-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode.list"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode.list-42"><a href="#MerchantCategoryCode.list-42"><span class="linenos">42</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode.list-43"><a href="#MerchantCategoryCode.list-43"><span class="linenos">43</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.list-44"><a href="#MerchantCategoryCode.list-44"><span class="linenos">44</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.list-45"><a href="#MerchantCategoryCode.list-45"><span class="linenos">45</span></a><span class="sd">        List all the MCCs known to the triple systems.  Full range is between 0000 and </span>
+</span><span id="MerchantCategoryCode.list-46"><a href="#MerchantCategoryCode.list-46"><span class="linenos">46</span></a><span class="sd">        9999, inclusive.  Ranges must be expressed as 4-digit strings.</span>
+</span><span id="MerchantCategoryCode.list-47"><a href="#MerchantCategoryCode.list-47"><span class="linenos">47</span></a>
+</span><span id="MerchantCategoryCode.list-48"><a href="#MerchantCategoryCode.list-48"><span class="linenos">48</span></a><span class="sd">        Arguments</span>
+</span><span id="MerchantCategoryCode.list-49"><a href="#MerchantCategoryCode.list-49"><span class="linenos">49</span></a><span class="sd">        ---------</span>
+</span><span id="MerchantCategoryCode.list-50"><a href="#MerchantCategoryCode.list-50"><span class="linenos">50</span></a><span class="sd">            begin : str</span>
+</span><span id="MerchantCategoryCode.list-51"><a href="#MerchantCategoryCode.list-51"><span class="linenos">51</span></a><span class="sd">        The starting code for listing a range (inclusive).</span>
+</span><span id="MerchantCategoryCode.list-52"><a href="#MerchantCategoryCode.list-52"><span class="linenos">52</span></a>
+</span><span id="MerchantCategoryCode.list-53"><a href="#MerchantCategoryCode.list-53"><span class="linenos">53</span></a><span class="sd">            end : str</span>
+</span><span id="MerchantCategoryCode.list-54"><a href="#MerchantCategoryCode.list-54"><span class="linenos">54</span></a><span class="sd">        The ending code for listing a range (inclusive).</span>
+</span><span id="MerchantCategoryCode.list-55"><a href="#MerchantCategoryCode.list-55"><span class="linenos">55</span></a>
+</span><span id="MerchantCategoryCode.list-56"><a href="#MerchantCategoryCode.list-56"><span class="linenos">56</span></a><span class="sd">        Returns</span>
+</span><span id="MerchantCategoryCode.list-57"><a href="#MerchantCategoryCode.list-57"><span class="linenos">57</span></a><span class="sd">        -------</span>
+</span><span id="MerchantCategoryCode.list-58"><a href="#MerchantCategoryCode.list-58"><span class="linenos">58</span></a><span class="sd">            list</span>
+</span><span id="MerchantCategoryCode.list-59"><a href="#MerchantCategoryCode.list-59"><span class="linenos">59</span></a><span class="sd">        A list of `MerchantCategoryCode` objects, or `None` if empty.</span>
+</span><span id="MerchantCategoryCode.list-60"><a href="#MerchantCategoryCode.list-60"><span class="linenos">60</span></a>
+</span><span id="MerchantCategoryCode.list-61"><a href="#MerchantCategoryCode.list-61"><span class="linenos">61</span></a><span class="sd">        Raises</span>
+</span><span id="MerchantCategoryCode.list-62"><a href="#MerchantCategoryCode.list-62"><span class="linenos">62</span></a><span class="sd">        ------</span>
+</span><span id="MerchantCategoryCode.list-63"><a href="#MerchantCategoryCode.list-63"><span class="linenos">63</span></a><span class="sd">            CoronadoError</span>
+</span><span id="MerchantCategoryCode.list-64"><a href="#MerchantCategoryCode.list-64"><span class="linenos">64</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="MerchantCategoryCode.list-65"><a href="#MerchantCategoryCode.list-65"><span class="linenos">65</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="MerchantCategoryCode.list-66"><a href="#MerchantCategoryCode.list-66"><span class="linenos">66</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="MerchantCategoryCode.list-67"><a href="#MerchantCategoryCode.list-67"><span class="linenos">67</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.list-68"><a href="#MerchantCategoryCode.list-68"><span class="linenos">68</span></a>        <span class="n">begin</span> <span class="o">=</span> <span class="s1">&#39;0000&#39;</span>
+</span><span id="MerchantCategoryCode.list-69"><a href="#MerchantCategoryCode.list-69"><span class="linenos">69</span></a>        <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;9999&#39;</span>
+</span><span id="MerchantCategoryCode.list-70"><a href="#MerchantCategoryCode.list-70"><span class="linenos">70</span></a>
+</span><span id="MerchantCategoryCode.list-71"><a href="#MerchantCategoryCode.list-71"><span class="linenos">71</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode.list-72"><a href="#MerchantCategoryCode.list-72"><span class="linenos">72</span></a>            <span class="n">requiredArgs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="MerchantCategoryCode.list-73"><a href="#MerchantCategoryCode.list-73"><span class="linenos">73</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">requiredArgs</span><span class="p">):</span>
+</span><span id="MerchantCategoryCode.list-74"><a href="#MerchantCategoryCode.list-74"><span class="linenos">74</span></a>                <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">requiredArgs</span><span class="p">)</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</span><span id="MerchantCategoryCode.list-75"><a href="#MerchantCategoryCode.list-75"><span class="linenos">75</span></a>                <span class="k">raise</span> <span class="n">CallError</span><span class="p">(</span><span class="s2">&quot;arg</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> missing during instantiation&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">missing</span><span class="p">))</span>
+</span><span id="MerchantCategoryCode.list-76"><a href="#MerchantCategoryCode.list-76"><span class="linenos">76</span></a>            <span class="n">begin</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]</span>
+</span><span id="MerchantCategoryCode.list-77"><a href="#MerchantCategoryCode.list-77"><span class="linenos">77</span></a>            <span class="n">end</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span>
+</span><span id="MerchantCategoryCode.list-78"><a href="#MerchantCategoryCode.list-78"><span class="linenos">78</span></a>        <span class="n">merchantCodes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">MerchantCategoryCode</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">([</span> <span class="n">catInfo</span><span class="o">.</span><span class="n">mcc</span> <span class="k">for</span> <span class="n">catInfo</span> <span class="ow">in</span> <span class="n">iso18245</span><span class="o">.</span><span class="n">get_all_mccs_in_range</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="p">])</span> <span class="p">]</span>
+</span><span id="MerchantCategoryCode.list-79"><a href="#MerchantCategoryCode.list-79"><span class="linenos">79</span></a>
+</span><span id="MerchantCategoryCode.list-80"><a href="#MerchantCategoryCode.list-80"><span class="linenos">80</span></a>        <span class="k">return</span> <span class="n">merchantCodes</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>List all the MCCs known to the triple systems.  Full range is between 0000 and 
 9999, inclusive.  Ranges must be expressed as 4-digit strings.</p>
 
@@ -170,53 +436,90 @@ associated with a valid object</p>
 <p>A list of <code><a href="#MerchantCategoryCode">MerchantCategoryCode</a></code> objects, or <code>None</code> if empty.</p>
 
 <h2 id="raises">Raises</h2>
+
+<pre><code>CoronadoError
+</code></pre>
+
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
                             </div>
                             <div id="MerchantCategoryCode.create" class="classattr">
-                                <div class="attr function">
+                                        <input id="MerchantCategoryCode.create-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">create</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode.create-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode.create"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode.create-83"><a href="#MerchantCategoryCode.create-83"><span class="linenos">83</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode.create-84"><a href="#MerchantCategoryCode.create-84"><span class="linenos">84</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.create-85"><a href="#MerchantCategoryCode.create-85"><span class="linenos">85</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.create-86"><a href="#MerchantCategoryCode.create-86"><span class="linenos">86</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode.create-87"><a href="#MerchantCategoryCode.create-87"><span class="linenos">87</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.create-88"><a href="#MerchantCategoryCode.create-88"><span class="linenos">88</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p><strong>Disabled for this class.</strong></p>
 </div>
 
 
                             </div>
                             <div id="MerchantCategoryCode.byID" class="classattr">
-                                <div class="attr function">
+                                        <input id="MerchantCategoryCode.byID-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">byID</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode.byID-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode.byID"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode.byID-91"><a href="#MerchantCategoryCode.byID-91"><span class="linenos">91</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode.byID-92"><a href="#MerchantCategoryCode.byID-92"><span class="linenos">92</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.byID-93"><a href="#MerchantCategoryCode.byID-93"><span class="linenos">93</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.byID-94"><a href="#MerchantCategoryCode.byID-94"><span class="linenos">94</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode.byID-95"><a href="#MerchantCategoryCode.byID-95"><span class="linenos">95</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.byID-96"><a href="#MerchantCategoryCode.byID-96"><span class="linenos">96</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p><strong>Disabled for this class.</strong></p>
 </div>
 
 
                             </div>
                             <div id="MerchantCategoryCode.updateWith" class="classattr">
-                                <div class="attr function">
+                                        <input id="MerchantCategoryCode.updateWith-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">updateWith</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
-        
+                <label class="view-source-button" for="MerchantCategoryCode.updateWith-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MerchantCategoryCode.updateWith"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantCategoryCode.updateWith-99"><a href="#MerchantCategoryCode.updateWith-99"><span class="linenos"> 99</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantCategoryCode.updateWith-100"><a href="#MerchantCategoryCode.updateWith-100"><span class="linenos">100</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantCategoryCode.updateWith-101"><a href="#MerchantCategoryCode.updateWith-101"><span class="linenos">101</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.updateWith-102"><a href="#MerchantCategoryCode.updateWith-102"><span class="linenos">102</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantCategoryCode.updateWith-103"><a href="#MerchantCategoryCode.updateWith-103"><span class="linenos">103</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantCategoryCode.updateWith-104"><a href="#MerchantCategoryCode.updateWith-104"><span class="linenos">104</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p><strong>Disabled for this class.</strong></p>
 </div>
 

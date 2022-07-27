@@ -1,13 +1,12 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
 from coronado.auth import Scope
 from coronado.cardprog import CardProgram
 from coronado.cardprog import SERVICE_PATH
+from coronado.exceptions import CallError
+from coronado.exceptions import InvalidPayloadError
 
 import uuid
 
@@ -49,15 +48,15 @@ def test_CardProgram_create():
     program = CardProgram.create(progSpec)
     assert program
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         CardProgram.create(None)
 
-#     progSpec['external_id'] = KNOWN_PROG_EXT_ID
-#     with pytest.raises(CoronadoDuplicatesDisallowedError):
-#         CardProgram.create(progSpec)
+    progSpec['external_id'] = KNOWN_PROG_EXT_ID
+    with pytest.raises(InvalidPayloadError):
+        CardProgram.create(progSpec)
 
     progSpec['external_id'] = '****'
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    with pytest.raises(CallError):
         CardProgram.create(progSpec)
 
 

@@ -152,7 +152,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -167,9 +167,168 @@
 <a href="./../coronado.html">coronado</a><wbr>.transaction    </h1>
 
                 
-                
-                
-                
+                        <input id="transaction-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="transaction-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleEnum</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span> <span class="nn">coronado.address</span> <span class="kn">import</span> <span class="n">Address</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="kn">from</span> <span class="nn">coronado.baseobjects</span> <span class="kn">import</span> <span class="n">BASE_TRANSACTION_DICT</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="kn">from</span> <span class="nn">coronado.merchantcodes</span> <span class="kn">import</span> <span class="n">MerchantCategoryCode</span> <span class="k">as</span> <span class="n">MCC</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s1">&#39;partner/transactions&#39;</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">The default service path associated with Transaction operations.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">Usage:</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">```</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="sd">Transaction.initialize(serviceURL, SERVICE_PATH, auth)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">```</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">Users are welcome to initialize the class&#39; service path from regular strings.</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="sd">This constant is defined for convenience.</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="c1"># +++ classes +++</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="k">class</span> <span class="nc">Transaction</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">    Transaction instances represent exchanges between buyers and sellers that </span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">    may have a linked offer.</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>        <span class="s1">&#39;amount&#39;</span><span class="p">,</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>        <span class="s1">&#39;cardAccountID&#39;</span><span class="p">,</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>        <span class="s1">&#39;createdAt&#39;</span><span class="p">,</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="s1">&#39;currencyCode&#39;</span><span class="p">,</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>        <span class="s1">&#39;debit&#39;</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>        <span class="s1">&#39;description&#39;</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="s1">&#39;externalID&#39;</span><span class="p">,</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>        <span class="s1">&#39;localDate&#39;</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="s1">&#39;matchingStatus&#39;</span><span class="p">,</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="s1">&#39;transactionType&#39;</span><span class="p">,</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="s1">&#39;updatedAt&#39;</span><span class="p">,</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>    <span class="p">]</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_TRANSACTION_DICT</span><span class="p">):</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>    <span class="c1"># TODO:  Update the docstring to link to Rewards and reward details when</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>    <span class="c1">#        that code is implemented by the back-end and Coronado.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">        List all transactions that match any of the criteria set by the </span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        arguments to this method.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">        Arguments</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">        ---------</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">            cardAccountExternalID</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">            cardProgramExternalID</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">            endDate</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">            matched</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">        A Boolean flag; if True, includes only the transactions matched to an</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        active offer.  See Reward Details for more information.</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">            publisherExternalID</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">            startDate</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">            transactionExternalID</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        Returns</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">        -------</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">            list</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        A list of Transaction objects; can be `None`.</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>            <span class="s1">&#39;endDate&#39;</span><span class="p">:</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>            <span class="s1">&#39;matched&#39;</span><span class="p">:</span> <span class="s1">&#39;matched&#39;</span><span class="p">,</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>            <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>            <span class="s1">&#39;transactionExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;transaction_external_id&#39;</span><span class="p">,</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="p">}</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;transactions&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>            <span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span> <span class="o">=</span> <span class="n">MatchingStatus</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span><span class="p">)</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="c1"># TODO: Bug!  Why are there transactions without an MCC?</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">:</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>                <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span> <span class="o">=</span> <span class="n">MCC</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">)</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="c1"># TODO: error!</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>            <span class="c1"># t.merchantAddress = Address(t.merchantAddress)</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>            <span class="c1"># TODO:  Pending triple API implementation update</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>            <span class="c1"># t.transactionType = TransactionType(t.transactionType)</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>        <span class="kc">None</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="k">class</span> <span class="nc">MatchingStatus</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>    <span class="n">HISTORIC_TRANSACTION</span> <span class="o">=</span> <span class="s1">&#39;HISTORIC_TRANSACTION&#39;</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>    <span class="n">QUEUED</span> <span class="o">=</span> <span class="s1">&#39;QUEUED&#39;</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>    <span class="n">NOT_APPLICABLE</span> <span class="o">=</span> <span class="s1">&#39;NOT_APPLICABLE&#39;</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>    <span class="n">NOT_ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;NOT_ENROLLED&#39;</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>    <span class="n">NO_ACTIVE_OFFER</span> <span class="o">=</span> <span class="s1">&#39;NO_ACTIVE_OFFER&#39;</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>    <span class="n">MATCHED</span> <span class="o">=</span> <span class="s1">&#39;MATCHED&#39;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="k">class</span> <span class="nc">ProcessorMID</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>    <span class="n">AMEX_SE_NUMBER</span> <span class="o">=</span> <span class="s1">&#39;AMEX_SE_NUMBER&#39;</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>    <span class="n">DISCOVER_MID</span> <span class="o">=</span> <span class="s1">&#39;DISCOVER_MID&#39;</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>    <span class="n">MC_AUTH_ACQ_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_ACQ_ID&#39;</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>    <span class="n">MC_AUTH_ICA</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_ICA&#39;</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>    <span class="n">MC_AUTH_LOC_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_LOC_ID&#39;</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>    <span class="n">MC_CLEARING_ACQ_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_ACQ_ID&#39;</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>    <span class="n">MC_CLEARING_ICA</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_ICA&#39;</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>    <span class="n">MC_CLEARING_LOC_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_LOC_ID&#39;</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>    <span class="n">MERCHANT_PROCESSOR</span> <span class="o">=</span> <span class="s1">&#39;MERCHANT_PROCESSOR&#39;</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>    <span class="n">NCR</span> <span class="o">=</span> <span class="s1">&#39;NCR&#39;</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>    <span class="n">VISA_VMID</span> <span class="o">=</span> <span class="s1">&#39;VISA_VMID&#39;</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>    <span class="n">VISA_VSID</span> <span class="o">=</span> <span class="s1">&#39;VISA_VSID&#39;</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="k">class</span> <span class="nc">TransactionType</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>    <span class="n">CHECK</span> <span class="o">=</span> <span class="s1">&#39;CHECK&#39;</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>    <span class="n">DEPOSIT</span> <span class="o">=</span> <span class="s1">&#39;DEPOSIT&#39;</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>    <span class="n">FEE</span> <span class="o">=</span> <span class="s1">&#39;FEE&#39;</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>    <span class="n">PAYMENT</span> <span class="o">=</span> <span class="s1">&#39;PAYMENT&#39;</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>    <span class="n">PURCHASE</span> <span class="o">=</span> <span class="s1">&#39;PURCHASE&#39;</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>    <span class="n">REFUND</span> <span class="o">=</span> <span class="s1">&#39;REFUND&#39;</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>    <span class="n">TRANSFER</span> <span class="o">=</span> <span class="s1">&#39;TRANSFER&#39;</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>    <span class="n">WITHDRAWAL</span> <span class="o">=</span> <span class="s1">&#39;WITHDRAWAL&#39;</span>
+</span></pre></div>
+
+
             </section>
                 <section id="SERVICE_PATH">
                     <div class="attr variable">
@@ -193,29 +352,130 @@ This constant is defined for convenience.</p>
 
                 </section>
                 <section id="Transaction">
-                    <div class="attr class">
+                            <input id="Transaction-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">Transaction</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
-        
+                <label class="view-source-button" for="Transaction-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Transaction"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Transaction-31"><a href="#Transaction-31"><span class="linenos"> 31</span></a><span class="k">class</span> <span class="nc">Transaction</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="Transaction-32"><a href="#Transaction-32"><span class="linenos"> 32</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Transaction-33"><a href="#Transaction-33"><span class="linenos"> 33</span></a><span class="sd">    Transaction instances represent exchanges between buyers and sellers that </span>
+</span><span id="Transaction-34"><a href="#Transaction-34"><span class="linenos"> 34</span></a><span class="sd">    may have a linked offer.</span>
+</span><span id="Transaction-35"><a href="#Transaction-35"><span class="linenos"> 35</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Transaction-36"><a href="#Transaction-36"><span class="linenos"> 36</span></a>
+</span><span id="Transaction-37"><a href="#Transaction-37"><span class="linenos"> 37</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="Transaction-38"><a href="#Transaction-38"><span class="linenos"> 38</span></a>        <span class="s1">&#39;amount&#39;</span><span class="p">,</span>
+</span><span id="Transaction-39"><a href="#Transaction-39"><span class="linenos"> 39</span></a>        <span class="s1">&#39;cardAccountID&#39;</span><span class="p">,</span>
+</span><span id="Transaction-40"><a href="#Transaction-40"><span class="linenos"> 40</span></a>        <span class="s1">&#39;createdAt&#39;</span><span class="p">,</span>
+</span><span id="Transaction-41"><a href="#Transaction-41"><span class="linenos"> 41</span></a>        <span class="s1">&#39;currencyCode&#39;</span><span class="p">,</span>
+</span><span id="Transaction-42"><a href="#Transaction-42"><span class="linenos"> 42</span></a>        <span class="s1">&#39;debit&#39;</span><span class="p">,</span>
+</span><span id="Transaction-43"><a href="#Transaction-43"><span class="linenos"> 43</span></a>        <span class="s1">&#39;description&#39;</span><span class="p">,</span>
+</span><span id="Transaction-44"><a href="#Transaction-44"><span class="linenos"> 44</span></a>        <span class="s1">&#39;externalID&#39;</span><span class="p">,</span>
+</span><span id="Transaction-45"><a href="#Transaction-45"><span class="linenos"> 45</span></a>        <span class="s1">&#39;localDate&#39;</span><span class="p">,</span>
+</span><span id="Transaction-46"><a href="#Transaction-46"><span class="linenos"> 46</span></a>        <span class="s1">&#39;matchingStatus&#39;</span><span class="p">,</span>
+</span><span id="Transaction-47"><a href="#Transaction-47"><span class="linenos"> 47</span></a>        <span class="s1">&#39;transactionType&#39;</span><span class="p">,</span>
+</span><span id="Transaction-48"><a href="#Transaction-48"><span class="linenos"> 48</span></a>        <span class="s1">&#39;updatedAt&#39;</span><span class="p">,</span>
+</span><span id="Transaction-49"><a href="#Transaction-49"><span class="linenos"> 49</span></a>    <span class="p">]</span>
+</span><span id="Transaction-50"><a href="#Transaction-50"><span class="linenos"> 50</span></a>
+</span><span id="Transaction-51"><a href="#Transaction-51"><span class="linenos"> 51</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_TRANSACTION_DICT</span><span class="p">):</span>
+</span><span id="Transaction-52"><a href="#Transaction-52"><span class="linenos"> 52</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="Transaction-53"><a href="#Transaction-53"><span class="linenos"> 53</span></a>
+</span><span id="Transaction-54"><a href="#Transaction-54"><span class="linenos"> 54</span></a>
+</span><span id="Transaction-55"><a href="#Transaction-55"><span class="linenos"> 55</span></a>    <span class="c1"># TODO:  Update the docstring to link to Rewards and reward details when</span>
+</span><span id="Transaction-56"><a href="#Transaction-56"><span class="linenos"> 56</span></a>    <span class="c1">#        that code is implemented by the back-end and Coronado.</span>
+</span><span id="Transaction-57"><a href="#Transaction-57"><span class="linenos"> 57</span></a>    <span class="nd">@classmethod</span>
+</span><span id="Transaction-58"><a href="#Transaction-58"><span class="linenos"> 58</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="Transaction-59"><a href="#Transaction-59"><span class="linenos"> 59</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Transaction-60"><a href="#Transaction-60"><span class="linenos"> 60</span></a><span class="sd">        List all transactions that match any of the criteria set by the </span>
+</span><span id="Transaction-61"><a href="#Transaction-61"><span class="linenos"> 61</span></a><span class="sd">        arguments to this method.</span>
+</span><span id="Transaction-62"><a href="#Transaction-62"><span class="linenos"> 62</span></a>
+</span><span id="Transaction-63"><a href="#Transaction-63"><span class="linenos"> 63</span></a><span class="sd">        Arguments</span>
+</span><span id="Transaction-64"><a href="#Transaction-64"><span class="linenos"> 64</span></a><span class="sd">        ---------</span>
+</span><span id="Transaction-65"><a href="#Transaction-65"><span class="linenos"> 65</span></a><span class="sd">            cardAccountExternalID</span>
+</span><span id="Transaction-66"><a href="#Transaction-66"><span class="linenos"> 66</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction-67"><a href="#Transaction-67"><span class="linenos"> 67</span></a>
+</span><span id="Transaction-68"><a href="#Transaction-68"><span class="linenos"> 68</span></a><span class="sd">            cardProgramExternalID</span>
+</span><span id="Transaction-69"><a href="#Transaction-69"><span class="linenos"> 69</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction-70"><a href="#Transaction-70"><span class="linenos"> 70</span></a>
+</span><span id="Transaction-71"><a href="#Transaction-71"><span class="linenos"> 71</span></a><span class="sd">            endDate</span>
+</span><span id="Transaction-72"><a href="#Transaction-72"><span class="linenos"> 72</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="Transaction-73"><a href="#Transaction-73"><span class="linenos"> 73</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="Transaction-74"><a href="#Transaction-74"><span class="linenos"> 74</span></a>
+</span><span id="Transaction-75"><a href="#Transaction-75"><span class="linenos"> 75</span></a><span class="sd">            matched</span>
+</span><span id="Transaction-76"><a href="#Transaction-76"><span class="linenos"> 76</span></a><span class="sd">        A Boolean flag; if True, includes only the transactions matched to an</span>
+</span><span id="Transaction-77"><a href="#Transaction-77"><span class="linenos"> 77</span></a><span class="sd">        active offer.  See Reward Details for more information.</span>
+</span><span id="Transaction-78"><a href="#Transaction-78"><span class="linenos"> 78</span></a><span class="sd">            publisherExternalID</span>
+</span><span id="Transaction-79"><a href="#Transaction-79"><span class="linenos"> 79</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction-80"><a href="#Transaction-80"><span class="linenos"> 80</span></a>
+</span><span id="Transaction-81"><a href="#Transaction-81"><span class="linenos"> 81</span></a><span class="sd">            startDate</span>
+</span><span id="Transaction-82"><a href="#Transaction-82"><span class="linenos"> 82</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="Transaction-83"><a href="#Transaction-83"><span class="linenos"> 83</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="Transaction-84"><a href="#Transaction-84"><span class="linenos"> 84</span></a>
+</span><span id="Transaction-85"><a href="#Transaction-85"><span class="linenos"> 85</span></a><span class="sd">            transactionExternalID</span>
+</span><span id="Transaction-86"><a href="#Transaction-86"><span class="linenos"> 86</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction-87"><a href="#Transaction-87"><span class="linenos"> 87</span></a>
+</span><span id="Transaction-88"><a href="#Transaction-88"><span class="linenos"> 88</span></a><span class="sd">        Returns</span>
+</span><span id="Transaction-89"><a href="#Transaction-89"><span class="linenos"> 89</span></a><span class="sd">        -------</span>
+</span><span id="Transaction-90"><a href="#Transaction-90"><span class="linenos"> 90</span></a><span class="sd">            list</span>
+</span><span id="Transaction-91"><a href="#Transaction-91"><span class="linenos"> 91</span></a><span class="sd">        A list of Transaction objects; can be `None`.</span>
+</span><span id="Transaction-92"><a href="#Transaction-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Transaction-93"><a href="#Transaction-93"><span class="linenos"> 93</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="Transaction-94"><a href="#Transaction-94"><span class="linenos"> 94</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction-95"><a href="#Transaction-95"><span class="linenos"> 95</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction-96"><a href="#Transaction-96"><span class="linenos"> 96</span></a>            <span class="s1">&#39;endDate&#39;</span><span class="p">:</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span>
+</span><span id="Transaction-97"><a href="#Transaction-97"><span class="linenos"> 97</span></a>            <span class="s1">&#39;matched&#39;</span><span class="p">:</span> <span class="s1">&#39;matched&#39;</span><span class="p">,</span>
+</span><span id="Transaction-98"><a href="#Transaction-98"><span class="linenos"> 98</span></a>            <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span>
+</span><span id="Transaction-99"><a href="#Transaction-99"><span class="linenos"> 99</span></a>            <span class="s1">&#39;transactionExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;transaction_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction-100"><a href="#Transaction-100"><span class="linenos">100</span></a>        <span class="p">}</span>
+</span><span id="Transaction-101"><a href="#Transaction-101"><span class="linenos">101</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="Transaction-102"><a href="#Transaction-102"><span class="linenos">102</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;transactions&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="Transaction-103"><a href="#Transaction-103"><span class="linenos">103</span></a>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+</span><span id="Transaction-104"><a href="#Transaction-104"><span class="linenos">104</span></a>            <span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span> <span class="o">=</span> <span class="n">MatchingStatus</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span><span class="p">)</span>
+</span><span id="Transaction-105"><a href="#Transaction-105"><span class="linenos">105</span></a>            <span class="c1"># TODO: Bug!  Why are there transactions without an MCC?</span>
+</span><span id="Transaction-106"><a href="#Transaction-106"><span class="linenos">106</span></a>            <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">:</span>
+</span><span id="Transaction-107"><a href="#Transaction-107"><span class="linenos">107</span></a>                <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span> <span class="o">=</span> <span class="n">MCC</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">)</span>
+</span><span id="Transaction-108"><a href="#Transaction-108"><span class="linenos">108</span></a>            <span class="c1"># TODO: error!</span>
+</span><span id="Transaction-109"><a href="#Transaction-109"><span class="linenos">109</span></a>            <span class="c1"># t.merchantAddress = Address(t.merchantAddress)</span>
+</span><span id="Transaction-110"><a href="#Transaction-110"><span class="linenos">110</span></a>            <span class="c1"># TODO:  Pending triple API implementation update</span>
+</span><span id="Transaction-111"><a href="#Transaction-111"><span class="linenos">111</span></a>            <span class="c1"># t.transactionType = TransactionType(t.transactionType)</span>
+</span><span id="Transaction-112"><a href="#Transaction-112"><span class="linenos">112</span></a>
+</span><span id="Transaction-113"><a href="#Transaction-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span><span id="Transaction-114"><a href="#Transaction-114"><span class="linenos">114</span></a>
+</span><span id="Transaction-115"><a href="#Transaction-115"><span class="linenos">115</span></a>
+</span><span id="Transaction-116"><a href="#Transaction-116"><span class="linenos">116</span></a>    <span class="nd">@classmethod</span>
+</span><span id="Transaction-117"><a href="#Transaction-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="Transaction-118"><a href="#Transaction-118"><span class="linenos">118</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Transaction-119"><a href="#Transaction-119"><span class="linenos">119</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="Transaction-120"><a href="#Transaction-120"><span class="linenos">120</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Transaction-121"><a href="#Transaction-121"><span class="linenos">121</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Transaction instances represent exchanges between buyers and sellers that 
 may have a linked offer.</p>
 </div>
 
 
                             <div id="Transaction.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="Transaction.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">Transaction</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;card_account_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;external_id&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;local_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01&#39;</span><span class="p">,</span> <span class="s1">&#39;local_time&#39;</span><span class="p">:</span> <span class="s1">&#39;13:45:00&#39;</span><span class="p">,</span> <span class="s1">&#39;debit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;transaction_type&#39;</span><span class="p">:</span> <span class="s1">&#39;PURCHASE&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Pittsburgh Zoo&#39;</span><span class="p">,</span> <span class="s1">&#39;merchant_category_code&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;7998&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Aquariums, Dolphinariums, Seaquariums, and Zoos&#39;</span><span class="p">},</span> <span class="s1">&#39;merchant_address&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST STE 100</span><span class="se">\n</span><span class="s1">PITTSBURGH, PA 15206&#39;</span><span class="p">,</span> <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST STE 100&#39;</span><span class="p">,</span> <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="s1">&#39;PITTSBURGH&#39;</span><span class="p">,</span> <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="s1">&#39;15206&#39;</span><span class="p">,</span> <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="mf">40.440624</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">79.995888</span><span class="p">},</span> <span class="s1">&#39;processor_mid&#39;</span><span class="p">:</span> <span class="s1">&#39;9000012345&#39;</span><span class="p">,</span> <span class="s1">&#39;processor_mid_type&#39;</span><span class="p">:</span> <span class="s1">&#39;VISA_VMID&#39;</span><span class="p">,</span> <span class="s1">&#39;matching_status&#39;</span><span class="p">:</span> <span class="s1">&#39;HISTORIC_TRANSACTION&#39;</span><span class="p">,</span> <span class="s1">&#39;reward_details&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;offer_id&#39;</span><span class="p">:</span> <span class="s1">&#39;triple-abc-123&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;currency_code&#39;</span><span class="p">:</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;REJECTED&#39;</span><span class="p">,</span> <span class="s1">&#39;rejection&#39;</span><span class="p">:</span> <span class="s1">&#39;PURCHASE_AMOUNT_TOO_LOW&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}],</span> <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01T01:59:59.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;updated_at&#39;</span><span class="p">:</span> <span class="s1">&#39;2021-12-01T01:59:59.000Z&#39;</span><span class="p">}</span></span>)</span>
 
-        
+                <label class="view-source-button" for="Transaction.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Transaction.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Transaction.__init__-51"><a href="#Transaction.__init__-51"><span class="linenos">51</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_TRANSACTION_DICT</span><span class="p">):</span>
+</span><span id="Transaction.__init__-52"><a href="#Transaction.__init__-52"><span class="linenos">52</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
 valid, existing object ID if it's not a collection or JSON.  The
 constructor only returns a valid object if a subclass is instantiated;
@@ -239,16 +499,12 @@ in the API documentation</li>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If obj represents an objectID and the ID isn't
-associated with a valid object</p>
-
-<pre><code>CoronadoMalformedError
-</code></pre>
-
-<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
@@ -273,16 +529,77 @@ in JSON or a <code>dict</code>.</p>
 
                             </div>
                             <div id="Transaction.list" class="classattr">
-                                <div class="attr function">
+                                        <input id="Transaction.list-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">list</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span>, </span><span class="param"><span class="n">paramMap</span><span class="o">=</span><span class="kc">None</span>, </span><span class="param"><span class="o">**</span><span class="n">args</span></span><span class="return-annotation">) -> <span class="nb">list</span>:</span></span>
 
-        
+                <label class="view-source-button" for="Transaction.list-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Transaction.list"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Transaction.list-57"><a href="#Transaction.list-57"><span class="linenos"> 57</span></a>    <span class="nd">@classmethod</span>
+</span><span id="Transaction.list-58"><a href="#Transaction.list-58"><span class="linenos"> 58</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="Transaction.list-59"><a href="#Transaction.list-59"><span class="linenos"> 59</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Transaction.list-60"><a href="#Transaction.list-60"><span class="linenos"> 60</span></a><span class="sd">        List all transactions that match any of the criteria set by the </span>
+</span><span id="Transaction.list-61"><a href="#Transaction.list-61"><span class="linenos"> 61</span></a><span class="sd">        arguments to this method.</span>
+</span><span id="Transaction.list-62"><a href="#Transaction.list-62"><span class="linenos"> 62</span></a>
+</span><span id="Transaction.list-63"><a href="#Transaction.list-63"><span class="linenos"> 63</span></a><span class="sd">        Arguments</span>
+</span><span id="Transaction.list-64"><a href="#Transaction.list-64"><span class="linenos"> 64</span></a><span class="sd">        ---------</span>
+</span><span id="Transaction.list-65"><a href="#Transaction.list-65"><span class="linenos"> 65</span></a><span class="sd">            cardAccountExternalID</span>
+</span><span id="Transaction.list-66"><a href="#Transaction.list-66"><span class="linenos"> 66</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction.list-67"><a href="#Transaction.list-67"><span class="linenos"> 67</span></a>
+</span><span id="Transaction.list-68"><a href="#Transaction.list-68"><span class="linenos"> 68</span></a><span class="sd">            cardProgramExternalID</span>
+</span><span id="Transaction.list-69"><a href="#Transaction.list-69"><span class="linenos"> 69</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction.list-70"><a href="#Transaction.list-70"><span class="linenos"> 70</span></a>
+</span><span id="Transaction.list-71"><a href="#Transaction.list-71"><span class="linenos"> 71</span></a><span class="sd">            endDate</span>
+</span><span id="Transaction.list-72"><a href="#Transaction.list-72"><span class="linenos"> 72</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="Transaction.list-73"><a href="#Transaction.list-73"><span class="linenos"> 73</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="Transaction.list-74"><a href="#Transaction.list-74"><span class="linenos"> 74</span></a>
+</span><span id="Transaction.list-75"><a href="#Transaction.list-75"><span class="linenos"> 75</span></a><span class="sd">            matched</span>
+</span><span id="Transaction.list-76"><a href="#Transaction.list-76"><span class="linenos"> 76</span></a><span class="sd">        A Boolean flag; if True, includes only the transactions matched to an</span>
+</span><span id="Transaction.list-77"><a href="#Transaction.list-77"><span class="linenos"> 77</span></a><span class="sd">        active offer.  See Reward Details for more information.</span>
+</span><span id="Transaction.list-78"><a href="#Transaction.list-78"><span class="linenos"> 78</span></a><span class="sd">            publisherExternalID</span>
+</span><span id="Transaction.list-79"><a href="#Transaction.list-79"><span class="linenos"> 79</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction.list-80"><a href="#Transaction.list-80"><span class="linenos"> 80</span></a>
+</span><span id="Transaction.list-81"><a href="#Transaction.list-81"><span class="linenos"> 81</span></a><span class="sd">            startDate</span>
+</span><span id="Transaction.list-82"><a href="#Transaction.list-82"><span class="linenos"> 82</span></a><span class="sd">        A string date - includes only transactions that start from the date in</span>
+</span><span id="Transaction.list-83"><a href="#Transaction.list-83"><span class="linenos"> 83</span></a><span class="sd">        format:  YYYY-mm-dd</span>
+</span><span id="Transaction.list-84"><a href="#Transaction.list-84"><span class="linenos"> 84</span></a>
+</span><span id="Transaction.list-85"><a href="#Transaction.list-85"><span class="linenos"> 85</span></a><span class="sd">            transactionExternalID</span>
+</span><span id="Transaction.list-86"><a href="#Transaction.list-86"><span class="linenos"> 86</span></a><span class="sd">        String, 1-50 characters partner-provided external ID</span>
+</span><span id="Transaction.list-87"><a href="#Transaction.list-87"><span class="linenos"> 87</span></a>
+</span><span id="Transaction.list-88"><a href="#Transaction.list-88"><span class="linenos"> 88</span></a><span class="sd">        Returns</span>
+</span><span id="Transaction.list-89"><a href="#Transaction.list-89"><span class="linenos"> 89</span></a><span class="sd">        -------</span>
+</span><span id="Transaction.list-90"><a href="#Transaction.list-90"><span class="linenos"> 90</span></a><span class="sd">            list</span>
+</span><span id="Transaction.list-91"><a href="#Transaction.list-91"><span class="linenos"> 91</span></a><span class="sd">        A list of Transaction objects; can be `None`.</span>
+</span><span id="Transaction.list-92"><a href="#Transaction.list-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Transaction.list-93"><a href="#Transaction.list-93"><span class="linenos"> 93</span></a>        <span class="n">paramMap</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="Transaction.list-94"><a href="#Transaction.list-94"><span class="linenos"> 94</span></a>            <span class="s1">&#39;cardAccountExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_account_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-95"><a href="#Transaction.list-95"><span class="linenos"> 95</span></a>            <span class="s1">&#39;cardProgramExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;card_program_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-96"><a href="#Transaction.list-96"><span class="linenos"> 96</span></a>            <span class="s1">&#39;endDate&#39;</span><span class="p">:</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-97"><a href="#Transaction.list-97"><span class="linenos"> 97</span></a>            <span class="s1">&#39;matched&#39;</span><span class="p">:</span> <span class="s1">&#39;matched&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-98"><a href="#Transaction.list-98"><span class="linenos"> 98</span></a>            <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-99"><a href="#Transaction.list-99"><span class="linenos"> 99</span></a>            <span class="s1">&#39;transactionExternalID&#39;</span><span class="p">:</span> <span class="s1">&#39;transaction_external_id&#39;</span><span class="p">,</span>
+</span><span id="Transaction.list-100"><a href="#Transaction.list-100"><span class="linenos">100</span></a>        <span class="p">}</span>
+</span><span id="Transaction.list-101"><a href="#Transaction.list-101"><span class="linenos">101</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">paramMap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="Transaction.list-102"><a href="#Transaction.list-102"><span class="linenos">102</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)[</span><span class="s1">&#39;transactions&#39;</span><span class="p">]</span> <span class="p">]</span>
+</span><span id="Transaction.list-103"><a href="#Transaction.list-103"><span class="linenos">103</span></a>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+</span><span id="Transaction.list-104"><a href="#Transaction.list-104"><span class="linenos">104</span></a>            <span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span> <span class="o">=</span> <span class="n">MatchingStatus</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">matchingStatus</span><span class="p">)</span>
+</span><span id="Transaction.list-105"><a href="#Transaction.list-105"><span class="linenos">105</span></a>            <span class="c1"># TODO: Bug!  Why are there transactions without an MCC?</span>
+</span><span id="Transaction.list-106"><a href="#Transaction.list-106"><span class="linenos">106</span></a>            <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">:</span>
+</span><span id="Transaction.list-107"><a href="#Transaction.list-107"><span class="linenos">107</span></a>                <span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span> <span class="o">=</span> <span class="n">MCC</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">merchantCategoryCode</span><span class="p">)</span>
+</span><span id="Transaction.list-108"><a href="#Transaction.list-108"><span class="linenos">108</span></a>            <span class="c1"># TODO: error!</span>
+</span><span id="Transaction.list-109"><a href="#Transaction.list-109"><span class="linenos">109</span></a>            <span class="c1"># t.merchantAddress = Address(t.merchantAddress)</span>
+</span><span id="Transaction.list-110"><a href="#Transaction.list-110"><span class="linenos">110</span></a>            <span class="c1"># TODO:  Pending triple API implementation update</span>
+</span><span id="Transaction.list-111"><a href="#Transaction.list-111"><span class="linenos">111</span></a>            <span class="c1"># t.transactionType = TransactionType(t.transactionType)</span>
+</span><span id="Transaction.list-112"><a href="#Transaction.list-112"><span class="linenos">112</span></a>
+</span><span id="Transaction.list-113"><a href="#Transaction.list-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>List all transactions that match any of the criteria set by the 
 arguments to this method.</p>
 
@@ -334,16 +651,26 @@ format:  YYYY-mm-dd</p>
 
                             </div>
                             <div id="Transaction.updateWith" class="classattr">
-                                <div class="attr function">
+                                        <input id="Transaction.updateWith-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">updateWith</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span>, </span><span class="param"><span class="n">objID</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
-        
+                <label class="view-source-button" for="Transaction.updateWith-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Transaction.updateWith"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Transaction.updateWith-116"><a href="#Transaction.updateWith-116"><span class="linenos">116</span></a>    <span class="nd">@classmethod</span>
+</span><span id="Transaction.updateWith-117"><a href="#Transaction.updateWith-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="Transaction.updateWith-118"><a href="#Transaction.updateWith-118"><span class="linenos">118</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Transaction.updateWith-119"><a href="#Transaction.updateWith-119"><span class="linenos">119</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="Transaction.updateWith-120"><a href="#Transaction.updateWith-120"><span class="linenos">120</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Transaction.updateWith-121"><a href="#Transaction.updateWith-121"><span class="linenos">121</span></a>        <span class="kc">None</span>
+</span></pre></div>
+
+
             <div class="docstring"><p><strong>Disabled for this class.</strong></p>
 </div>
 
@@ -368,15 +695,26 @@ format:  YYYY-mm-dd</p>
                             </div>
                 </section>
                 <section id="MatchingStatus">
-                    <div class="attr class">
+                            <input id="MatchingStatus-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">MatchingStatus</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
 
-        
+                <label class="view-source-button" for="MatchingStatus-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#MatchingStatus"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MatchingStatus-124"><a href="#MatchingStatus-124"><span class="linenos">124</span></a><span class="k">class</span> <span class="nc">MatchingStatus</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="MatchingStatus-125"><a href="#MatchingStatus-125"><span class="linenos">125</span></a>    <span class="n">HISTORIC_TRANSACTION</span> <span class="o">=</span> <span class="s1">&#39;HISTORIC_TRANSACTION&#39;</span>
+</span><span id="MatchingStatus-126"><a href="#MatchingStatus-126"><span class="linenos">126</span></a>    <span class="n">QUEUED</span> <span class="o">=</span> <span class="s1">&#39;QUEUED&#39;</span>
+</span><span id="MatchingStatus-127"><a href="#MatchingStatus-127"><span class="linenos">127</span></a>    <span class="n">NOT_APPLICABLE</span> <span class="o">=</span> <span class="s1">&#39;NOT_APPLICABLE&#39;</span>
+</span><span id="MatchingStatus-128"><a href="#MatchingStatus-128"><span class="linenos">128</span></a>    <span class="n">NOT_ENROLLED</span> <span class="o">=</span> <span class="s1">&#39;NOT_ENROLLED&#39;</span>
+</span><span id="MatchingStatus-129"><a href="#MatchingStatus-129"><span class="linenos">129</span></a>    <span class="n">NO_ACTIVE_OFFER</span> <span class="o">=</span> <span class="s1">&#39;NO_ACTIVE_OFFER&#39;</span>
+</span><span id="MatchingStatus-130"><a href="#MatchingStatus-130"><span class="linenos">130</span></a>    <span class="n">MATCHED</span> <span class="o">=</span> <span class="s1">&#39;MATCHED&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>An enumeration.</p>
 </div>
 
@@ -459,15 +797,32 @@ format:  YYYY-mm-dd</p>
                             </div>
                 </section>
                 <section id="ProcessorMID">
-                    <div class="attr class">
+                            <input id="ProcessorMID-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">ProcessorMID</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
 
-        
+                <label class="view-source-button" for="ProcessorMID-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#ProcessorMID"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ProcessorMID-133"><a href="#ProcessorMID-133"><span class="linenos">133</span></a><span class="k">class</span> <span class="nc">ProcessorMID</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="ProcessorMID-134"><a href="#ProcessorMID-134"><span class="linenos">134</span></a>    <span class="n">AMEX_SE_NUMBER</span> <span class="o">=</span> <span class="s1">&#39;AMEX_SE_NUMBER&#39;</span>
+</span><span id="ProcessorMID-135"><a href="#ProcessorMID-135"><span class="linenos">135</span></a>    <span class="n">DISCOVER_MID</span> <span class="o">=</span> <span class="s1">&#39;DISCOVER_MID&#39;</span>
+</span><span id="ProcessorMID-136"><a href="#ProcessorMID-136"><span class="linenos">136</span></a>    <span class="n">MC_AUTH_ACQ_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_ACQ_ID&#39;</span>
+</span><span id="ProcessorMID-137"><a href="#ProcessorMID-137"><span class="linenos">137</span></a>    <span class="n">MC_AUTH_ICA</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_ICA&#39;</span>
+</span><span id="ProcessorMID-138"><a href="#ProcessorMID-138"><span class="linenos">138</span></a>    <span class="n">MC_AUTH_LOC_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_AUTH_LOC_ID&#39;</span>
+</span><span id="ProcessorMID-139"><a href="#ProcessorMID-139"><span class="linenos">139</span></a>    <span class="n">MC_CLEARING_ACQ_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_ACQ_ID&#39;</span>
+</span><span id="ProcessorMID-140"><a href="#ProcessorMID-140"><span class="linenos">140</span></a>    <span class="n">MC_CLEARING_ICA</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_ICA&#39;</span>
+</span><span id="ProcessorMID-141"><a href="#ProcessorMID-141"><span class="linenos">141</span></a>    <span class="n">MC_CLEARING_LOC_ID</span> <span class="o">=</span> <span class="s1">&#39;MC_CLEARING_LOC_ID&#39;</span>
+</span><span id="ProcessorMID-142"><a href="#ProcessorMID-142"><span class="linenos">142</span></a>    <span class="n">MERCHANT_PROCESSOR</span> <span class="o">=</span> <span class="s1">&#39;MERCHANT_PROCESSOR&#39;</span>
+</span><span id="ProcessorMID-143"><a href="#ProcessorMID-143"><span class="linenos">143</span></a>    <span class="n">NCR</span> <span class="o">=</span> <span class="s1">&#39;NCR&#39;</span>
+</span><span id="ProcessorMID-144"><a href="#ProcessorMID-144"><span class="linenos">144</span></a>    <span class="n">VISA_VMID</span> <span class="o">=</span> <span class="s1">&#39;VISA_VMID&#39;</span>
+</span><span id="ProcessorMID-145"><a href="#ProcessorMID-145"><span class="linenos">145</span></a>    <span class="n">VISA_VSID</span> <span class="o">=</span> <span class="s1">&#39;VISA_VSID&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>An enumeration.</p>
 </div>
 
@@ -616,15 +971,28 @@ format:  YYYY-mm-dd</p>
                             </div>
                 </section>
                 <section id="TransactionType">
-                    <div class="attr class">
+                            <input id="TransactionType-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">TransactionType</span><wbr>(<span class="base"><a href="../coronado.html#TripleEnum">coronado.TripleEnum</a></span>):
 
-        
+                <label class="view-source-button" for="TransactionType-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#TransactionType"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TransactionType-148"><a href="#TransactionType-148"><span class="linenos">148</span></a><span class="k">class</span> <span class="nc">TransactionType</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
+</span><span id="TransactionType-149"><a href="#TransactionType-149"><span class="linenos">149</span></a>    <span class="n">CHECK</span> <span class="o">=</span> <span class="s1">&#39;CHECK&#39;</span>
+</span><span id="TransactionType-150"><a href="#TransactionType-150"><span class="linenos">150</span></a>    <span class="n">DEPOSIT</span> <span class="o">=</span> <span class="s1">&#39;DEPOSIT&#39;</span>
+</span><span id="TransactionType-151"><a href="#TransactionType-151"><span class="linenos">151</span></a>    <span class="n">FEE</span> <span class="o">=</span> <span class="s1">&#39;FEE&#39;</span>
+</span><span id="TransactionType-152"><a href="#TransactionType-152"><span class="linenos">152</span></a>    <span class="n">PAYMENT</span> <span class="o">=</span> <span class="s1">&#39;PAYMENT&#39;</span>
+</span><span id="TransactionType-153"><a href="#TransactionType-153"><span class="linenos">153</span></a>    <span class="n">PURCHASE</span> <span class="o">=</span> <span class="s1">&#39;PURCHASE&#39;</span>
+</span><span id="TransactionType-154"><a href="#TransactionType-154"><span class="linenos">154</span></a>    <span class="n">REFUND</span> <span class="o">=</span> <span class="s1">&#39;REFUND&#39;</span>
+</span><span id="TransactionType-155"><a href="#TransactionType-155"><span class="linenos">155</span></a>    <span class="n">TRANSFER</span> <span class="o">=</span> <span class="s1">&#39;TRANSFER&#39;</span>
+</span><span id="TransactionType-156"><a href="#TransactionType-156"><span class="linenos">156</span></a>    <span class="n">WITHDRAWAL</span> <span class="o">=</span> <span class="s1">&#39;WITHDRAWAL&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>An enumeration.</p>
 </div>
 

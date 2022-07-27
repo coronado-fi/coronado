@@ -53,7 +53,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -68,20 +68,153 @@
 <a href="./../coronado.html">coronado</a><wbr>.healthmonitor    </h1>
 
                 
-                
-                
-                
+                        <input id="healthmonitor-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="healthmonitor-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span> <span class="nn">coronado.auth</span> <span class="kn">import</span> <span class="n">Auth</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span> <span class="nn">coronado.auth</span> <span class="kn">import</span> <span class="n">Scope</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">__VERSION__</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">import</span> <span class="nn">coronado.auth</span> <span class="k">as</span> <span class="nn">auth</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="c1"># +++ constants +++</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="n">SERVICE_PATH</span> <span class="o">=</span> <span class="s1">&#39;partner/healthcheck&#39;</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="c1"># +++ implementation +++</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span> <span class="nc">HealthMonitor</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">    Health monitor reports if the API service is healthy and operational.</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    Returns</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    -------</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">        TripleObject</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">    A triple object with these attributes set:</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">    </span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    - `APIVersion`</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    - `build`</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    - `coronadoVersion`</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    Raises</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    ------</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        CoronadoError</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">    A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">    possible errors, causes, and semantics is available in the </span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">    **`coronado.exceptions`** module.</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;APIVersion&#39;</span><span class="p">,</span> <span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>        <span class="n">healthCheck</span> <span class="o">=</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>        <span class="n">healthCheck</span><span class="o">.</span><span class="n">coronadoVersion</span> <span class="o">=</span> <span class="n">__VERSION__</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>        <span class="k">return</span> <span class="n">healthCheck</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="c1"># --- functions ---</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">unitTest</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">    Check the triple API service health by reporting the API version, build ID,</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">    and other information relevant to implementers.</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="sd">    This function is the main entry point for a script that will be installed to</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">    `/usr/local/bin/triplchk` or equivalent depending on whether the Coronado</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">    package was installed in the system wide Python configuraiton or in a</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    virtual environment.</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">    See:  `man 5 coronado` for details.</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">    Arguments</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="sd">    ---------</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a><span class="sd">        unitTest</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a><span class="sd">    Set it to True for running it in a unit test.</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a><span class="sd">    Returns</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="sd">    -------</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="sd">        dict</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">    `None` if running standalone, or a dictionary with information useful to</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">    API developers if running a unit test.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="n">_config</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">()</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>    <span class="n">_auth</span> <span class="o">=</span> <span class="n">Auth</span><span class="p">(</span><span class="n">_config</span><span class="p">[</span><span class="s1">&#39;tokenURL&#39;</span><span class="p">],</span> <span class="n">clientID</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">],</span> <span class="n">clientSecret</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s1">&#39;secret&#39;</span><span class="p">],</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Scope</span><span class="o">.</span><span class="n">PUBLISHERS</span><span class="p">)</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>
+</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>    <span class="n">HealthMonitor</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">_config</span><span class="p">[</span><span class="s1">&#39;serviceURL&#39;</span><span class="p">],</span> <span class="n">SERVICE_PATH</span><span class="p">,</span> <span class="n">_auth</span><span class="p">)</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>    <span class="n">check</span> <span class="o">=</span> <span class="n">HealthMonitor</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>
+</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;triple API version = </span><span class="si">%s</span><span class="s1">, build = </span><span class="si">%s</span><span class="s1">; Coronado version = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">check</span><span class="o">.</span><span class="n">APIVersion</span><span class="p">,</span> <span class="n">check</span><span class="o">.</span><span class="n">build</span><span class="p">,</span> <span class="n">check</span><span class="o">.</span><span class="n">coronadoVersion</span><span class="p">))</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>    <span class="k">if</span> <span class="n">unitTest</span><span class="p">:</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a>        <span class="k">return</span> <span class="n">check</span><span class="o">.</span><span class="vm">__dict__</span>
+</span></pre></div>
+
+
             </section>
                 <section id="HealthMonitor">
-                    <div class="attr class">
+                            <input id="HealthMonitor-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">HealthMonitor</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
-        
+                <label class="view-source-button" for="HealthMonitor-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#HealthMonitor"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="HealthMonitor-22"><a href="#HealthMonitor-22"><span class="linenos">22</span></a><span class="k">class</span> <span class="nc">HealthMonitor</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="HealthMonitor-23"><a href="#HealthMonitor-23"><span class="linenos">23</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="HealthMonitor-24"><a href="#HealthMonitor-24"><span class="linenos">24</span></a><span class="sd">    Health monitor reports if the API service is healthy and operational.</span>
+</span><span id="HealthMonitor-25"><a href="#HealthMonitor-25"><span class="linenos">25</span></a>
+</span><span id="HealthMonitor-26"><a href="#HealthMonitor-26"><span class="linenos">26</span></a><span class="sd">    Returns</span>
+</span><span id="HealthMonitor-27"><a href="#HealthMonitor-27"><span class="linenos">27</span></a><span class="sd">    -------</span>
+</span><span id="HealthMonitor-28"><a href="#HealthMonitor-28"><span class="linenos">28</span></a><span class="sd">        TripleObject</span>
+</span><span id="HealthMonitor-29"><a href="#HealthMonitor-29"><span class="linenos">29</span></a><span class="sd">    A triple object with these attributes set:</span>
+</span><span id="HealthMonitor-30"><a href="#HealthMonitor-30"><span class="linenos">30</span></a><span class="sd">    </span>
+</span><span id="HealthMonitor-31"><a href="#HealthMonitor-31"><span class="linenos">31</span></a><span class="sd">    - `APIVersion`</span>
+</span><span id="HealthMonitor-32"><a href="#HealthMonitor-32"><span class="linenos">32</span></a><span class="sd">    - `build`</span>
+</span><span id="HealthMonitor-33"><a href="#HealthMonitor-33"><span class="linenos">33</span></a><span class="sd">    - `coronadoVersion`</span>
+</span><span id="HealthMonitor-34"><a href="#HealthMonitor-34"><span class="linenos">34</span></a>
+</span><span id="HealthMonitor-35"><a href="#HealthMonitor-35"><span class="linenos">35</span></a>
+</span><span id="HealthMonitor-36"><a href="#HealthMonitor-36"><span class="linenos">36</span></a><span class="sd">    Raises</span>
+</span><span id="HealthMonitor-37"><a href="#HealthMonitor-37"><span class="linenos">37</span></a><span class="sd">    ------</span>
+</span><span id="HealthMonitor-38"><a href="#HealthMonitor-38"><span class="linenos">38</span></a><span class="sd">        CoronadoError</span>
+</span><span id="HealthMonitor-39"><a href="#HealthMonitor-39"><span class="linenos">39</span></a><span class="sd">    A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="HealthMonitor-40"><a href="#HealthMonitor-40"><span class="linenos">40</span></a><span class="sd">    possible errors, causes, and semantics is available in the </span>
+</span><span id="HealthMonitor-41"><a href="#HealthMonitor-41"><span class="linenos">41</span></a><span class="sd">    **`coronado.exceptions`** module.</span>
+</span><span id="HealthMonitor-42"><a href="#HealthMonitor-42"><span class="linenos">42</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="HealthMonitor-43"><a href="#HealthMonitor-43"><span class="linenos">43</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;APIVersion&#39;</span><span class="p">,</span> <span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="HealthMonitor-44"><a href="#HealthMonitor-44"><span class="linenos">44</span></a>
+</span><span id="HealthMonitor-45"><a href="#HealthMonitor-45"><span class="linenos">45</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="HealthMonitor-46"><a href="#HealthMonitor-46"><span class="linenos">46</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span id="HealthMonitor-47"><a href="#HealthMonitor-47"><span class="linenos">47</span></a>
+</span><span id="HealthMonitor-48"><a href="#HealthMonitor-48"><span class="linenos">48</span></a>
+</span><span id="HealthMonitor-49"><a href="#HealthMonitor-49"><span class="linenos">49</span></a>    <span class="nd">@classmethod</span>
+</span><span id="HealthMonitor-50"><a href="#HealthMonitor-50"><span class="linenos">50</span></a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="HealthMonitor-51"><a href="#HealthMonitor-51"><span class="linenos">51</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</span><span id="HealthMonitor-52"><a href="#HealthMonitor-52"><span class="linenos">52</span></a>
+</span><span id="HealthMonitor-53"><a href="#HealthMonitor-53"><span class="linenos">53</span></a>        <span class="n">healthCheck</span> <span class="o">=</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+</span><span id="HealthMonitor-54"><a href="#HealthMonitor-54"><span class="linenos">54</span></a>        <span class="n">healthCheck</span><span class="o">.</span><span class="n">coronadoVersion</span> <span class="o">=</span> <span class="n">__VERSION__</span>
+</span><span id="HealthMonitor-55"><a href="#HealthMonitor-55"><span class="linenos">55</span></a>        <span class="k">return</span> <span class="n">healthCheck</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Health monitor reports if the API service is healthy and operational.</p>
 
 <h2 id="returns">Returns</h2>
@@ -99,22 +232,30 @@
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>When the service is unavailable because of a fatal runtime condition.</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
                             <div id="HealthMonitor.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="HealthMonitor.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">HealthMonitor</span><span class="signature pdoc-code condensed">()</span>
 
-        
+                <label class="view-source-button" for="HealthMonitor.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#HealthMonitor.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="HealthMonitor.__init__-45"><a href="#HealthMonitor.__init__-45"><span class="linenos">45</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="HealthMonitor.__init__-46"><a href="#HealthMonitor.__init__-46"><span class="linenos">46</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Create a new instance of a triple object.  <code>obj</code> must correspond to a
 valid, existing object ID if it's not a collection or JSON.  The
 constructor only returns a valid object if a subclass is instantiated;
@@ -138,16 +279,12 @@ in the API documentation</li>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If obj represents an objectID and the ID isn't
-associated with a valid object</p>
-
-<pre><code>CoronadoMalformedError
-</code></pre>
-
-<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
@@ -172,16 +309,27 @@ in JSON or a <code>dict</code>.</p>
 
                             </div>
                             <div id="HealthMonitor.check" class="classattr">
-                                <div class="attr function">
+                                        <input id="HealthMonitor.check-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
                     <div class="decorator">@classmethod</div>
 
         <span class="def">def</span>
         <span class="name">check</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">klass</span></span><span class="return-annotation">) -> <span class="nb">object</span>:</span></span>
 
-        
+                <label class="view-source-button" for="HealthMonitor.check-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#HealthMonitor.check"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="HealthMonitor.check-49"><a href="#HealthMonitor.check-49"><span class="linenos">49</span></a>    <span class="nd">@classmethod</span>
+</span><span id="HealthMonitor.check-50"><a href="#HealthMonitor.check-50"><span class="linenos">50</span></a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="HealthMonitor.check-51"><a href="#HealthMonitor.check-51"><span class="linenos">51</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</span><span id="HealthMonitor.check-52"><a href="#HealthMonitor.check-52"><span class="linenos">52</span></a>
+</span><span id="HealthMonitor.check-53"><a href="#HealthMonitor.check-53"><span class="linenos">53</span></a>        <span class="n">healthCheck</span> <span class="o">=</span> <span class="n">TripleObject</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+</span><span id="HealthMonitor.check-54"><a href="#HealthMonitor.check-54"><span class="linenos">54</span></a>        <span class="n">healthCheck</span><span class="o">.</span><span class="n">coronadoVersion</span> <span class="o">=</span> <span class="n">__VERSION__</span>
+</span><span id="HealthMonitor.check-55"><a href="#HealthMonitor.check-55"><span class="linenos">55</span></a>        <span class="k">return</span> <span class="n">healthCheck</span>
+</span></pre></div>
+
+
     
 
                             </div>
@@ -206,15 +354,52 @@ in JSON or a <code>dict</code>.</p>
                             </div>
                 </section>
                 <section id="main">
-                    <div class="attr function">
+                            <input id="main-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="def">def</span>
         <span class="name">main</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unitTest</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
 
-        
+                <label class="view-source-button" for="main-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#main"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="main-60"><a href="#main-60"><span class="linenos">60</span></a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">unitTest</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="main-61"><a href="#main-61"><span class="linenos">61</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="main-62"><a href="#main-62"><span class="linenos">62</span></a><span class="sd">    Check the triple API service health by reporting the API version, build ID,</span>
+</span><span id="main-63"><a href="#main-63"><span class="linenos">63</span></a><span class="sd">    and other information relevant to implementers.</span>
+</span><span id="main-64"><a href="#main-64"><span class="linenos">64</span></a>
+</span><span id="main-65"><a href="#main-65"><span class="linenos">65</span></a><span class="sd">    This function is the main entry point for a script that will be installed to</span>
+</span><span id="main-66"><a href="#main-66"><span class="linenos">66</span></a><span class="sd">    `/usr/local/bin/triplchk` or equivalent depending on whether the Coronado</span>
+</span><span id="main-67"><a href="#main-67"><span class="linenos">67</span></a><span class="sd">    package was installed in the system wide Python configuraiton or in a</span>
+</span><span id="main-68"><a href="#main-68"><span class="linenos">68</span></a><span class="sd">    virtual environment.</span>
+</span><span id="main-69"><a href="#main-69"><span class="linenos">69</span></a>
+</span><span id="main-70"><a href="#main-70"><span class="linenos">70</span></a><span class="sd">    See:  `man 5 coronado` for details.</span>
+</span><span id="main-71"><a href="#main-71"><span class="linenos">71</span></a>
+</span><span id="main-72"><a href="#main-72"><span class="linenos">72</span></a><span class="sd">    Arguments</span>
+</span><span id="main-73"><a href="#main-73"><span class="linenos">73</span></a><span class="sd">    ---------</span>
+</span><span id="main-74"><a href="#main-74"><span class="linenos">74</span></a><span class="sd">        unitTest</span>
+</span><span id="main-75"><a href="#main-75"><span class="linenos">75</span></a><span class="sd">    Set it to True for running it in a unit test.</span>
+</span><span id="main-76"><a href="#main-76"><span class="linenos">76</span></a>
+</span><span id="main-77"><a href="#main-77"><span class="linenos">77</span></a><span class="sd">    Returns</span>
+</span><span id="main-78"><a href="#main-78"><span class="linenos">78</span></a><span class="sd">    -------</span>
+</span><span id="main-79"><a href="#main-79"><span class="linenos">79</span></a><span class="sd">        dict</span>
+</span><span id="main-80"><a href="#main-80"><span class="linenos">80</span></a><span class="sd">    `None` if running standalone, or a dictionary with information useful to</span>
+</span><span id="main-81"><a href="#main-81"><span class="linenos">81</span></a><span class="sd">    API developers if running a unit test.</span>
+</span><span id="main-82"><a href="#main-82"><span class="linenos">82</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="main-83"><a href="#main-83"><span class="linenos">83</span></a>    <span class="n">_config</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">loadConfig</span><span class="p">()</span>
+</span><span id="main-84"><a href="#main-84"><span class="linenos">84</span></a>    <span class="n">_auth</span> <span class="o">=</span> <span class="n">Auth</span><span class="p">(</span><span class="n">_config</span><span class="p">[</span><span class="s1">&#39;tokenURL&#39;</span><span class="p">],</span> <span class="n">clientID</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">],</span> <span class="n">clientSecret</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s1">&#39;secret&#39;</span><span class="p">],</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">Scope</span><span class="o">.</span><span class="n">PUBLISHERS</span><span class="p">)</span>
+</span><span id="main-85"><a href="#main-85"><span class="linenos">85</span></a>
+</span><span id="main-86"><a href="#main-86"><span class="linenos">86</span></a>    <span class="n">HealthMonitor</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">_config</span><span class="p">[</span><span class="s1">&#39;serviceURL&#39;</span><span class="p">],</span> <span class="n">SERVICE_PATH</span><span class="p">,</span> <span class="n">_auth</span><span class="p">)</span>
+</span><span id="main-87"><a href="#main-87"><span class="linenos">87</span></a>    <span class="n">check</span> <span class="o">=</span> <span class="n">HealthMonitor</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</span><span id="main-88"><a href="#main-88"><span class="linenos">88</span></a>
+</span><span id="main-89"><a href="#main-89"><span class="linenos">89</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;triple API version = </span><span class="si">%s</span><span class="s1">, build = </span><span class="si">%s</span><span class="s1">; Coronado version = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">check</span><span class="o">.</span><span class="n">APIVersion</span><span class="p">,</span> <span class="n">check</span><span class="o">.</span><span class="n">build</span><span class="p">,</span> <span class="n">check</span><span class="o">.</span><span class="n">coronadoVersion</span><span class="p">))</span>
+</span><span id="main-90"><a href="#main-90"><span class="linenos">90</span></a>
+</span><span id="main-91"><a href="#main-91"><span class="linenos">91</span></a>    <span class="k">if</span> <span class="n">unitTest</span><span class="p">:</span>
+</span><span id="main-92"><a href="#main-92"><span class="linenos">92</span></a>        <span class="k">return</span> <span class="n">check</span><span class="o">.</span><span class="vm">__dict__</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Check the triple API service health by reporting the API version, build ID,
 and other information relevant to implementers.</p>
 

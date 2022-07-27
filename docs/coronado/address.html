@@ -58,7 +58,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.1.13</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -89,20 +89,295 @@ and behaviors in this module changed.</p>
 </ul>
 </div>
 
-                
-                
-                
+                        <input id="address-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+
+                        <label class="view-source-button" for="address-view-source"><span>View Source</span></label>
+
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="c1"># vim: set fileencoding=utf-8:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="sd">DEPRECATED</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="sd">==========</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="sd">This implementation of Address is invalid and will stop working by 01.Aug.2022.</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="sd">The Address class (like most objects in this package), its attributes, and </span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="sd">semantics conform to the **triple Card Linked Offer Ontology**.</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="sd">Please review `coronado.address_cloo.AddressCLOO` for details on how the objects</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">and behaviors in this module changed.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">Also review:</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="sd">- `coronado.baseobjects.BASE_ADDRESS_DICT`</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">- `coronado.baseobjects.BASE_ADDRESS_JSON`</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="kn">from</span> <span class="nn">coronado.baseobjects</span> <span class="kn">import</span> <span class="n">BASE_ADDRESS_DICT</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="c1"># TODO:  Review https://github.com/mirumee/google-i18n-address</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="c1"># +++ classes and objects +++</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">    Address object that provides a high-level definition for address components</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">    that meets ontological and physical address standards.  An address is a kind</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">    of index that describes a physical location to which communications may be</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">    delivered.</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">    This Address class doesn&#39;t meet the full ontological criteria for a complete</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">    address because it doesn&#39;t separate building number, subdivisions, and other</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">    attributes.</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">    Future implementations may parse the `.line` and `.line2` attributes to</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">    separate distinct items like the buildingNumber from streetName or</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">    equivalent to fit a standard address schema.</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">    This Address implementation is equivalent to the &lt;a href=&#39;https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/GeneralDeliveryAddress&#39; target=&#39;_blank&#39;&gt;FIBO GeneralDeliveryAddress&lt;/a&gt;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">    class.</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;completeAddress&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_ADDRESS_DICT</span><span class="p">):</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">        Create a new instance of an address.  `obj` must correspond to a</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        valid, existing object ID if it&#39;s not a collection or JSON.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">        obj specification:</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">        ```</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        Address({</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">            # We made it a requirement but we&#39;ll toss it in the instances:</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">            &#39;complete_address&#39;: &#39;&#39;,</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">            &#39;countryCode&#39;: &#39;US&#39;,</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">            &#39;latitude&#39;: 37.802821,</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">            &#39;line1&#39;: &#39;1233 Francisco Street&#39;,</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">            &#39;line2&#39;: &#39;Suite 202&#39;,</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">            &#39;locality&#39;: &#39;San Francisco&#39;,</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">            &#39;longitude&#39;: -122.425486,</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">            &#39;postalCode&#39;: &#39;94123&#39;,</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">            &#39;province&#39;: &#39;CA&#39;,</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">        })</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        ```</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">        Arguments</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">        ---------</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">            obj</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">        An object used for building a valid address.  The object can</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        be one of:</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        - A dictionary - a dictionary with instantiation values as described</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">          in the API documentation</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">        - A JSON string</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">        - A triple objectID</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        Raises</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        ------</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">            CoronadoError</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">completeAddress</span> <span class="o">=</span> <span class="s1">&#39;WARNING:  USE .complete instead of .completeAddress&#39;</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="nd">@property</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">        Return the receiver as a human-readable, multi-line complete address.</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">        Output format:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">            line1\\n</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">            locality, province, postalCode</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        Return</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">        ------</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">            A string representation of the address.</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="n">completeAddress</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>            <span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">),</span> <span class="p">])</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="n">completeAddress</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>    <span class="k">def</span> <span class="nf">asSnakeCaseDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        Return a dict representation of the receiver with the attributes</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        written in snake_case format.</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        Return</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        ------</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">            A dict representation of the receiver.</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>            <span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete</span><span class="p">,</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>            <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">countryCode</span><span class="p">,</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>            <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>            <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>            <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">,</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>            <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>            <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>            <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>            <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>        <span class="p">}</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">,</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">countryCode</span><span class="p">,</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>        <span class="p">)</span>
+</span></pre></div>
+
+
             </section>
                 <section id="Address">
-                    <div class="attr class">
+                            <input id="Address-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
             
     <span class="def">class</span>
     <span class="name">Address</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
-        
+                <label class="view-source-button" for="Address-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Address"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Address-31"><a href="#Address-31"><span class="linenos"> 31</span></a><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="Address-32"><a href="#Address-32"><span class="linenos"> 32</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address-33"><a href="#Address-33"><span class="linenos"> 33</span></a><span class="sd">    Address object that provides a high-level definition for address components</span>
+</span><span id="Address-34"><a href="#Address-34"><span class="linenos"> 34</span></a><span class="sd">    that meets ontological and physical address standards.  An address is a kind</span>
+</span><span id="Address-35"><a href="#Address-35"><span class="linenos"> 35</span></a><span class="sd">    of index that describes a physical location to which communications may be</span>
+</span><span id="Address-36"><a href="#Address-36"><span class="linenos"> 36</span></a><span class="sd">    delivered.</span>
+</span><span id="Address-37"><a href="#Address-37"><span class="linenos"> 37</span></a>
+</span><span id="Address-38"><a href="#Address-38"><span class="linenos"> 38</span></a><span class="sd">    This Address class doesn&#39;t meet the full ontological criteria for a complete</span>
+</span><span id="Address-39"><a href="#Address-39"><span class="linenos"> 39</span></a><span class="sd">    address because it doesn&#39;t separate building number, subdivisions, and other</span>
+</span><span id="Address-40"><a href="#Address-40"><span class="linenos"> 40</span></a><span class="sd">    attributes.</span>
+</span><span id="Address-41"><a href="#Address-41"><span class="linenos"> 41</span></a>
+</span><span id="Address-42"><a href="#Address-42"><span class="linenos"> 42</span></a><span class="sd">    Future implementations may parse the `.line` and `.line2` attributes to</span>
+</span><span id="Address-43"><a href="#Address-43"><span class="linenos"> 43</span></a><span class="sd">    separate distinct items like the buildingNumber from streetName or</span>
+</span><span id="Address-44"><a href="#Address-44"><span class="linenos"> 44</span></a><span class="sd">    equivalent to fit a standard address schema.</span>
+</span><span id="Address-45"><a href="#Address-45"><span class="linenos"> 45</span></a>
+</span><span id="Address-46"><a href="#Address-46"><span class="linenos"> 46</span></a><span class="sd">    This Address implementation is equivalent to the &lt;a href=&#39;https://spec.edmcouncil.org/fibo/ontology/FND/Places/NorthAmerica/USPostalServiceAddresses/GeneralDeliveryAddress&#39; target=&#39;_blank&#39;&gt;FIBO GeneralDeliveryAddress&lt;/a&gt;</span>
+</span><span id="Address-47"><a href="#Address-47"><span class="linenos"> 47</span></a><span class="sd">    class.</span>
+</span><span id="Address-48"><a href="#Address-48"><span class="linenos"> 48</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Address-49"><a href="#Address-49"><span class="linenos"> 49</span></a>
+</span><span id="Address-50"><a href="#Address-50"><span class="linenos"> 50</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;completeAddress&#39;</span><span class="p">,</span> <span class="p">]</span>
+</span><span id="Address-51"><a href="#Address-51"><span class="linenos"> 51</span></a>
+</span><span id="Address-52"><a href="#Address-52"><span class="linenos"> 52</span></a>
+</span><span id="Address-53"><a href="#Address-53"><span class="linenos"> 53</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_ADDRESS_DICT</span><span class="p">):</span>
+</span><span id="Address-54"><a href="#Address-54"><span class="linenos"> 54</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address-55"><a href="#Address-55"><span class="linenos"> 55</span></a><span class="sd">        Create a new instance of an address.  `obj` must correspond to a</span>
+</span><span id="Address-56"><a href="#Address-56"><span class="linenos"> 56</span></a><span class="sd">        valid, existing object ID if it&#39;s not a collection or JSON.</span>
+</span><span id="Address-57"><a href="#Address-57"><span class="linenos"> 57</span></a>
+</span><span id="Address-58"><a href="#Address-58"><span class="linenos"> 58</span></a><span class="sd">        obj specification:</span>
+</span><span id="Address-59"><a href="#Address-59"><span class="linenos"> 59</span></a>
+</span><span id="Address-60"><a href="#Address-60"><span class="linenos"> 60</span></a><span class="sd">        ```</span>
+</span><span id="Address-61"><a href="#Address-61"><span class="linenos"> 61</span></a><span class="sd">        Address({</span>
+</span><span id="Address-62"><a href="#Address-62"><span class="linenos"> 62</span></a><span class="sd">            # We made it a requirement but we&#39;ll toss it in the instances:</span>
+</span><span id="Address-63"><a href="#Address-63"><span class="linenos"> 63</span></a><span class="sd">            &#39;complete_address&#39;: &#39;&#39;,</span>
+</span><span id="Address-64"><a href="#Address-64"><span class="linenos"> 64</span></a><span class="sd">            &#39;countryCode&#39;: &#39;US&#39;,</span>
+</span><span id="Address-65"><a href="#Address-65"><span class="linenos"> 65</span></a><span class="sd">            &#39;latitude&#39;: 37.802821,</span>
+</span><span id="Address-66"><a href="#Address-66"><span class="linenos"> 66</span></a><span class="sd">            &#39;line1&#39;: &#39;1233 Francisco Street&#39;,</span>
+</span><span id="Address-67"><a href="#Address-67"><span class="linenos"> 67</span></a><span class="sd">            &#39;line2&#39;: &#39;Suite 202&#39;,</span>
+</span><span id="Address-68"><a href="#Address-68"><span class="linenos"> 68</span></a><span class="sd">            &#39;locality&#39;: &#39;San Francisco&#39;,</span>
+</span><span id="Address-69"><a href="#Address-69"><span class="linenos"> 69</span></a><span class="sd">            &#39;longitude&#39;: -122.425486,</span>
+</span><span id="Address-70"><a href="#Address-70"><span class="linenos"> 70</span></a><span class="sd">            &#39;postalCode&#39;: &#39;94123&#39;,</span>
+</span><span id="Address-71"><a href="#Address-71"><span class="linenos"> 71</span></a><span class="sd">            &#39;province&#39;: &#39;CA&#39;,</span>
+</span><span id="Address-72"><a href="#Address-72"><span class="linenos"> 72</span></a><span class="sd">        })</span>
+</span><span id="Address-73"><a href="#Address-73"><span class="linenos"> 73</span></a><span class="sd">        ```</span>
+</span><span id="Address-74"><a href="#Address-74"><span class="linenos"> 74</span></a>
+</span><span id="Address-75"><a href="#Address-75"><span class="linenos"> 75</span></a><span class="sd">        Arguments</span>
+</span><span id="Address-76"><a href="#Address-76"><span class="linenos"> 76</span></a><span class="sd">        ---------</span>
+</span><span id="Address-77"><a href="#Address-77"><span class="linenos"> 77</span></a><span class="sd">            obj</span>
+</span><span id="Address-78"><a href="#Address-78"><span class="linenos"> 78</span></a><span class="sd">        An object used for building a valid address.  The object can</span>
+</span><span id="Address-79"><a href="#Address-79"><span class="linenos"> 79</span></a><span class="sd">        be one of:</span>
+</span><span id="Address-80"><a href="#Address-80"><span class="linenos"> 80</span></a>
+</span><span id="Address-81"><a href="#Address-81"><span class="linenos"> 81</span></a><span class="sd">        - A dictionary - a dictionary with instantiation values as described</span>
+</span><span id="Address-82"><a href="#Address-82"><span class="linenos"> 82</span></a><span class="sd">          in the API documentation</span>
+</span><span id="Address-83"><a href="#Address-83"><span class="linenos"> 83</span></a><span class="sd">        - A JSON string</span>
+</span><span id="Address-84"><a href="#Address-84"><span class="linenos"> 84</span></a><span class="sd">        - A triple objectID</span>
+</span><span id="Address-85"><a href="#Address-85"><span class="linenos"> 85</span></a>
+</span><span id="Address-86"><a href="#Address-86"><span class="linenos"> 86</span></a><span class="sd">        Raises</span>
+</span><span id="Address-87"><a href="#Address-87"><span class="linenos"> 87</span></a><span class="sd">        ------</span>
+</span><span id="Address-88"><a href="#Address-88"><span class="linenos"> 88</span></a><span class="sd">            CoronadoError</span>
+</span><span id="Address-89"><a href="#Address-89"><span class="linenos"> 89</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="Address-90"><a href="#Address-90"><span class="linenos"> 90</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="Address-91"><a href="#Address-91"><span class="linenos"> 91</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="Address-92"><a href="#Address-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Address-93"><a href="#Address-93"><span class="linenos"> 93</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="Address-94"><a href="#Address-94"><span class="linenos"> 94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">completeAddress</span> <span class="o">=</span> <span class="s1">&#39;WARNING:  USE .complete instead of .completeAddress&#39;</span>
+</span><span id="Address-95"><a href="#Address-95"><span class="linenos"> 95</span></a>
+</span><span id="Address-96"><a href="#Address-96"><span class="linenos"> 96</span></a>
+</span><span id="Address-97"><a href="#Address-97"><span class="linenos"> 97</span></a>    <span class="nd">@property</span>
+</span><span id="Address-98"><a href="#Address-98"><span class="linenos"> 98</span></a>    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Address-99"><a href="#Address-99"><span class="linenos"> 99</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address-100"><a href="#Address-100"><span class="linenos">100</span></a><span class="sd">        Return the receiver as a human-readable, multi-line complete address.</span>
+</span><span id="Address-101"><a href="#Address-101"><span class="linenos">101</span></a><span class="sd">        Output format:</span>
+</span><span id="Address-102"><a href="#Address-102"><span class="linenos">102</span></a>
+</span><span id="Address-103"><a href="#Address-103"><span class="linenos">103</span></a><span class="sd">            line1\\n</span>
+</span><span id="Address-104"><a href="#Address-104"><span class="linenos">104</span></a><span class="sd">            locality, province, postalCode</span>
+</span><span id="Address-105"><a href="#Address-105"><span class="linenos">105</span></a>
+</span><span id="Address-106"><a href="#Address-106"><span class="linenos">106</span></a><span class="sd">        Return</span>
+</span><span id="Address-107"><a href="#Address-107"><span class="linenos">107</span></a><span class="sd">        ------</span>
+</span><span id="Address-108"><a href="#Address-108"><span class="linenos">108</span></a><span class="sd">            A string representation of the address.</span>
+</span><span id="Address-109"><a href="#Address-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Address-110"><a href="#Address-110"><span class="linenos">110</span></a>        <span class="n">completeAddress</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+</span><span id="Address-111"><a href="#Address-111"><span class="linenos">111</span></a>            <span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+</span><span id="Address-112"><a href="#Address-112"><span class="linenos">112</span></a>            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">),</span> <span class="p">])</span>
+</span><span id="Address-113"><a href="#Address-113"><span class="linenos">113</span></a>
+</span><span id="Address-114"><a href="#Address-114"><span class="linenos">114</span></a>        <span class="k">return</span> <span class="n">completeAddress</span>
+</span><span id="Address-115"><a href="#Address-115"><span class="linenos">115</span></a>
+</span><span id="Address-116"><a href="#Address-116"><span class="linenos">116</span></a>
+</span><span id="Address-117"><a href="#Address-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">asSnakeCaseDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="Address-118"><a href="#Address-118"><span class="linenos">118</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address-119"><a href="#Address-119"><span class="linenos">119</span></a><span class="sd">        Return a dict representation of the receiver with the attributes</span>
+</span><span id="Address-120"><a href="#Address-120"><span class="linenos">120</span></a><span class="sd">        written in snake_case format.</span>
+</span><span id="Address-121"><a href="#Address-121"><span class="linenos">121</span></a>
+</span><span id="Address-122"><a href="#Address-122"><span class="linenos">122</span></a><span class="sd">        Return</span>
+</span><span id="Address-123"><a href="#Address-123"><span class="linenos">123</span></a><span class="sd">        ------</span>
+</span><span id="Address-124"><a href="#Address-124"><span class="linenos">124</span></a><span class="sd">            A dict representation of the receiver.</span>
+</span><span id="Address-125"><a href="#Address-125"><span class="linenos">125</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Address-126"><a href="#Address-126"><span class="linenos">126</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="Address-127"><a href="#Address-127"><span class="linenos">127</span></a>            <span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete</span><span class="p">,</span>
+</span><span id="Address-128"><a href="#Address-128"><span class="linenos">128</span></a>            <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">countryCode</span><span class="p">,</span>
+</span><span id="Address-129"><a href="#Address-129"><span class="linenos">129</span></a>            <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+</span><span id="Address-130"><a href="#Address-130"><span class="linenos">130</span></a>            <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span>
+</span><span id="Address-131"><a href="#Address-131"><span class="linenos">131</span></a>            <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">,</span>
+</span><span id="Address-132"><a href="#Address-132"><span class="linenos">132</span></a>            <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+</span><span id="Address-133"><a href="#Address-133"><span class="linenos">133</span></a>            <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+</span><span id="Address-134"><a href="#Address-134"><span class="linenos">134</span></a>            <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+</span><span id="Address-135"><a href="#Address-135"><span class="linenos">135</span></a>            <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span>
+</span><span id="Address-136"><a href="#Address-136"><span class="linenos">136</span></a>        <span class="p">}</span>
+</span><span id="Address-137"><a href="#Address-137"><span class="linenos">137</span></a>
+</span><span id="Address-138"><a href="#Address-138"><span class="linenos">138</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span><span id="Address-139"><a href="#Address-139"><span class="linenos">139</span></a>
+</span><span id="Address-140"><a href="#Address-140"><span class="linenos">140</span></a>
+</span><span id="Address-141"><a href="#Address-141"><span class="linenos">141</span></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Address-142"><a href="#Address-142"><span class="linenos">142</span></a>        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+</span><span id="Address-143"><a href="#Address-143"><span class="linenos">143</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span>
+</span><span id="Address-144"><a href="#Address-144"><span class="linenos">144</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">,</span>
+</span><span id="Address-145"><a href="#Address-145"><span class="linenos">145</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+</span><span id="Address-146"><a href="#Address-146"><span class="linenos">146</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span>
+</span><span id="Address-147"><a href="#Address-147"><span class="linenos">147</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+</span><span id="Address-148"><a href="#Address-148"><span class="linenos">148</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">countryCode</span><span class="p">,</span>
+</span><span id="Address-149"><a href="#Address-149"><span class="linenos">149</span></a>        <span class="p">)</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Address object that provides a high-level definition for address components
 that meets ontological and physical address standards.  An address is a kind
 of index that describes a physical location to which communications may be
@@ -122,14 +397,60 @@ class.</p>
 
 
                             <div id="Address.__init__" class="classattr">
-                                <div class="attr function">
+                                        <input id="Address.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="name">Address</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">obj</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="s1">&#39;DEPRECATE AND ELIMINATE THIS FIELD&#39;</span><span class="p">,</span> <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="s1">&#39;7370 BAKER ST&#39;</span><span class="p">,</span> <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="s1">&#39;SUITE 100&#39;</span><span class="p">,</span> <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="s1">&#39;PITTSBURGH&#39;</span><span class="p">,</span> <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="s1">&#39;15206&#39;</span><span class="p">,</span> <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="mf">40.440624</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">79.995888</span><span class="p">}</span></span>)</span>
 
-        
+                <label class="view-source-button" for="Address.__init__-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Address.__init__"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Address.__init__-53"><a href="#Address.__init__-53"><span class="linenos">53</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_ADDRESS_DICT</span><span class="p">):</span>
+</span><span id="Address.__init__-54"><a href="#Address.__init__-54"><span class="linenos">54</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address.__init__-55"><a href="#Address.__init__-55"><span class="linenos">55</span></a><span class="sd">        Create a new instance of an address.  `obj` must correspond to a</span>
+</span><span id="Address.__init__-56"><a href="#Address.__init__-56"><span class="linenos">56</span></a><span class="sd">        valid, existing object ID if it&#39;s not a collection or JSON.</span>
+</span><span id="Address.__init__-57"><a href="#Address.__init__-57"><span class="linenos">57</span></a>
+</span><span id="Address.__init__-58"><a href="#Address.__init__-58"><span class="linenos">58</span></a><span class="sd">        obj specification:</span>
+</span><span id="Address.__init__-59"><a href="#Address.__init__-59"><span class="linenos">59</span></a>
+</span><span id="Address.__init__-60"><a href="#Address.__init__-60"><span class="linenos">60</span></a><span class="sd">        ```</span>
+</span><span id="Address.__init__-61"><a href="#Address.__init__-61"><span class="linenos">61</span></a><span class="sd">        Address({</span>
+</span><span id="Address.__init__-62"><a href="#Address.__init__-62"><span class="linenos">62</span></a><span class="sd">            # We made it a requirement but we&#39;ll toss it in the instances:</span>
+</span><span id="Address.__init__-63"><a href="#Address.__init__-63"><span class="linenos">63</span></a><span class="sd">            &#39;complete_address&#39;: &#39;&#39;,</span>
+</span><span id="Address.__init__-64"><a href="#Address.__init__-64"><span class="linenos">64</span></a><span class="sd">            &#39;countryCode&#39;: &#39;US&#39;,</span>
+</span><span id="Address.__init__-65"><a href="#Address.__init__-65"><span class="linenos">65</span></a><span class="sd">            &#39;latitude&#39;: 37.802821,</span>
+</span><span id="Address.__init__-66"><a href="#Address.__init__-66"><span class="linenos">66</span></a><span class="sd">            &#39;line1&#39;: &#39;1233 Francisco Street&#39;,</span>
+</span><span id="Address.__init__-67"><a href="#Address.__init__-67"><span class="linenos">67</span></a><span class="sd">            &#39;line2&#39;: &#39;Suite 202&#39;,</span>
+</span><span id="Address.__init__-68"><a href="#Address.__init__-68"><span class="linenos">68</span></a><span class="sd">            &#39;locality&#39;: &#39;San Francisco&#39;,</span>
+</span><span id="Address.__init__-69"><a href="#Address.__init__-69"><span class="linenos">69</span></a><span class="sd">            &#39;longitude&#39;: -122.425486,</span>
+</span><span id="Address.__init__-70"><a href="#Address.__init__-70"><span class="linenos">70</span></a><span class="sd">            &#39;postalCode&#39;: &#39;94123&#39;,</span>
+</span><span id="Address.__init__-71"><a href="#Address.__init__-71"><span class="linenos">71</span></a><span class="sd">            &#39;province&#39;: &#39;CA&#39;,</span>
+</span><span id="Address.__init__-72"><a href="#Address.__init__-72"><span class="linenos">72</span></a><span class="sd">        })</span>
+</span><span id="Address.__init__-73"><a href="#Address.__init__-73"><span class="linenos">73</span></a><span class="sd">        ```</span>
+</span><span id="Address.__init__-74"><a href="#Address.__init__-74"><span class="linenos">74</span></a>
+</span><span id="Address.__init__-75"><a href="#Address.__init__-75"><span class="linenos">75</span></a><span class="sd">        Arguments</span>
+</span><span id="Address.__init__-76"><a href="#Address.__init__-76"><span class="linenos">76</span></a><span class="sd">        ---------</span>
+</span><span id="Address.__init__-77"><a href="#Address.__init__-77"><span class="linenos">77</span></a><span class="sd">            obj</span>
+</span><span id="Address.__init__-78"><a href="#Address.__init__-78"><span class="linenos">78</span></a><span class="sd">        An object used for building a valid address.  The object can</span>
+</span><span id="Address.__init__-79"><a href="#Address.__init__-79"><span class="linenos">79</span></a><span class="sd">        be one of:</span>
+</span><span id="Address.__init__-80"><a href="#Address.__init__-80"><span class="linenos">80</span></a>
+</span><span id="Address.__init__-81"><a href="#Address.__init__-81"><span class="linenos">81</span></a><span class="sd">        - A dictionary - a dictionary with instantiation values as described</span>
+</span><span id="Address.__init__-82"><a href="#Address.__init__-82"><span class="linenos">82</span></a><span class="sd">          in the API documentation</span>
+</span><span id="Address.__init__-83"><a href="#Address.__init__-83"><span class="linenos">83</span></a><span class="sd">        - A JSON string</span>
+</span><span id="Address.__init__-84"><a href="#Address.__init__-84"><span class="linenos">84</span></a><span class="sd">        - A triple objectID</span>
+</span><span id="Address.__init__-85"><a href="#Address.__init__-85"><span class="linenos">85</span></a>
+</span><span id="Address.__init__-86"><a href="#Address.__init__-86"><span class="linenos">86</span></a><span class="sd">        Raises</span>
+</span><span id="Address.__init__-87"><a href="#Address.__init__-87"><span class="linenos">87</span></a><span class="sd">        ------</span>
+</span><span id="Address.__init__-88"><a href="#Address.__init__-88"><span class="linenos">88</span></a><span class="sd">            CoronadoError</span>
+</span><span id="Address.__init__-89"><a href="#Address.__init__-89"><span class="linenos">89</span></a><span class="sd">        A CoronadoError dependent on the specific error condition.  The full list of</span>
+</span><span id="Address.__init__-90"><a href="#Address.__init__-90"><span class="linenos">90</span></a><span class="sd">        possible errors, causes, and semantics is available in the </span>
+</span><span id="Address.__init__-91"><a href="#Address.__init__-91"><span class="linenos">91</span></a><span class="sd">        **`coronado.exceptions`** module.</span>
+</span><span id="Address.__init__-92"><a href="#Address.__init__-92"><span class="linenos">92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Address.__init__-93"><a href="#Address.__init__-93"><span class="linenos">93</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="Address.__init__-94"><a href="#Address.__init__-94"><span class="linenos">94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">completeAddress</span> <span class="o">=</span> <span class="s1">&#39;WARNING:  USE .complete instead of .completeAddress&#39;</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Create a new instance of an address.  <code>obj</code> must correspond to a
 valid, existing object ID if it's not a collection or JSON.</p>
 
@@ -166,16 +487,12 @@ in the API documentation</li>
 
 <h2 id="raises">Raises</h2>
 
-<pre><code>CoronadoAPIError
+<pre><code>CoronadoError
 </code></pre>
 
-<p>If obj represents an objectID and the ID isn't
-associated with a valid object</p>
-
-<pre><code>CoronadoMalformedError
-</code></pre>
-
-<p>If obj format is invalid (non <code>dict</code>, non JSON)</p>
+<p>A CoronadoError dependent on the specific error condition.  The full list of
+possible errors, causes, and semantics is available in the 
+<strong><code><a href="exceptions.html">coronado.exceptions</a></code></strong> module.</p>
 </div>
 
 
@@ -223,15 +540,41 @@ locality, province, postalCode
 
                             </div>
                             <div id="Address.asSnakeCaseDictionary" class="classattr">
-                                <div class="attr function">
+                                        <input id="Address.asSnakeCaseDictionary-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
             
         <span class="def">def</span>
         <span class="name">asSnakeCaseDictionary</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
 
-        
+                <label class="view-source-button" for="Address.asSnakeCaseDictionary-view-source"><span>View Source</span></label>
+
     </div>
     <a class="headerlink" href="#Address.asSnakeCaseDictionary"></a>
-    
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Address.asSnakeCaseDictionary-117"><a href="#Address.asSnakeCaseDictionary-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">asSnakeCaseDictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="Address.asSnakeCaseDictionary-118"><a href="#Address.asSnakeCaseDictionary-118"><span class="linenos">118</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Address.asSnakeCaseDictionary-119"><a href="#Address.asSnakeCaseDictionary-119"><span class="linenos">119</span></a><span class="sd">        Return a dict representation of the receiver with the attributes</span>
+</span><span id="Address.asSnakeCaseDictionary-120"><a href="#Address.asSnakeCaseDictionary-120"><span class="linenos">120</span></a><span class="sd">        written in snake_case format.</span>
+</span><span id="Address.asSnakeCaseDictionary-121"><a href="#Address.asSnakeCaseDictionary-121"><span class="linenos">121</span></a>
+</span><span id="Address.asSnakeCaseDictionary-122"><a href="#Address.asSnakeCaseDictionary-122"><span class="linenos">122</span></a><span class="sd">        Return</span>
+</span><span id="Address.asSnakeCaseDictionary-123"><a href="#Address.asSnakeCaseDictionary-123"><span class="linenos">123</span></a><span class="sd">        ------</span>
+</span><span id="Address.asSnakeCaseDictionary-124"><a href="#Address.asSnakeCaseDictionary-124"><span class="linenos">124</span></a><span class="sd">            A dict representation of the receiver.</span>
+</span><span id="Address.asSnakeCaseDictionary-125"><a href="#Address.asSnakeCaseDictionary-125"><span class="linenos">125</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Address.asSnakeCaseDictionary-126"><a href="#Address.asSnakeCaseDictionary-126"><span class="linenos">126</span></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="Address.asSnakeCaseDictionary-127"><a href="#Address.asSnakeCaseDictionary-127"><span class="linenos">127</span></a>            <span class="s1">&#39;complete_address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-128"><a href="#Address.asSnakeCaseDictionary-128"><span class="linenos">128</span></a>            <span class="s1">&#39;country_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">countryCode</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-129"><a href="#Address.asSnakeCaseDictionary-129"><span class="linenos">129</span></a>            <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-130"><a href="#Address.asSnakeCaseDictionary-130"><span class="linenos">130</span></a>            <span class="s1">&#39;line_1&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line1</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-131"><a href="#Address.asSnakeCaseDictionary-131"><span class="linenos">131</span></a>            <span class="s1">&#39;line_2&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line2</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-132"><a href="#Address.asSnakeCaseDictionary-132"><span class="linenos">132</span></a>            <span class="s1">&#39;locality&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-133"><a href="#Address.asSnakeCaseDictionary-133"><span class="linenos">133</span></a>            <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-134"><a href="#Address.asSnakeCaseDictionary-134"><span class="linenos">134</span></a>            <span class="s1">&#39;postal_code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-135"><a href="#Address.asSnakeCaseDictionary-135"><span class="linenos">135</span></a>            <span class="s1">&#39;province&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span>
+</span><span id="Address.asSnakeCaseDictionary-136"><a href="#Address.asSnakeCaseDictionary-136"><span class="linenos">136</span></a>        <span class="p">}</span>
+</span><span id="Address.asSnakeCaseDictionary-137"><a href="#Address.asSnakeCaseDictionary-137"><span class="linenos">137</span></a>
+</span><span id="Address.asSnakeCaseDictionary-138"><a href="#Address.asSnakeCaseDictionary-138"><span class="linenos">138</span></a>        <span class="k">return</span> <span class="n">result</span>
+</span></pre></div>
+
+
             <div class="docstring"><p>Return a dict representation of the receiver with the attributes
 written in snake_case format.</p>
 

@@ -8,6 +8,9 @@ from jose.exceptions import ExpiredSignatureError
 from jose.exceptions import JWTClaimsError
 from jose.exceptions import JWTError
 
+from coronado.exceptions import AuthInvalidScope
+from coronado.exceptions import AuthTokenAPIError
+
 import enum
 import json
 import os
@@ -110,7 +113,7 @@ class Auth(object):
         response = requests.request('POST', self._tokenURL, data = payload, auth = credentials)
 
         if response.status_code != 200:
-            raise CoronadoAuthTokenAPIError(': '.join([response.reason, json.loads(response.text)["error"]]))
+            raise AuthTokenAPIError(': '.join([response.reason, json.loads(response.text)["error"]]))
 
         return str(response.content, encoding = 'utf-8')
 
@@ -134,10 +137,10 @@ class Auth(object):
         elif isinstance(scope, list):
             for item in scope:
                 if not isinstance(item, Scope):
-                    raise CoronadoAuthInvalidScope(str(scope))
+                    raise AuthInvalidScope(str(scope))
             return scope
         else:
-            raise CoronadoAuthInvalidScope(str(scope))
+            raise AuthInvalidScope(str(scope))
 
     # --------------------
 
@@ -177,10 +180,10 @@ class Auth(object):
 
         Raises
         ------
-        coronado.auth.CoronadoAuthTokenAPIError if the underlying token API call
-        fails.  The exception message will include details about the failure
-        reason.
-
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         self._tokenURL = tokenURL
         self._clientID = clientID
@@ -256,36 +259,21 @@ class Auth(object):
 
         Raises
         ------
-            CoronadoAuthTokenAPIError
-        If the JWT provider fails; the error text will include the reason
-        for the failure.  Possible causes:
-
-        - The claims are invalid at the issuer
-        - The token signature might have expired (should never happen)
-        - The service provider (e.g. Cognito) may have some issue
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         self.tokenPayload
 
         try:
             claimSet = jwt.decode(self.token, '', options = {'verify_signature': False})
         except JWTError as e:
-            raise CoronadoAuthTokenAPIError(str(e))
+            raise AuthTokenAPIError(str(e))
         except ExpiredSignatureError as e:
-            raise CoronadoAuthTokenAPIError(str(e))
+            raise AuthTokenAPIError(str(e))
         except JWTClaimsError as e:
-            raise CoronadoAuthTokenAPIError(str(e))
+            raise AuthTokenAPIError(str(e))
             
         return tripleKeysToCamelCase(claimSet)
-
-
-class CoronadoAuthInvalidScope(Exception):
-    """
-    Raised during `Auth` token instantiation if an invalid scopes list is used.
-    """
-
-
-class CoronadoAuthTokenAPIError(Exception):
-    """
-    Raised when the access token API fails to produce an access token.
-    """
 
