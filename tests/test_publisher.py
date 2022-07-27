@@ -1,13 +1,11 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
 from coronado.address import Address
 from coronado.auth import Auth
 from coronado.auth import Scope
+from coronado.exceptions import CallError
+from coronado.exceptions import InvalidPayloadError
 from coronado.publisher import Publisher
 from coronado.publisher import SERVICE_PATH
 
@@ -59,7 +57,7 @@ def _generateTestPayload():
 # +++ tests +++
 
 def test_Publisher_create():
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Publisher.create(None)
 
     pubSpec = _generateTestPayload()
@@ -67,12 +65,12 @@ def test_Publisher_create():
     assert isinstance(publisher, Publisher)
 
     del(pubSpec['address'])
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    with pytest.raises(CallError):
         Publisher.create(pubSpec)
 
     pubSpec = _generateTestPayload()
-    pubSpec['revenue_share'] = 'bogus'
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    pubSpec['external_id'] = '10'
+    with pytest.raises(InvalidPayloadError):
         Publisher.create(pubSpec)
 
 
@@ -94,20 +92,6 @@ def test_Publisher_byID():
     assert not Publisher.byID('bogus')
 
 
-def test_Publisher_createDuplicateFail():
-    p = Publisher.byID(KNOWN_PUB_ID)
-    address = Address(p.address)
-    pubSpec = {
-        'address': address.asSnakeCaseDictionary(),
-        'assumed_name': p.assumedName,
-        'external_id': p.externalID,
-        'revenue_share': p.revenueShare,
-    }
-
-    with pytest.raises(CoronadoDuplicatesDisallowedError):
-        Publisher.create(pubSpec)
-
-
 def test_Publisher_updateWith():
     address = _address.asSnakeCaseDictionary()
 
@@ -120,19 +104,6 @@ def test_Publisher_updateWith():
     # Reset:
     payload['assumed_name'] = orgName
     Publisher.updateWith(KNOWN_PUB_ID, payload)
-
-# TODO:  implement these tests after the underlying bug is fixed:
-#     orgAddress = result.address
-#     x = orgAddress.line2
-#     control = 'Suite 303'
-#     address['line2'] = control
-#     payload = { 'address': address, }
-#     result = Publisher.updateWith(KNOWN_PUB_ID, address)
-#     assert result.address.postalCode == control
-#
-#     # Reset
-#     payload['address'] = orgAddress
-#     Publisher.updateWith(4, payload)
 
 
 def test_Publisher_instanceByID():

@@ -1,11 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnexpectedError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 

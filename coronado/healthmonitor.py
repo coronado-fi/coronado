@@ -83,7 +83,7 @@ def main(unitTest : bool = False) -> dict:
     HealthMonitor.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
     check = HealthMonitor.check()
 
-    print('triple API version = %s, build = %s' % (check.APIVersion, check.build))
+    print('triple API version = %s, build = %s; Coronado version = %s' % (check.APIVersion, check.build, check.coronadoVersion))
 
     if unitTest:
         return check.__dict__

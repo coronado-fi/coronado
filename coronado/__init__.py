@@ -11,6 +11,7 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 
 from copy import deepcopy
 
+from coronado.exceptions import errorFor
 from coronado.tools import tripleKeysToCamelCase
 
 import json
@@ -21,7 +22,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.1.13'
+__VERSION__ = '1.1.14'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -325,24 +326,18 @@ class TripleObject(object):
         """
         if klass == TripleObject:
             # Don't allow this in the abstract ancestor
-            raise NotImplementedError
+            raise errorFor(501, 'TripleObject cannot be created in the service')
 
         if not spec:
-            raise CoronadoMalformedObjectError
+            raise errorFor(400, 'spec was empty or None')
 
         endpoint = '/'.join([klass._serviceURL, klass._servicePath ]) # URL fix later
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 201:
             tripleObject = klass(response.text)
-        elif response.status_code == 409:
-            raise CoronadoDuplicatesDisallowedError(response.text)
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
         else:
-            raise CoronadoUnexpectedError(response.text)
+            raise errorFor(response.status_code, details = response.text)
 
         return tripleObject
 
@@ -370,13 +365,13 @@ class TripleObject(object):
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
         response = requests.request('GET', endpoint, headers = klass.headers)
 
-        if response.status_code == 404:
-            result = None
-        elif response.status_code == 200:
+        if response.status_code == 200:
             result = klass(response.content.decode())
+        elif response.status_code == 404:
+            result = None
         else:
-            raise CoronadoAPIError(response.text)
-
+            raise errorFor(response.status_code, details = response.text)
+            
         return result
 
 
@@ -420,12 +415,12 @@ class TripleObject(object):
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
         response = requests.request('PATCH', endpoint, headers = klass.headers, json = spec)
 
-        if response.status_code == 404:
-            result = None
-        elif response.status_code == 200:
+        if response.status_code == 200:
             result = klass(response.content.decode())
+        elif response.status_code == 404:
+            result = None
         else:
-            raise CoronadoAPIError(response.text)
+            raise errorFor(response.status_code, details = response.text)
 
         return result
 
