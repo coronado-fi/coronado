@@ -101,16 +101,21 @@ class UnexpectedError(CoronadoError):
     """
 
 
+class UnprocessablePayload(CoronadoError):
+    """
+    Raised when the request payload is well-formed but the server couldn't
+    service it for some reason.  This exception's textual representation is a
+    JSON object with further details regarding the error cause.
+    """
+
+
 _ERRORS_MAP = {
     400: CallError,
     401: UnauthorizedError,
     403: ForbiddenError,
     404: NotFoundError,
     409: InvalidPayloadError,
-    422: {
-            'xxxx': NotFoundError,
-            'yyyy': DuplicatesDisallowedError,
-         },
+    422: UnprocessablePayload,
     501: NotImplementedError,
     503: ServiceUnavailable,
 }

@@ -1,15 +1,15 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
 from coronado.auth import Auth
 from coronado.display import CardLinkedOffer as CLOffer
 from coronado.display import CardLinkedOfferDetails as CLOfferDetails
 from coronado.display import FETCH_RPC_SERVICE_PATH
 from coronado.display import OfferSearchResult
 from coronado.display import SEARCH_RPC_SERVICE_PATH
+from coronado.exceptions import CallError
+from coronado.exceptions import UnexpectedError
+from coronado.exceptions import UnprocessablePayload
 from coronado.offer import OfferType
 
 import pytest
@@ -37,39 +37,6 @@ CLOfferDetails.initialize(_config['serviceURL'], FETCH_RPC_SERVICE_PATH, _auth)
 
 # +++ tests +++
 
-def test_OfferSearchResult_forQuery():
-    # Known offers working query:
-    spec = {
-        "proximity_target": {
-            "latitude": "40.4604548",
-            "longitude": "-79.9215594",
-            "radius": 35000
-        },
-        "card_account_identifier": {
-            "card_account_id": KNOWN_CARD_ID
-        },
-        "text_query": "italian food",
-        "page_size": 25,
-        "page_offset": 0,
-        "apply_filter": {
-            "type": "CARD_LINKED"
-        }
-    }
-    offers = OfferSearchResult.forQuery(spec = spec)
-
-    assert isinstance(offers, list)
-    assert len(offers)
-    assert offers[0].objID
-
-    spec['card_account_identifier']['card_account_id'] = 'BOGUS'
-    with pytest.raises(CoronadoAPIError):
-        OfferSearchResult.forQuery(spec)
-
-    del spec['proximity_target']
-    with pytest.raises(CoronadoUnprocessableObjectError):
-        OfferSearchResult.forQuery(spec)
-
-
 def test_OfferSearchResult_withQuery():
     # Known offers working query:
     spec = {
@@ -88,19 +55,19 @@ def test_OfferSearchResult_withQuery():
             "type": "CARD_LINKED"
         }
     }
-    offers = OfferSearchResult.forQuery(spec = spec)
+    offers = OfferSearchResult.queryWith(spec = spec)
 
     assert isinstance(offers, list)
     assert len(offers)
     assert offers[0].objID
 
     spec['card_account_identifier']['card_account_id'] = 'BOGUS'
-    with pytest.raises(CoronadoAPIError):
-        OfferSearchResult.forQuery(spec)
+    with pytest.raises(UnprocessablePayload):
+        OfferSearchResult.queryWith(spec = spec)
 
     del spec['proximity_target']
-    with pytest.raises(CoronadoUnprocessableObjectError):
-        OfferSearchResult.forQuery(spec)
+    with pytest.raises(CallError):
+        OfferSearchResult.queryWith(spec = spec)
 
 
 def test_OfferSearchResult_withQuery_args():
@@ -118,7 +85,7 @@ def test_OfferSearchResult_withQuery_args():
     assert len(offers)
     assert offers[0].objID
 
-    with pytest.raises(CoronadoAPIError):
+    with pytest.raises(CallError):
         OfferSearchResult.queryWith(
                 latitude = '40.46',
                 longitude = '-79.92',
@@ -128,7 +95,7 @@ def test_OfferSearchResult_withQuery_args():
                 pageOffset = 0,
                 filterType = OfferType.CARD_LINKED)
 
-    with pytest.raises(KeyError):
+    with pytest.raises(CallError):
         OfferSearchResult.queryWith(
                 radius = 35000,
                 cardAccountID = KNOWN_CARD_ID,
@@ -157,24 +124,24 @@ def test_CLOfferDetails_forID():
 
     # TODO:  All of these need to test against specific exceptions,
     #        this is good enough for this release.
-    with pytest.raises(Exception):
+    with pytest.raises(UnexpectedError):
         CLOfferDetails.forID('BOGUs', spec = spec)
 
-    with pytest.raises(Exception):
+    with pytest.raises(UnexpectedError):
         CLOfferDetails.forID('0', spec = spec)
         
     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
-    with pytest.raises(Exception):
+    with pytest.raises(UnprocessablePayload):
         CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
 
     spec['card_account_identifier']['card_account_id'] = '0'
-    offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
-    assert not offerDetails
+    with pytest.raises(UnprocessablePayload):
+        offerDetails = CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
 
     del spec['card_account_identifier']
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    with pytest.raises(CallError):
         CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
 
-    with pytest.raises(CoronadoAPIError):
+    with pytest.raises(CallError):
         CLOfferDetails.forID(KNOWN_OFFER_ID, postalCode = '94123')
 

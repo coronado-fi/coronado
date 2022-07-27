@@ -12,7 +12,9 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 from copy import deepcopy
 
 from coronado.exceptions import errorFor
+from coronado.exceptions import CallError
 from coronado.tools import tripleKeysToCamelCase
+from coronado.exceptions import InvalidPayloadError
 
 import json
 import enum
@@ -99,13 +101,13 @@ class TripleObject(object):
                 try:
                     d = self.__class__.byID(obj).__dict__
                 except:
-                    raise CoronadoAPIError('invalid object ID')
+                    raise InvalidPayloadError('invalid object ID')
         elif isinstance(obj, dict):
             d = deepcopy(obj)
         elif isinstance(obj, TripleObject):
             d = deepcopy(obj.__dict__)
         else:
-            raise CoronadoMalformedObjectError
+            raise InvalidPayloadError()
 
         d = tripleKeysToCamelCase(d)
 
@@ -140,7 +142,7 @@ class TripleObject(object):
             attributes = self.__dict__.keys()
             if not all(attribute in attributes for attribute in self.__class__.requiredAttributes):
                 missing = set(self.__class__.requiredAttributes)-set(attributes)
-                raise CoronadoMalformedObjectError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
+                raise CallError("attribute%s %s missing during instantiation" % ('' if len(missing) == 1 else 's', missing))
 
 
     def listAttributes(self) -> dict:

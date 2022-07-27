@@ -2,12 +2,10 @@
 
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.address import Address
+from coronado.exceptions import CallError
+from coronado.exceptions import InvalidPayloadError
 from coronado.transaction import MatchingStatus
 from coronado.transaction import ProcessorMID
 from coronado.transaction import SERVICE_PATH
@@ -76,11 +74,11 @@ def test_Transaction():
     result = Transaction(KNOWN_TRANSACTION_ID)
     assert isinstance(result, Transaction)
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Transaction({ 'bogus': 'test'})
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(InvalidPayloadError):
         Transaction(None)
-    with pytest.raises(CoronadoAPIError):
+    with pytest.raises(InvalidPayloadError):
         Transaction('bogus')
 
 
@@ -114,15 +112,15 @@ def test_Transaction_create():
     assert transaction.objID
     assert transaction.amount == 41.95
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Transaction.create(None)
 
     spec['external_id'] = KNOWN_ACCT_EXT_ID
-    with pytest.raises(CoronadoDuplicatesDisallowedError):
+    with pytest.raises(InvalidPayloadError):
         Transaction.create(spec)
 
     spec['external_id'] = '****'
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    with pytest.raises(CallError):
         Transaction.create(spec)
 
 
@@ -171,5 +169,5 @@ def test_Transaction_byID():
     assert not Transaction.byID('bogus')
 
 
-test_Transaction_list()
+test_Transaction_create()
 

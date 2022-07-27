@@ -1,14 +1,12 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnexpectedError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.address import Address
 from coronado.baseobjects import BASE_CLOFFER_DETAILS_DICT
 from coronado.baseobjects import BASE_OFFER_SEARCH_RESULT_DICT
+from coronado.exceptions import CallError
+from coronado.exceptions import errorFor
 from coronado.merchant import MerchantCategoryCode as MCC
 from coronado.offer import Offer
 from coronado.offer import OfferCategory
@@ -50,12 +48,8 @@ class OfferSearchResult(Offer):
             result = [ klass(offer) for offer in json.loads(response.content)['offers'] ]
         elif response.status_code == 404:
             result = None
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
         else:
-            raise CoronadoUnexpectedError(response.text)
+            raise errorFor(response.status_code, response.text)
 
         return result
 
@@ -90,16 +84,6 @@ class OfferSearchResult(Offer):
         method to query the system for valid results.
         """
         TripleObject.__init__(self, obj)
-
-
-    @classmethod
-    def forQuery(klass, spec : dict) -> list:
-        """
-        DEPRECATED
-        ----------
-        Use `queryWith(objID, spec = spec)` instead.
-        """
-        return klass.queryWith(spec = spec)
 
 
     @classmethod
@@ -227,38 +211,41 @@ class OfferSearchResult(Offer):
 
         if not all(arg in args.keys() for arg in requiredArgs):
             missing = set(requiredArgs)-set(args.keys())
-            raise CoronadoAPIError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
+            raise CallError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
 
         filters = dict()
         if 'filterCategory' in args:
             isinstance(args['filterCategory'], OfferCategory) \
-                or klass._error(CoronadoAPIError, 'filterCategory must be an instance of %s' % OfferCategory)
+                or klass._error(CallError, 'filterCategory must be an instance of %s' % OfferCategory)
             filters['category'] = str(args['filterCategory'])
         if 'filterMode' in args:
             isinstance(args['filterMode'], OfferDeliveryMode) \
-                or klass._error(CoronadoAPIError, 'filterMode must be an instance of %s' % OfferDeliveryMode)
+                or klass._error(CallError, 'filterMode must be an instance of %s' % OfferDeliveryMode)
             filters['mode'] = str(args['filterMode'])
         if 'filterType' in args:
             isinstance(args['filterType'], OfferType) \
-                or klass._error(CoronadoAPIError, 'filterType must be an instance of %s' % OfferType)
+                or klass._error(CallError, 'filterType must be an instance of %s' % OfferType)
             filters['type'] = str(args['filterType'])
 
-        spec = {
-            # TODO:  what's the behavior if both coordinates and postal code + # 20220718 -- lat,long used; the rest is ignored
-            #        country code are specified?
-            'proximity_target': {
-                'latitude': args['latitude'],
-                'longitude': args['longitude'],
-                'radius': args['radius'],
-            },
-            'card_account_identifier': {
-                'card_account_id': args['cardAccountID'],
-            },
-            'text_query': args.get('textQuery', '').lower(),
-            'page_size': args['pageSize'],
-            'page_offset': args['pageOffset'],
-            'apply_filter': filters,
-        }
+        try:
+            spec = {
+                # TODO:  what's the behavior if both coordinates and postal code + # 20220718 -- lat,long used; the rest is ignored
+                #        country code are specified?
+                'proximity_target': {
+                    'latitude': args['latitude'],
+                    'longitude': args['longitude'],
+                    'radius': args['radius'],
+                },
+                'card_account_identifier': {
+                    'card_account_id': args['cardAccountID'],
+                },
+                'text_query': args.get('textQuery', '').lower(),
+                'page_size': args['pageSize'],
+                'page_offset': args['pageOffset'],
+                'apply_filter': filters,
+            }
+        except KeyError as e:
+            raise CallError(str(e))
 
         return klass._queryWith(spec)
 
@@ -300,7 +287,7 @@ def _assembleDetailsFrom(payload):
     d = json.loads(payload)
 
     if 'offer' not in d:
-        raise CoronadoMalformedObjectError('offer attribute not found')
+        raise CallError('offer attribute not found')
 
     offer = CardLinkedOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
@@ -342,12 +329,8 @@ class CardLinkedOfferDetails(TripleObject):
             result = _assembleDetailsFrom(response.content)
         elif response.status_code == 404:
             result = None
-        elif response.status_code == 422:
-            raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
         else:
-            raise CoronadoUnexpectedError(response.text)
+            raise errorFor(response.status_code, response.text)
 
         return result
 
@@ -457,7 +440,7 @@ class CardLinkedOfferDetails(TripleObject):
 
         if not all(arg in args.keys() for arg in requiredArgs):
             missing = set(requiredArgs)-set(args.keys())
-            raise CoronadoAPIError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
+            raise CallError('argument%s %s missing during instantiation' % ('' if len(missing) == 1 else 's', missing))
 
         spec = {
             'proximity_target': {

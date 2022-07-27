@@ -1,15 +1,14 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoDuplicatesDisallowedError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleObject
 from coronado.auth import Auth
 from coronado.auth import Scope
 from coronado.cardaccount import CardAccount
 from coronado.cardaccount import CardAccountStatus
 from coronado.cardaccount import SERVICE_PATH
+from coronado.exceptions import CallError
+from coronado.exceptions import InvalidPayloadError
 
 import uuid
 
@@ -55,15 +54,15 @@ def test_CardAccount_create():
     account = CardAccount.create(spec)
     assert account
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         CardAccount.create(None)
 
     spec['external_id'] = KNOWN_ACCT_EXT_ID
-    with pytest.raises(CoronadoDuplicatesDisallowedError):
+    with pytest.raises(InvalidPayloadError):
         CardAccount.create(spec)
 
     spec['external_id'] = '****'
-    with pytest.raises(CoronadoUnprocessableObjectError):
+    with pytest.raises(CallError):
         CardAccount.create(spec)
 
 
