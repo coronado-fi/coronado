@@ -3,31 +3,6 @@
 
 from copy import deepcopy
 
-# from coronado import CardAccountIdentifier
-# from coronado import MerchantCategoryCode
-# from coronado import MerchantLocation
-# from coronado import Offer
-# from coronado import OfferActivation
-# from coronado import OfferDisplayRules
-# from coronado import Reward
-# from coronado import Transaction
-# from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_DICT
-# from coronado.baseobjects import BASE_CARD_ACCOUNT_IDENTIFIER_JSON
-# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
-# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_JSON
-# from coronado.baseobjects import BASE_MERCHANT_LOCATION_DICT
-# from coronado.baseobjects import BASE_MERCHANT_LOCATION_JSON
-# from coronado.baseobjects import BASE_OFFER_ACTIVATION_DICT
-# from coronado.baseobjects import BASE_OFFER_ACTIVATION_JSON
-# from coronado.baseobjects import BASE_OFFER_DICT
-# from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_DICT
-# from coronado.baseobjects import BASE_OFFER_DISPLAY_RULES_JSON
-# from coronado.baseobjects import BASE_OFFER_JSON
-# from coronado.baseobjects import BASE_REWARD_DICT
-# from coronado.baseobjects import BASE_REWARD_JSON
-# from coronado.baseobjects import BASE_TRANSACTION_DICT
-# from coronado.baseobjects import BASE_TRANSACTION_JSON
-from coronado import CoronadoMalformedObjectError
 from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.address import Address
@@ -47,6 +22,10 @@ from coronado.cardaccount import CardAccount
 from coronado.cardprog import CardProgram
 from coronado.merchant import Merchant
 from coronado.publisher import Publisher
+from coronado.exceptions import CallError
+from coronado.exceptions import ForbiddenError
+from coronado.exceptions import InvalidPayloadError
+from coronado.exceptions import UnexpectedError
 
 import pytest
 
@@ -65,7 +44,7 @@ _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret =
 # --- tests ---
 
 def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = None):
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(InvalidPayloadError):
         klass(42)
 
     x = klass(pJSON)
@@ -93,11 +72,11 @@ def test_TripleObjectMissingAttrError():
 
     try:
         Publisher(x)
-    except CoronadoMalformedObjectError as e:
+    except CallError as e:
         assert str(e) == "attribute {'assumedName'} missing during instantiation"
 
     del(x['address'])
-    with pytest.raises(CoronadoMalformedObjectError) as e:
+    with pytest.raises(CallError) as e:
         Publisher(x)
         assert str(e) == "attributes {'assumedName', 'address'} missing during instantiation"
 
@@ -170,7 +149,7 @@ def test_TripleObject_requiredAttributes():
     s = Synthetic({ 'alpha': 42, 'theta_meta': 69, 'beta': 99, })
     assert 'thetaMeta' in s.listAttributes()
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         Synthetic({ 'alpha': 42, 'theta_meta': 69, })
 
 

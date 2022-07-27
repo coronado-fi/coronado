@@ -11,10 +11,12 @@ Coronado - a Python API wrapper for the <a href='https://api.tripleup.dev/docs' 
 
 from copy import deepcopy
 
-from coronado.exceptions import errorFor
 from coronado.exceptions import CallError
-from coronado.tools import tripleKeysToCamelCase
+from coronado.exceptions import ForbiddenError
 from coronado.exceptions import InvalidPayloadError
+from coronado.exceptions import UnexpectedError
+from coronado.exceptions import errorFor
+from coronado.tools import tripleKeysToCamelCase
 
 import json
 import enum
@@ -461,65 +463,9 @@ class TripleObject(object):
         response = requests.request('GET', endpoint, headers = klass.headers, params = params)
 
         if response.status_code == 403 or response.status_code == 401:
-            raise CoronadoForbiddenError(response.text)
+            raise ForbiddenError(response.text)
         elif response.status_code >= 500:
-            raise CoronadoUnexpectedError(response.text)
+            raise UnexpectedError(response.text)
 
         return response
-
-
-class CoronadoAPIError(Exception):
-    """
-    Raised when the API server fails for some reason (HTTP status 5xx)
-    and it's unrecoverable.  This error most often means that the
-    service itself is misconfigured, is down, or has a serious bug.
-    Printing the reason code will display as much information about why
-    the service failed as it is available from the API system.
-    """
-
-class CoronadoDuplicatesDisallowedError(Exception):
-    """
-    Raised when trying to create a Coronado/triple object based on an
-    object spec that already exists (e.g. the externalID for the object
-    is already registered with the service, or its assumed name is
-    duplicated).
-    """
-
-
-class CoronadoMalformedObjectError(Exception):
-    """
-    Raised when instantiating a Coronado object fails.  May also include
-    a string describing the cause of the exception.
-    """
-    pass
-
-
-class CoronadoForbiddenError(Exception):
-    """
-    Raised when requesting access to a triple API resource without credentials
-    or with credentials with insufficient privileges.
-    """
-
-
-class CoronadoNotFoundError(Exception):
-    """
-    Raised when performing a search or update operation and the underlying API
-    is unable to tie the `objID` to a triple object of the corresponding type.
-    """
-
-
-class CoronadoUnexpectedError(Exception):
-    """
-    Raised when performning a Coronado API call that results in an
-    unknown, unexpected, undocumented, weird AF error that nobody knows
-    how it happened.
-    """
-
-
-class CoronadoUnprocessableObjectError(Exception):
-    """
-    Raised when instantiating a Coronado object fails because the object
-    is well-formed but contains semantic or object representation errors.
-    """
-    pass
 

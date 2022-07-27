@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 
-
 from coronado import TripleObject
 from coronado.address import Address
 from coronado.exceptions import CallError
@@ -167,7 +166,4 @@ def test_Transaction_byID():
     assert not Transaction.byID({ 'bogus': 'test'})
     assert not Transaction.byID(None)
     assert not Transaction.byID('bogus')
-
-
-test_Transaction_create()
 
