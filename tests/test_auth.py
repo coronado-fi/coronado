@@ -2,8 +2,8 @@
 
 
 from coronado.auth import Auth
-from coronado.auth import CoronadoAuthInvalidScope
-from coronado.auth import CoronadoAuthTokenAPIError
+from coronado.exceptions import AuthInvalidScope
+from coronado.exceptions import AuthTokenAPIError
 from coronado.auth import EXPIRATION_OFFSET
 from coronado.auth import Scope
 from coronado.auth import emptyConfig
@@ -44,13 +44,13 @@ def test_Auth():
     Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = [ Scope.PORTFOLIOS, Scope.CONTENT_PROVIDERS, ])
     Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'])
 
-    with pytest.raises(CoronadoAuthTokenAPIError):
+    with pytest.raises(AuthTokenAPIError):
         Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = Scope.NA)
 
-    with pytest.raises(CoronadoAuthInvalidScope):
+    with pytest.raises(AuthInvalidScope):
         Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = 69)
         
-    with pytest.raises(CoronadoAuthInvalidScope):
+    with pytest.raises(AuthInvalidScope):
         Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = [ Scope.PORTFOLIOS, 42, ])
         
 

@@ -71,8 +71,10 @@ class AddressCLOO(TripleObject):
 
         Raises
         ------
-            CoronadoMalformedObjectError
-        If obj format is invalid (non `dict`, non JSON)
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         TripleObject.__init__(self, obj)
         if 'completeAddress' in self.__dict__:

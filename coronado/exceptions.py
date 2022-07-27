@@ -19,6 +19,17 @@ class CoronadoError(Exception):
     """
 
 
+class AuthInvalidScope(CoronadoError):
+    """
+    Raised during `Auth` token instantiation if an invalid scopes list is used.
+    """
+
+
+class AuthTokenAPIError(CoronadoError):
+    """
+    Raised when the access token API fails to produce an access token.
+    """
+
 class CallError(CoronadoError):
     """
     Raised when the caller passes an invalid `spec` to any wrapper method, the
@@ -27,7 +38,7 @@ class CallError(CoronadoError):
     """
 
 
-class DuplicatesDisallowedError(Exception):
+class DuplicatesDisallowedError(CoronadoError):
     """
     Raised when trying to create a Coronado/triple object based on an
     object spec that already exists (e.g. the externalID for the object

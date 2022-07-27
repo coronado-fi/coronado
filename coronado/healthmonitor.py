@@ -34,8 +34,10 @@ class HealthMonitor(TripleObject):
 
     Raises
     ------
-        CoronadoAPIError
-    When the service is unavailable because of a fatal runtime condition.
+        CoronadoError
+    A CoronadoError dependent on the specific error condition.  The full list of
+    possible errors, causes, and semantics is available in the 
+    **`coronado.exceptions`** module.
     """
     requiredAttributes = [ 'APIVersion', 'build', ]
 

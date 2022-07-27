@@ -155,16 +155,10 @@ class Reward(TripleObject):
 
         Raises
         ------
-            CoronadoAPIError
-        When the underlying service is unable to serve the response.  The text 
-        in the exception explains the possible reason.
-
-            CoronadoUnexpectedError
-        When this object implementation is unable to handle a server response 
-        error not covered by existing exceptions.
-
-            CoronadoUnprocessableObjectError
-        When the `spec` query is missing one or more atribute:value pairs.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         return klass._action(transactionID, offerID, action = 'approve')
         
@@ -200,16 +194,10 @@ class Reward(TripleObject):
 
         Raises
         ------
-            CoronadoAPIError
-        When the underlying service is unable to serve the response.  The text 
-        in the exception explains the possible reason.
-
-            CoronadoUnexpectedError
-        When this object implementation is unable to handle a server response 
-        error not covered by existing exceptions.
-
-            CoronadoUnprocessableObjectError
-        When the `spec` query is missing one or more atribute:value pairs.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         return klass._action(transactionID, offerID, notes, action = 'deny')
 

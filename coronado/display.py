@@ -185,17 +185,10 @@ class OfferSearchResult(Offer):
 
         Raises
         ------
-            CoronadoUnprocessableObjectError
-        When the query `spec` is malformed, missing required fields, or has
-        invalid or out of range query parameter values.
-
-            CoronadoAPIError
-        When the underlying service is unable to serve the response.  The text 
-        in the exception explains the possible reason.
-
-            CoronadoUnexpectedError
-        When this object implementation is unable to handle a server response 
-        error not covered by existing exceptions.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         if 'spec' in args:
             # Uses spec, backward compatibility; new implementation is for
@@ -414,16 +407,10 @@ class CardLinkedOfferDetails(TripleObject):
 
         Raises
         ------
-            CoronadoAPIError
-        When the underlying service is unable to serve the response.  The text 
-        in the exception explains the possible reason.
-
-            CoronadoUnexpectedError
-        When this object implementation is unable to handle a server response 
-        error not covered by existing exceptions.
-
-            CoronadoUnprocessableObjectError
-        When the `spec` query is missing one or more atribute:value pairs.
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         if 'spec' in args:
             # Uses spec, backward compatibility; new implementation is for

@@ -59,7 +59,10 @@ class MerchantCategoryCode(TripleObject):
 
         Raises
         ------
-
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the 
+        **`coronado.exceptions`** module.
         """
         begin = '0000'
         end = '9999'
