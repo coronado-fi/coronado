@@ -1,13 +1,11 @@
 # vim: set fileencoding=utf-8:
 
 
-from coronado import CoronadoAPIError
-from coronado import CoronadoMalformedObjectError
-from coronado import CoronadoUnexpectedError
-from coronado import CoronadoUnprocessableObjectError
 from coronado import TripleEnum
 from coronado import TripleObject
 from coronado.baseobjects import BASE_REWARD_DICT
+from coronado.exceptions import CallError
+from coronado.exceptions import errorFor
 
 import json
 
@@ -89,18 +87,13 @@ class Reward(TripleObject):
         }
         if 'status' in args:
             if not isinstance(args['status'], RewardStatus):
-                raise CoronadoAPIError('invalid type for status - use RewardStatus objects')
+                raise CallError('invalid type for status - use RewardStatus objects')
             args['status'] = str(args['status'])
 
         response = super().list(paramMap, **args)
         result = [ Reward(obj) for obj in json.loads(response.content)['rewards'] ]
-# TODO: Map the inner objects!
-#         for t in result:
-#             t.matchingStatus = MatchingStatus(t.matchingStatus)
-#             t.merchantCategoryCode = MCC(t.merchantCategoryCode)
-#             t.merchantAddress = Address(t.merchantAddress)
-#             # TODO:  Pending triple API implementation update
-#             # t.transactionType = TransactionType(t.transactionType)
+        for r in result:
+            r.status = RewardStatus(r.status)
 
         return result
 
@@ -108,7 +101,7 @@ class Reward(TripleObject):
     @classmethod
     def _action(klass, transactionID: str, offerID: str, notes:str = None, action:str = 'approve') -> object:
         if action not in ( 'approve', 'deny'):
-            raise CoronadoUnprocessableObjectError('allowed actions:  approve, deny')
+            raise CallError('allowed actions:  approve, deny')
 
         spec = {
             'transaction_id': transactionID,
@@ -117,12 +110,11 @@ class Reward(TripleObject):
         if notes:
             spec['notes'] = notes
 
-        # TODO: This is a legit 422; the others aren't.
         if None == notes and 'deny' == action:
-            raise CoronadoMalformedObjectError('notes attribute missing or set to None')
+            raise CallError('notes attribute missing or set to None')
 
         if '' == notes and 'deny' == action:
-            raise CoronadoMalformedObjectError('notes attribute must have some text; empty strings disallowed')
+            raise CallError('notes attribute must have some text; empty strings disallowed')
 
         endpoint = '/'.join([ klass._serviceURL, 'partner/rewards.%s' % action ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
@@ -131,16 +123,8 @@ class Reward(TripleObject):
             result = _assembleDetailsFrom(response.content)
         elif response.status_code == 404:
             result = False
-        elif response.status_code == 422:
-            # TODO: THIS 404! {"detail":"No reward found for transaction_id \"129\" and offer_id \"bogus-offer-id\"."} 
-            # TODO: Decide between these two:
-            klass.responseDDT = json.loads(response.text)
-            result = False
-            # raise CoronadoUnprocessableObjectError(response.text)
-        elif response.status_code >= 500:
-            raise CoronadoAPIError(response.text)
         else:
-            raise CoronadoUnexpectedError(response.text)
+            raise errorFor(response.status_code, response.text)
 
         return result
 

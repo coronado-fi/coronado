@@ -3,9 +3,10 @@
 
 from copy import deepcopy
 
-from coronado import CoronadoMalformedObjectError
 from coronado.address_cloo import AddressCLOO
 from coronado.baseobjects import BASE_ADDRESS_CLOO_DICT
+from coronado.exceptions import InvalidPayloadError
+from coronado.exceptions import CallError
 
 import json
 import pytest
@@ -40,7 +41,7 @@ def test_AddressCLOO():
         'province': 'CA',
     }
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(CallError):
         AddressCLOO(inputAddress)
 
     _validAddress = AddressCLOO(BASE_ADDRESS_CLOO_DICT)
@@ -52,7 +53,7 @@ def test_AddressCLOO():
     inputAddress = deepcopy(BASE_ADDRESS_CLOO_DICT)
     inputAddress['completeAddress'] = _validAddress.complete
 
-    with pytest.raises(CoronadoMalformedObjectError):
+    with pytest.raises(InvalidPayloadError):
         AddressCLOO(inputAddress)
 
 

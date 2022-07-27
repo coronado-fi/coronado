@@ -5,9 +5,9 @@ from i18naddress import InvalidAddress as InvalidAddressError
 from i18naddress import format_address as formatAddress
 from i18naddress import normalize_address as normalizeAddress
 
-from coronado import CoronadoMalformedObjectError
 from coronado import TripleObject
 from coronado.baseobjects import BASE_ADDRESS_CLOO_DICT
+from coronado.exceptions import InvalidPayloadError
 
 
 # Ref: https://github.com/mirumee/google-i18n-address
@@ -76,7 +76,7 @@ class AddressCLOO(TripleObject):
         """
         TripleObject.__init__(self, obj)
         if 'completeAddress' in self.__dict__:
-            raise CoronadoMalformedObjectError('completeAddress (complete_address) is a deprecated invalid attribute')
+            raise InvalidPayloadError('completeAddress (complete_address) is a deprecated invalid attribute')
 
 
     @property
@@ -103,7 +103,7 @@ class AddressCLOO(TripleObject):
             addressElements = normalizeAddress(addressElements)
             return formatAddress(addressElements)
         except InvalidAddressError as e:
-            raise CoronadoMalformedObjectError(str(e.errors))
+            raise InvalidPayloadError(str(e.errors))
 
 
     def asSnakeCaseDictionary(self) -> dict:

@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 
+from coronado.exceptions import CallError
 from coronado.merchantcodes import MerchantCategoryCode
 
 import uuid

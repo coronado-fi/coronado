@@ -23,9 +23,7 @@ from coronado.cardprog import CardProgram
 from coronado.merchant import Merchant
 from coronado.publisher import Publisher
 from coronado.exceptions import CallError
-from coronado.exceptions import ForbiddenError
 from coronado.exceptions import InvalidPayloadError
-from coronado.exceptions import UnexpectedError
 
 import pytest
 
