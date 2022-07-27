@@ -42,7 +42,7 @@ _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret =
 # --- tests ---
 
 def _createAndAssertObject(klass, pJSON, pDict, testKey = None, controlKey = None):
-    with pytest.raises(InvalidPayloadError):
+    with pytest.raises(CallError):
         klass(42)
 
     x = klass(pJSON)

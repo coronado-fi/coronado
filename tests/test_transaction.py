@@ -75,9 +75,9 @@ def test_Transaction():
 
     with pytest.raises(CallError):
         Transaction({ 'bogus': 'test'})
-    with pytest.raises(InvalidPayloadError):
+    with pytest.raises(CallError):
         Transaction(None)
-    with pytest.raises(InvalidPayloadError):
+    with pytest.raises(CallError):
         Transaction('bogus')
 
 
@@ -166,4 +166,7 @@ def test_Transaction_byID():
     assert not Transaction.byID({ 'bogus': 'test'})
     assert not Transaction.byID(None)
     assert not Transaction.byID('bogus')
+
+
+test_Transaction()
 

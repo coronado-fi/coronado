@@ -5,7 +5,6 @@ from copy import deepcopy
 
 from coronado.address_cloo import AddressCLOO
 from coronado.baseobjects import BASE_ADDRESS_CLOO_DICT
-from coronado.exceptions import InvalidPayloadError
 from coronado.exceptions import CallError
 
 import json
@@ -53,7 +52,7 @@ def test_AddressCLOO():
     inputAddress = deepcopy(BASE_ADDRESS_CLOO_DICT)
     inputAddress['completeAddress'] = _validAddress.complete
 
-    with pytest.raises(InvalidPayloadError):
+    with pytest.raises(CallError):
         AddressCLOO(inputAddress)
 
 
