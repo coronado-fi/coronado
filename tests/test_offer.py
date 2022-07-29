@@ -1,11 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 
-# from coronado import CoronadoDuplicatesDisallowedError
-# from coronado import CoronadoMalformedObjectError
-# from coronado import CoronadoUnprocessableObjectError
-# from coronado import TripleObject
-# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado.offer import MarketingFeeType
 from coronado.offer import Offer
 from coronado.offer import OfferCategory

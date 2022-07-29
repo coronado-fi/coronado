@@ -1,20 +1,9 @@
 # vim: set fileencoding=utf-8:
 
 
-# from coronado import CoronadoAPIError
-# from coronado import CoronadoDuplicatesDisallowedError
-# from coronado import CoronadoMalformedObjectError
-# from coronado import CoronadoUnexpectedError
-# from coronado import CoronadoUnprocessableObjectError
-# from coronado.baseobjects import BASE_MERCHANT_CATEGORY_CODE_DICT
 from coronado import TripleEnum
 from coronado import TripleObject
-from coronado.baseobjects import BASE_MERCHANT_OFFER_DICT
 from coronado.baseobjects import BASE_OFFER_DICT
-# 
-# import json
-# 
-# import requests
 
 
 # +++ constants +++
@@ -76,17 +65,7 @@ class Offer(TripleObject):
     """
 
     requiredAttributes = [
-        'activationRequired',
-        'category',
-        'categoryTags',
-        'effectiveDate',
-        'expirationDate',
-        'headline',
-        'objID',
-        'isActivated',
-        'maxRedemptions',
-        'mode',
-        'type',
+        # UNDER HEAVY CONSTRUCTION
     ]
 
     def __init__(self, obj = BASE_OFFER_DICT):
@@ -102,45 +81,4 @@ class Offer(TripleObject):
         ```
         """
         TripleObject.__init__(self, obj)
-
-
-class MerchantOffer(Offer):
-    # TODO: Under heavy construction because this isn't implemented yet.
-    """
-    Merchant offer objects represent offers from brands and retaliers linked to a payment
-    provider like a debit or credit card.  The offer is redeemed by the consumer
-    when the linked payment card is used at a point-of-sale.  Offer instances 
-    connect on-line advertising campaings with concrete purchases.
-    """
-
-    requiredAttributes = [
-        'objID',
-        'activationDurationDays',
-        'categoryMccs',
-        'descriptioin',
-        'externalID',
-        'logoURL',
-        'marketingFee',
-    ]
-
-
-    def __init__(self, obj = BASE_MERCHANT_OFFER_DICT):
-        """
-        Create a new MerchantOffer instance.
-
-        spec:
-
-        ```
-        {
-            'lorem': 'ipsum',
-        }
-        ```
-        """
-        TripleObject.__init__(self, obj)
-
-# TODO: These objects must be implemented before Offer because some of the 
-#       attributes are of these classes:
-#
-#       1. MerchantCategoryCode
-#       2. Merchant
 

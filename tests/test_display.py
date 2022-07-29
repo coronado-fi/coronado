@@ -2,8 +2,8 @@
 
 
 from coronado.auth import Auth
-from coronado.display import CardLinkedOffer as CLOffer
-from coronado.display import CardLinkedOfferDetails as CLOfferDetails
+from coronado.display import CardholderOffer as CLOffer
+from coronado.display import CardholderOfferDetails as CLOfferDetails
 from coronado.display import FETCH_RPC_SERVICE_PATH
 from coronado.display import OfferSearchResult
 from coronado.display import SEARCH_RPC_SERVICE_PATH
