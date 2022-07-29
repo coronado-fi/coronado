@@ -11,15 +11,15 @@ from jose.exceptions import JWTError
 from coronado.exceptions import AuthInvalidScope
 from coronado.exceptions import AuthTokenAPIError
 
-import enum
 import json
 import os
 
 import appdirs
 import requests
 
-from coronado.tools import tripleKeysToCamelCase
 from coronado import TripleEnum
+from coronado import TripleObject
+from coronado.tools import tripleKeysToCamelCase
 
 # --- constants ----
 
@@ -94,7 +94,7 @@ class Scope(TripleEnum):
     VIEW_OFFERS = 'api.tripleup.com/partner.view_offers'
 
 
-class Auth(object):
+class Auth(TripleObject):
     def _buildScopeStrFrom(self, scopes):
         if isinstance(scopes, Scope):
             return scopes.value

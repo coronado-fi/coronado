@@ -83,7 +83,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.1</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -115,15 +115,15 @@
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="kn">from</span> <span class="nn">coronado.exceptions</span> <span class="kn">import</span> <span class="n">AuthInvalidScope</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="kn">from</span> <span class="nn">coronado.exceptions</span> <span class="kn">import</span> <span class="n">AuthTokenAPIError</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="kn">import</span> <span class="nn">enum</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="kn">import</span> <span class="nn">json</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="kn">import</span> <span class="nn">os</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="kn">import</span> <span class="nn">appdirs</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="kn">import</span> <span class="nn">requests</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="kn">from</span> <span class="nn">coronado.tools</span> <span class="kn">import</span> <span class="n">tripleKeysToCamelCase</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleEnum</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="kn">import</span> <span class="nn">os</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="kn">import</span> <span class="nn">appdirs</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="kn">import</span> <span class="nn">requests</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleEnum</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="kn">from</span> <span class="nn">coronado</span> <span class="kn">import</span> <span class="n">TripleObject</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="kn">from</span> <span class="nn">coronado.tools</span> <span class="kn">import</span> <span class="n">tripleKeysToCamelCase</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
 </span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="c1"># --- constants ----</span>
 </span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>
@@ -198,7 +198,7 @@
 </span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="n">VIEW_OFFERS</span> <span class="o">=</span> <span class="s1">&#39;api.tripleup.com/partner.view_offers&#39;</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
 </span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
 </span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="k">def</span> <span class="nf">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scopes</span><span class="p">):</span>
 </span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
 </span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>            <span class="k">return</span> <span class="n">scopes</span><span class="o">.</span><span class="n">value</span>
@@ -595,13 +595,13 @@ user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
 <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">Auth</span>:
+    <span class="name">Auth</span><wbr>(<span class="base"><a href="../coronado.html#TripleObject">coronado.TripleObject</a></span>):
 
                 <label class="view-source-button" for="Auth-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Auth"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Auth-98"><a href="#Auth-98"><span class="linenos"> 98</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Auth-98"><a href="#Auth-98"><span class="linenos"> 98</span></a><span class="k">class</span> <span class="nc">Auth</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
 </span><span id="Auth-99"><a href="#Auth-99"><span class="linenos"> 99</span></a>    <span class="k">def</span> <span class="nf">_buildScopeStrFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scopes</span><span class="p">):</span>
 </span><span id="Auth-100"><a href="#Auth-100"><span class="linenos">100</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scopes</span><span class="p">,</span> <span class="n">Scope</span><span class="p">):</span>
 </span><span id="Auth-101"><a href="#Auth-101"><span class="linenos">101</span></a>            <span class="k">return</span> <span class="n">scopes</span><span class="o">.</span><span class="n">value</span>
@@ -786,7 +786,9 @@ user.  The configuration is stored in A JSON file at SECRETS_FILE_PATH.</p>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>Abstract class ancestor to all the triple API objects.</p>
+</div>
+
 
                             <div id="Auth.__init__" class="classattr">
                                         <input id="Auth.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -991,6 +993,26 @@ possible errors, causes, and semantics is available in the
 </div>
 
 
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="../coronado.html#TripleObject">coronado.TripleObject</a></dt>
+                                <dd id="Auth.requiredAttributes" class="variable"><a href="../coronado.html#TripleObject.requiredAttributes">requiredAttributes</a></dd>
+                <dd id="Auth.assertAll" class="function"><a href="../coronado.html#TripleObject.assertAll">assertAll</a></dd>
+                <dd id="Auth.listAttributes" class="function"><a href="../coronado.html#TripleObject.listAttributes">listAttributes</a></dd>
+                <dd id="Auth.asDict" class="function"><a href="../coronado.html#TripleObject.asDict">asDict</a></dd>
+                <dd id="Auth.inSnakeCaseJSON" class="function"><a href="../coronado.html#TripleObject.inSnakeCaseJSON">inSnakeCaseJSON</a></dd>
+                <dd id="Auth.asSnakeCaseDictionary" class="function"><a href="../coronado.html#TripleObject.asSnakeCaseDictionary">asSnakeCaseDictionary</a></dd>
+                <dd id="Auth.initialize" class="function"><a href="../coronado.html#TripleObject.initialize">initialize</a></dd>
+                <dd id="Auth.headers" class="variable"><a href="../coronado.html#TripleObject.headers">headers</a></dd>
+                <dd id="Auth.create" class="function"><a href="../coronado.html#TripleObject.create">create</a></dd>
+                <dd id="Auth.byID" class="function"><a href="../coronado.html#TripleObject.byID">byID</a></dd>
+                <dd id="Auth.updateWith" class="function"><a href="../coronado.html#TripleObject.updateWith">updateWith</a></dd>
+                <dd id="Auth.list" class="function"><a href="../coronado.html#TripleObject.list">list</a></dd>
+
+            </div>
+                                </dl>
                             </div>
                 </section>
     </main>

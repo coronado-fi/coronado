@@ -494,10 +494,13 @@ class CardLinkedOffer(Offer):
         'effectiveDate',
         'headline',
         'isActivated',
+        'merchantID',
+        'merchantName',
         'minimumSpend',
 # TODO:  internal ticket M-906
+#         'category',
 #         'mode',
-#         'rewardType',
+        'rewardType',
         'type',
     ]
 
@@ -551,7 +554,7 @@ class MerchantLocation(TripleObject):
 
     requiredAttributes = [
         'address',
-        'isOnline',
+        'objID',
     ]
 
     def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):

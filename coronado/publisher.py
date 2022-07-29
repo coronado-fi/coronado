@@ -2,6 +2,7 @@
 
 
 from coronado import TripleObject
+from coronado.address import Address
 from coronado.baseobjects import BASE_PUBLISHER_DICT
 
 import json
@@ -79,6 +80,16 @@ class Publisher(TripleObject):
         endpoint = '/'.join([Publisher._serviceURL, SERVICE_PATH]) # URL fix later
         response = requests.request('GET', endpoint, headers = Publisher.headers)
         result = [ TripleObject(obj) for obj in json.loads(response.content)['publishers'] ]
+
+        return result
+
+
+    @classmethod
+    def byID(klass, objID: str) -> object:
+        result = super().byID(objID)
+
+        if result:
+            result.address = Address(result.address)
 
         return result
 

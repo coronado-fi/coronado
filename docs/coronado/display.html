@@ -137,7 +137,7 @@
     </ul>
 
 
-    <footer>Coronado - the triple API wrapper version 1.2.0</footer>
+    <footer>Coronado - the triple API wrapper version 1.2.1</footer>
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
             built with <span class="visually-hidden">pdoc</span><img
@@ -652,103 +652,106 @@
 </span><span id="L-494"><a href="#L-494"><span class="linenos">494</span></a>        <span class="s1">&#39;effectiveDate&#39;</span><span class="p">,</span>
 </span><span id="L-495"><a href="#L-495"><span class="linenos">495</span></a>        <span class="s1">&#39;headline&#39;</span><span class="p">,</span>
 </span><span id="L-496"><a href="#L-496"><span class="linenos">496</span></a>        <span class="s1">&#39;isActivated&#39;</span><span class="p">,</span>
-</span><span id="L-497"><a href="#L-497"><span class="linenos">497</span></a>        <span class="s1">&#39;minimumSpend&#39;</span><span class="p">,</span>
-</span><span id="L-498"><a href="#L-498"><span class="linenos">498</span></a><span class="c1"># TODO:  internal ticket M-906</span>
-</span><span id="L-499"><a href="#L-499"><span class="linenos">499</span></a><span class="c1">#         &#39;mode&#39;,</span>
-</span><span id="L-500"><a href="#L-500"><span class="linenos">500</span></a><span class="c1">#         &#39;rewardType&#39;,</span>
-</span><span id="L-501"><a href="#L-501"><span class="linenos">501</span></a>        <span class="s1">&#39;type&#39;</span><span class="p">,</span>
-</span><span id="L-502"><a href="#L-502"><span class="linenos">502</span></a>    <span class="p">]</span>
-</span><span id="L-503"><a href="#L-503"><span class="linenos">503</span></a>
-</span><span id="L-504"><a href="#L-504"><span class="linenos">504</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="L-505"><a href="#L-505"><span class="linenos">505</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-506"><a href="#L-506"><span class="linenos">506</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
-</span><span id="L-507"><a href="#L-507"><span class="linenos">507</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
-</span><span id="L-508"><a href="#L-508"><span class="linenos">508</span></a><span class="sd">        method to query the system for valid results.</span>
-</span><span id="L-509"><a href="#L-509"><span class="linenos">509</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-510"><a href="#L-510"><span class="linenos">510</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="L-511"><a href="#L-511"><span class="linenos">511</span></a>
-</span><span id="L-512"><a href="#L-512"><span class="linenos">512</span></a>
-</span><span id="L-513"><a href="#L-513"><span class="linenos">513</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-514"><a href="#L-514"><span class="linenos">514</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-515"><a href="#L-515"><span class="linenos">515</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-516"><a href="#L-516"><span class="linenos">516</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-517"><a href="#L-517"><span class="linenos">517</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-518"><a href="#L-518"><span class="linenos">518</span></a>        <span class="kc">None</span>
-</span><span id="L-519"><a href="#L-519"><span class="linenos">519</span></a>
-</span><span id="L-520"><a href="#L-520"><span class="linenos">520</span></a>
-</span><span id="L-521"><a href="#L-521"><span class="linenos">521</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-522"><a href="#L-522"><span class="linenos">522</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-523"><a href="#L-523"><span class="linenos">523</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-524"><a href="#L-524"><span class="linenos">524</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-525"><a href="#L-525"><span class="linenos">525</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-526"><a href="#L-526"><span class="linenos">526</span></a>        <span class="kc">None</span>
-</span><span id="L-527"><a href="#L-527"><span class="linenos">527</span></a>
-</span><span id="L-528"><a href="#L-528"><span class="linenos">528</span></a>
-</span><span id="L-529"><a href="#L-529"><span class="linenos">529</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-530"><a href="#L-530"><span class="linenos">530</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-531"><a href="#L-531"><span class="linenos">531</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-532"><a href="#L-532"><span class="linenos">532</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-533"><a href="#L-533"><span class="linenos">533</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-534"><a href="#L-534"><span class="linenos">534</span></a>        <span class="kc">None</span>
-</span><span id="L-535"><a href="#L-535"><span class="linenos">535</span></a>
-</span><span id="L-536"><a href="#L-536"><span class="linenos">536</span></a>
-</span><span id="L-537"><a href="#L-537"><span class="linenos">537</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-538"><a href="#L-538"><span class="linenos">538</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="L-539"><a href="#L-539"><span class="linenos">539</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-540"><a href="#L-540"><span class="linenos">540</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-541"><a href="#L-541"><span class="linenos">541</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-542"><a href="#L-542"><span class="linenos">542</span></a>        <span class="kc">None</span>
-</span><span id="L-543"><a href="#L-543"><span class="linenos">543</span></a>
-</span><span id="L-544"><a href="#L-544"><span class="linenos">544</span></a>
-</span><span id="L-545"><a href="#L-545"><span class="linenos">545</span></a><span class="k">class</span> <span class="nc">MerchantLocation</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
-</span><span id="L-546"><a href="#L-546"><span class="linenos">546</span></a>    <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-547"><a href="#L-547"><span class="linenos">547</span></a><span class="sd">    A merchant&#39;s business adddress, whether physical or on-line.</span>
-</span><span id="L-548"><a href="#L-548"><span class="linenos">548</span></a>
-</span><span id="L-549"><a href="#L-549"><span class="linenos">549</span></a><span class="sd">    See `coronado.address.Address`</span>
-</span><span id="L-550"><a href="#L-550"><span class="linenos">550</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-497"><a href="#L-497"><span class="linenos">497</span></a>        <span class="s1">&#39;merchantID&#39;</span><span class="p">,</span>
+</span><span id="L-498"><a href="#L-498"><span class="linenos">498</span></a>        <span class="s1">&#39;merchantName&#39;</span><span class="p">,</span>
+</span><span id="L-499"><a href="#L-499"><span class="linenos">499</span></a>        <span class="s1">&#39;minimumSpend&#39;</span><span class="p">,</span>
+</span><span id="L-500"><a href="#L-500"><span class="linenos">500</span></a><span class="c1"># TODO:  internal ticket M-906</span>
+</span><span id="L-501"><a href="#L-501"><span class="linenos">501</span></a><span class="c1">#         &#39;category&#39;,</span>
+</span><span id="L-502"><a href="#L-502"><span class="linenos">502</span></a><span class="c1">#         &#39;mode&#39;,</span>
+</span><span id="L-503"><a href="#L-503"><span class="linenos">503</span></a>        <span class="s1">&#39;rewardType&#39;</span><span class="p">,</span>
+</span><span id="L-504"><a href="#L-504"><span class="linenos">504</span></a>        <span class="s1">&#39;type&#39;</span><span class="p">,</span>
+</span><span id="L-505"><a href="#L-505"><span class="linenos">505</span></a>    <span class="p">]</span>
+</span><span id="L-506"><a href="#L-506"><span class="linenos">506</span></a>
+</span><span id="L-507"><a href="#L-507"><span class="linenos">507</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="L-508"><a href="#L-508"><span class="linenos">508</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-509"><a href="#L-509"><span class="linenos">509</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
+</span><span id="L-510"><a href="#L-510"><span class="linenos">510</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
+</span><span id="L-511"><a href="#L-511"><span class="linenos">511</span></a><span class="sd">        method to query the system for valid results.</span>
+</span><span id="L-512"><a href="#L-512"><span class="linenos">512</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-513"><a href="#L-513"><span class="linenos">513</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-514"><a href="#L-514"><span class="linenos">514</span></a>
+</span><span id="L-515"><a href="#L-515"><span class="linenos">515</span></a>
+</span><span id="L-516"><a href="#L-516"><span class="linenos">516</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-517"><a href="#L-517"><span class="linenos">517</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-518"><a href="#L-518"><span class="linenos">518</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-519"><a href="#L-519"><span class="linenos">519</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-520"><a href="#L-520"><span class="linenos">520</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-521"><a href="#L-521"><span class="linenos">521</span></a>        <span class="kc">None</span>
+</span><span id="L-522"><a href="#L-522"><span class="linenos">522</span></a>
+</span><span id="L-523"><a href="#L-523"><span class="linenos">523</span></a>
+</span><span id="L-524"><a href="#L-524"><span class="linenos">524</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-525"><a href="#L-525"><span class="linenos">525</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-526"><a href="#L-526"><span class="linenos">526</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-527"><a href="#L-527"><span class="linenos">527</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-528"><a href="#L-528"><span class="linenos">528</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-529"><a href="#L-529"><span class="linenos">529</span></a>        <span class="kc">None</span>
+</span><span id="L-530"><a href="#L-530"><span class="linenos">530</span></a>
+</span><span id="L-531"><a href="#L-531"><span class="linenos">531</span></a>
+</span><span id="L-532"><a href="#L-532"><span class="linenos">532</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-533"><a href="#L-533"><span class="linenos">533</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-534"><a href="#L-534"><span class="linenos">534</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-535"><a href="#L-535"><span class="linenos">535</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-536"><a href="#L-536"><span class="linenos">536</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-537"><a href="#L-537"><span class="linenos">537</span></a>        <span class="kc">None</span>
+</span><span id="L-538"><a href="#L-538"><span class="linenos">538</span></a>
+</span><span id="L-539"><a href="#L-539"><span class="linenos">539</span></a>
+</span><span id="L-540"><a href="#L-540"><span class="linenos">540</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-541"><a href="#L-541"><span class="linenos">541</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="L-542"><a href="#L-542"><span class="linenos">542</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-543"><a href="#L-543"><span class="linenos">543</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-544"><a href="#L-544"><span class="linenos">544</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-545"><a href="#L-545"><span class="linenos">545</span></a>        <span class="kc">None</span>
+</span><span id="L-546"><a href="#L-546"><span class="linenos">546</span></a>
+</span><span id="L-547"><a href="#L-547"><span class="linenos">547</span></a>
+</span><span id="L-548"><a href="#L-548"><span class="linenos">548</span></a><span class="k">class</span> <span class="nc">MerchantLocation</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="L-549"><a href="#L-549"><span class="linenos">549</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-550"><a href="#L-550"><span class="linenos">550</span></a><span class="sd">    A merchant&#39;s business adddress, whether physical or on-line.</span>
 </span><span id="L-551"><a href="#L-551"><span class="linenos">551</span></a>
-</span><span id="L-552"><a href="#L-552"><span class="linenos">552</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="L-553"><a href="#L-553"><span class="linenos">553</span></a>        <span class="s1">&#39;address&#39;</span><span class="p">,</span>
-</span><span id="L-554"><a href="#L-554"><span class="linenos">554</span></a>        <span class="s1">&#39;isOnline&#39;</span><span class="p">,</span>
-</span><span id="L-555"><a href="#L-555"><span class="linenos">555</span></a>    <span class="p">]</span>
-</span><span id="L-556"><a href="#L-556"><span class="linenos">556</span></a>
-</span><span id="L-557"><a href="#L-557"><span class="linenos">557</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="L-558"><a href="#L-558"><span class="linenos">558</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-559"><a href="#L-559"><span class="linenos">559</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
-</span><span id="L-560"><a href="#L-560"><span class="linenos">560</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-561"><a href="#L-561"><span class="linenos">561</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="L-562"><a href="#L-562"><span class="linenos">562</span></a>
-</span><span id="L-563"><a href="#L-563"><span class="linenos">563</span></a>
-</span><span id="L-564"><a href="#L-564"><span class="linenos">564</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-565"><a href="#L-565"><span class="linenos">565</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-566"><a href="#L-566"><span class="linenos">566</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-567"><a href="#L-567"><span class="linenos">567</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-568"><a href="#L-568"><span class="linenos">568</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-569"><a href="#L-569"><span class="linenos">569</span></a>        <span class="kc">None</span>
-</span><span id="L-570"><a href="#L-570"><span class="linenos">570</span></a>
-</span><span id="L-571"><a href="#L-571"><span class="linenos">571</span></a>
-</span><span id="L-572"><a href="#L-572"><span class="linenos">572</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-573"><a href="#L-573"><span class="linenos">573</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-574"><a href="#L-574"><span class="linenos">574</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-575"><a href="#L-575"><span class="linenos">575</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-576"><a href="#L-576"><span class="linenos">576</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-577"><a href="#L-577"><span class="linenos">577</span></a>        <span class="kc">None</span>
-</span><span id="L-578"><a href="#L-578"><span class="linenos">578</span></a>
-</span><span id="L-579"><a href="#L-579"><span class="linenos">579</span></a>
-</span><span id="L-580"><a href="#L-580"><span class="linenos">580</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-581"><a href="#L-581"><span class="linenos">581</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="L-582"><a href="#L-582"><span class="linenos">582</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-583"><a href="#L-583"><span class="linenos">583</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-584"><a href="#L-584"><span class="linenos">584</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-585"><a href="#L-585"><span class="linenos">585</span></a>        <span class="kc">None</span>
-</span><span id="L-586"><a href="#L-586"><span class="linenos">586</span></a>
-</span><span id="L-587"><a href="#L-587"><span class="linenos">587</span></a>
-</span><span id="L-588"><a href="#L-588"><span class="linenos">588</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-589"><a href="#L-589"><span class="linenos">589</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="L-590"><a href="#L-590"><span class="linenos">590</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-591"><a href="#L-591"><span class="linenos">591</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="L-592"><a href="#L-592"><span class="linenos">592</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-593"><a href="#L-593"><span class="linenos">593</span></a>        <span class="kc">None</span>
+</span><span id="L-552"><a href="#L-552"><span class="linenos">552</span></a><span class="sd">    See `coronado.address.Address`</span>
+</span><span id="L-553"><a href="#L-553"><span class="linenos">553</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-554"><a href="#L-554"><span class="linenos">554</span></a>
+</span><span id="L-555"><a href="#L-555"><span class="linenos">555</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-556"><a href="#L-556"><span class="linenos">556</span></a>        <span class="s1">&#39;address&#39;</span><span class="p">,</span>
+</span><span id="L-557"><a href="#L-557"><span class="linenos">557</span></a>        <span class="s1">&#39;objID&#39;</span><span class="p">,</span>
+</span><span id="L-558"><a href="#L-558"><span class="linenos">558</span></a>    <span class="p">]</span>
+</span><span id="L-559"><a href="#L-559"><span class="linenos">559</span></a>
+</span><span id="L-560"><a href="#L-560"><span class="linenos">560</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="L-561"><a href="#L-561"><span class="linenos">561</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-562"><a href="#L-562"><span class="linenos">562</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
+</span><span id="L-563"><a href="#L-563"><span class="linenos">563</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-564"><a href="#L-564"><span class="linenos">564</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="L-565"><a href="#L-565"><span class="linenos">565</span></a>
+</span><span id="L-566"><a href="#L-566"><span class="linenos">566</span></a>
+</span><span id="L-567"><a href="#L-567"><span class="linenos">567</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-568"><a href="#L-568"><span class="linenos">568</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-569"><a href="#L-569"><span class="linenos">569</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-570"><a href="#L-570"><span class="linenos">570</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-571"><a href="#L-571"><span class="linenos">571</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-572"><a href="#L-572"><span class="linenos">572</span></a>        <span class="kc">None</span>
+</span><span id="L-573"><a href="#L-573"><span class="linenos">573</span></a>
+</span><span id="L-574"><a href="#L-574"><span class="linenos">574</span></a>
+</span><span id="L-575"><a href="#L-575"><span class="linenos">575</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-576"><a href="#L-576"><span class="linenos">576</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-577"><a href="#L-577"><span class="linenos">577</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-578"><a href="#L-578"><span class="linenos">578</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-579"><a href="#L-579"><span class="linenos">579</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-580"><a href="#L-580"><span class="linenos">580</span></a>        <span class="kc">None</span>
+</span><span id="L-581"><a href="#L-581"><span class="linenos">581</span></a>
+</span><span id="L-582"><a href="#L-582"><span class="linenos">582</span></a>
+</span><span id="L-583"><a href="#L-583"><span class="linenos">583</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-584"><a href="#L-584"><span class="linenos">584</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="L-585"><a href="#L-585"><span class="linenos">585</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-586"><a href="#L-586"><span class="linenos">586</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-587"><a href="#L-587"><span class="linenos">587</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-588"><a href="#L-588"><span class="linenos">588</span></a>        <span class="kc">None</span>
+</span><span id="L-589"><a href="#L-589"><span class="linenos">589</span></a>
+</span><span id="L-590"><a href="#L-590"><span class="linenos">590</span></a>
+</span><span id="L-591"><a href="#L-591"><span class="linenos">591</span></a>    <span class="nd">@classmethod</span>
+</span><span id="L-592"><a href="#L-592"><span class="linenos">592</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="L-593"><a href="#L-593"><span class="linenos">593</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-594"><a href="#L-594"><span class="linenos">594</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="L-595"><a href="#L-595"><span class="linenos">595</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-596"><a href="#L-596"><span class="linenos">596</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2077,52 +2080,55 @@ possible errors, causes, and semantics is available in the
 </span><span id="CardLinkedOffer-495"><a href="#CardLinkedOffer-495"><span class="linenos">495</span></a>        <span class="s1">&#39;effectiveDate&#39;</span><span class="p">,</span>
 </span><span id="CardLinkedOffer-496"><a href="#CardLinkedOffer-496"><span class="linenos">496</span></a>        <span class="s1">&#39;headline&#39;</span><span class="p">,</span>
 </span><span id="CardLinkedOffer-497"><a href="#CardLinkedOffer-497"><span class="linenos">497</span></a>        <span class="s1">&#39;isActivated&#39;</span><span class="p">,</span>
-</span><span id="CardLinkedOffer-498"><a href="#CardLinkedOffer-498"><span class="linenos">498</span></a>        <span class="s1">&#39;minimumSpend&#39;</span><span class="p">,</span>
-</span><span id="CardLinkedOffer-499"><a href="#CardLinkedOffer-499"><span class="linenos">499</span></a><span class="c1"># TODO:  internal ticket M-906</span>
-</span><span id="CardLinkedOffer-500"><a href="#CardLinkedOffer-500"><span class="linenos">500</span></a><span class="c1">#         &#39;mode&#39;,</span>
-</span><span id="CardLinkedOffer-501"><a href="#CardLinkedOffer-501"><span class="linenos">501</span></a><span class="c1">#         &#39;rewardType&#39;,</span>
-</span><span id="CardLinkedOffer-502"><a href="#CardLinkedOffer-502"><span class="linenos">502</span></a>        <span class="s1">&#39;type&#39;</span><span class="p">,</span>
-</span><span id="CardLinkedOffer-503"><a href="#CardLinkedOffer-503"><span class="linenos">503</span></a>    <span class="p">]</span>
-</span><span id="CardLinkedOffer-504"><a href="#CardLinkedOffer-504"><span class="linenos">504</span></a>
-</span><span id="CardLinkedOffer-505"><a href="#CardLinkedOffer-505"><span class="linenos">505</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="CardLinkedOffer-506"><a href="#CardLinkedOffer-506"><span class="linenos">506</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-507"><a href="#CardLinkedOffer-507"><span class="linenos">507</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
-</span><span id="CardLinkedOffer-508"><a href="#CardLinkedOffer-508"><span class="linenos">508</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
-</span><span id="CardLinkedOffer-509"><a href="#CardLinkedOffer-509"><span class="linenos">509</span></a><span class="sd">        method to query the system for valid results.</span>
-</span><span id="CardLinkedOffer-510"><a href="#CardLinkedOffer-510"><span class="linenos">510</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-511"><a href="#CardLinkedOffer-511"><span class="linenos">511</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="CardLinkedOffer-512"><a href="#CardLinkedOffer-512"><span class="linenos">512</span></a>
-</span><span id="CardLinkedOffer-513"><a href="#CardLinkedOffer-513"><span class="linenos">513</span></a>
-</span><span id="CardLinkedOffer-514"><a href="#CardLinkedOffer-514"><span class="linenos">514</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer-515"><a href="#CardLinkedOffer-515"><span class="linenos">515</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer-516"><a href="#CardLinkedOffer-516"><span class="linenos">516</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-517"><a href="#CardLinkedOffer-517"><span class="linenos">517</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer-518"><a href="#CardLinkedOffer-518"><span class="linenos">518</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-519"><a href="#CardLinkedOffer-519"><span class="linenos">519</span></a>        <span class="kc">None</span>
-</span><span id="CardLinkedOffer-520"><a href="#CardLinkedOffer-520"><span class="linenos">520</span></a>
-</span><span id="CardLinkedOffer-521"><a href="#CardLinkedOffer-521"><span class="linenos">521</span></a>
-</span><span id="CardLinkedOffer-522"><a href="#CardLinkedOffer-522"><span class="linenos">522</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer-523"><a href="#CardLinkedOffer-523"><span class="linenos">523</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer-524"><a href="#CardLinkedOffer-524"><span class="linenos">524</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-525"><a href="#CardLinkedOffer-525"><span class="linenos">525</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer-526"><a href="#CardLinkedOffer-526"><span class="linenos">526</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-527"><a href="#CardLinkedOffer-527"><span class="linenos">527</span></a>        <span class="kc">None</span>
-</span><span id="CardLinkedOffer-528"><a href="#CardLinkedOffer-528"><span class="linenos">528</span></a>
-</span><span id="CardLinkedOffer-529"><a href="#CardLinkedOffer-529"><span class="linenos">529</span></a>
-</span><span id="CardLinkedOffer-530"><a href="#CardLinkedOffer-530"><span class="linenos">530</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer-531"><a href="#CardLinkedOffer-531"><span class="linenos">531</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer-532"><a href="#CardLinkedOffer-532"><span class="linenos">532</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-533"><a href="#CardLinkedOffer-533"><span class="linenos">533</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer-534"><a href="#CardLinkedOffer-534"><span class="linenos">534</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-535"><a href="#CardLinkedOffer-535"><span class="linenos">535</span></a>        <span class="kc">None</span>
-</span><span id="CardLinkedOffer-536"><a href="#CardLinkedOffer-536"><span class="linenos">536</span></a>
-</span><span id="CardLinkedOffer-537"><a href="#CardLinkedOffer-537"><span class="linenos">537</span></a>
-</span><span id="CardLinkedOffer-538"><a href="#CardLinkedOffer-538"><span class="linenos">538</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer-539"><a href="#CardLinkedOffer-539"><span class="linenos">539</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="CardLinkedOffer-540"><a href="#CardLinkedOffer-540"><span class="linenos">540</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-541"><a href="#CardLinkedOffer-541"><span class="linenos">541</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer-542"><a href="#CardLinkedOffer-542"><span class="linenos">542</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer-543"><a href="#CardLinkedOffer-543"><span class="linenos">543</span></a>        <span class="kc">None</span>
+</span><span id="CardLinkedOffer-498"><a href="#CardLinkedOffer-498"><span class="linenos">498</span></a>        <span class="s1">&#39;merchantID&#39;</span><span class="p">,</span>
+</span><span id="CardLinkedOffer-499"><a href="#CardLinkedOffer-499"><span class="linenos">499</span></a>        <span class="s1">&#39;merchantName&#39;</span><span class="p">,</span>
+</span><span id="CardLinkedOffer-500"><a href="#CardLinkedOffer-500"><span class="linenos">500</span></a>        <span class="s1">&#39;minimumSpend&#39;</span><span class="p">,</span>
+</span><span id="CardLinkedOffer-501"><a href="#CardLinkedOffer-501"><span class="linenos">501</span></a><span class="c1"># TODO:  internal ticket M-906</span>
+</span><span id="CardLinkedOffer-502"><a href="#CardLinkedOffer-502"><span class="linenos">502</span></a><span class="c1">#         &#39;category&#39;,</span>
+</span><span id="CardLinkedOffer-503"><a href="#CardLinkedOffer-503"><span class="linenos">503</span></a><span class="c1">#         &#39;mode&#39;,</span>
+</span><span id="CardLinkedOffer-504"><a href="#CardLinkedOffer-504"><span class="linenos">504</span></a>        <span class="s1">&#39;rewardType&#39;</span><span class="p">,</span>
+</span><span id="CardLinkedOffer-505"><a href="#CardLinkedOffer-505"><span class="linenos">505</span></a>        <span class="s1">&#39;type&#39;</span><span class="p">,</span>
+</span><span id="CardLinkedOffer-506"><a href="#CardLinkedOffer-506"><span class="linenos">506</span></a>    <span class="p">]</span>
+</span><span id="CardLinkedOffer-507"><a href="#CardLinkedOffer-507"><span class="linenos">507</span></a>
+</span><span id="CardLinkedOffer-508"><a href="#CardLinkedOffer-508"><span class="linenos">508</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="CardLinkedOffer-509"><a href="#CardLinkedOffer-509"><span class="linenos">509</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-510"><a href="#CardLinkedOffer-510"><span class="linenos">510</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
+</span><span id="CardLinkedOffer-511"><a href="#CardLinkedOffer-511"><span class="linenos">511</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
+</span><span id="CardLinkedOffer-512"><a href="#CardLinkedOffer-512"><span class="linenos">512</span></a><span class="sd">        method to query the system for valid results.</span>
+</span><span id="CardLinkedOffer-513"><a href="#CardLinkedOffer-513"><span class="linenos">513</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-514"><a href="#CardLinkedOffer-514"><span class="linenos">514</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="CardLinkedOffer-515"><a href="#CardLinkedOffer-515"><span class="linenos">515</span></a>
+</span><span id="CardLinkedOffer-516"><a href="#CardLinkedOffer-516"><span class="linenos">516</span></a>
+</span><span id="CardLinkedOffer-517"><a href="#CardLinkedOffer-517"><span class="linenos">517</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer-518"><a href="#CardLinkedOffer-518"><span class="linenos">518</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer-519"><a href="#CardLinkedOffer-519"><span class="linenos">519</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-520"><a href="#CardLinkedOffer-520"><span class="linenos">520</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer-521"><a href="#CardLinkedOffer-521"><span class="linenos">521</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-522"><a href="#CardLinkedOffer-522"><span class="linenos">522</span></a>        <span class="kc">None</span>
+</span><span id="CardLinkedOffer-523"><a href="#CardLinkedOffer-523"><span class="linenos">523</span></a>
+</span><span id="CardLinkedOffer-524"><a href="#CardLinkedOffer-524"><span class="linenos">524</span></a>
+</span><span id="CardLinkedOffer-525"><a href="#CardLinkedOffer-525"><span class="linenos">525</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer-526"><a href="#CardLinkedOffer-526"><span class="linenos">526</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer-527"><a href="#CardLinkedOffer-527"><span class="linenos">527</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-528"><a href="#CardLinkedOffer-528"><span class="linenos">528</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer-529"><a href="#CardLinkedOffer-529"><span class="linenos">529</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-530"><a href="#CardLinkedOffer-530"><span class="linenos">530</span></a>        <span class="kc">None</span>
+</span><span id="CardLinkedOffer-531"><a href="#CardLinkedOffer-531"><span class="linenos">531</span></a>
+</span><span id="CardLinkedOffer-532"><a href="#CardLinkedOffer-532"><span class="linenos">532</span></a>
+</span><span id="CardLinkedOffer-533"><a href="#CardLinkedOffer-533"><span class="linenos">533</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer-534"><a href="#CardLinkedOffer-534"><span class="linenos">534</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer-535"><a href="#CardLinkedOffer-535"><span class="linenos">535</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-536"><a href="#CardLinkedOffer-536"><span class="linenos">536</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer-537"><a href="#CardLinkedOffer-537"><span class="linenos">537</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-538"><a href="#CardLinkedOffer-538"><span class="linenos">538</span></a>        <span class="kc">None</span>
+</span><span id="CardLinkedOffer-539"><a href="#CardLinkedOffer-539"><span class="linenos">539</span></a>
+</span><span id="CardLinkedOffer-540"><a href="#CardLinkedOffer-540"><span class="linenos">540</span></a>
+</span><span id="CardLinkedOffer-541"><a href="#CardLinkedOffer-541"><span class="linenos">541</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer-542"><a href="#CardLinkedOffer-542"><span class="linenos">542</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="CardLinkedOffer-543"><a href="#CardLinkedOffer-543"><span class="linenos">543</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-544"><a href="#CardLinkedOffer-544"><span class="linenos">544</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer-545"><a href="#CardLinkedOffer-545"><span class="linenos">545</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer-546"><a href="#CardLinkedOffer-546"><span class="linenos">546</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2146,13 +2152,13 @@ connect on-line advertising campaings with concrete purchases.</p>
 
     </div>
     <a class="headerlink" href="#CardLinkedOffer.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.__init__-505"><a href="#CardLinkedOffer.__init__-505"><span class="linenos">505</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="CardLinkedOffer.__init__-506"><a href="#CardLinkedOffer.__init__-506"><span class="linenos">506</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.__init__-507"><a href="#CardLinkedOffer.__init__-507"><span class="linenos">507</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
-</span><span id="CardLinkedOffer.__init__-508"><a href="#CardLinkedOffer.__init__-508"><span class="linenos">508</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
-</span><span id="CardLinkedOffer.__init__-509"><a href="#CardLinkedOffer.__init__-509"><span class="linenos">509</span></a><span class="sd">        method to query the system for valid results.</span>
-</span><span id="CardLinkedOffer.__init__-510"><a href="#CardLinkedOffer.__init__-510"><span class="linenos">510</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.__init__-511"><a href="#CardLinkedOffer.__init__-511"><span class="linenos">511</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.__init__-508"><a href="#CardLinkedOffer.__init__-508"><span class="linenos">508</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="CardLinkedOffer.__init__-509"><a href="#CardLinkedOffer.__init__-509"><span class="linenos">509</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.__init__-510"><a href="#CardLinkedOffer.__init__-510"><span class="linenos">510</span></a><span class="sd">        Create a new OfferSearchResult instance.  Objects of this class should</span>
+</span><span id="CardLinkedOffer.__init__-511"><a href="#CardLinkedOffer.__init__-511"><span class="linenos">511</span></a><span class="sd">        not be instantiated via constructor in most cases.  Use the `forQuery()`</span>
+</span><span id="CardLinkedOffer.__init__-512"><a href="#CardLinkedOffer.__init__-512"><span class="linenos">512</span></a><span class="sd">        method to query the system for valid results.</span>
+</span><span id="CardLinkedOffer.__init__-513"><a href="#CardLinkedOffer.__init__-513"><span class="linenos">513</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.__init__-514"><a href="#CardLinkedOffer.__init__-514"><span class="linenos">514</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -2165,7 +2171,7 @@ method to query the system for valid results.</p>
                             </div>
                             <div id="CardLinkedOffer.requiredAttributes" class="classattr">
                                 <div class="attr variable">
-            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;activationRequired&#39;, &#39;currencyCode&#39;, &#39;effectiveDate&#39;, &#39;headline&#39;, &#39;isActivated&#39;, &#39;minimumSpend&#39;, &#39;type&#39;]</span>
+            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;activationRequired&#39;, &#39;currencyCode&#39;, &#39;effectiveDate&#39;, &#39;headline&#39;, &#39;isActivated&#39;, &#39;merchantID&#39;, &#39;merchantName&#39;, &#39;minimumSpend&#39;, &#39;rewardType&#39;, &#39;type&#39;]</span>
 
         
     </div>
@@ -2194,12 +2200,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#CardLinkedOffer.create"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.create-514"><a href="#CardLinkedOffer.create-514"><span class="linenos">514</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer.create-515"><a href="#CardLinkedOffer.create-515"><span class="linenos">515</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer.create-516"><a href="#CardLinkedOffer.create-516"><span class="linenos">516</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.create-517"><a href="#CardLinkedOffer.create-517"><span class="linenos">517</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer.create-518"><a href="#CardLinkedOffer.create-518"><span class="linenos">518</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.create-519"><a href="#CardLinkedOffer.create-519"><span class="linenos">519</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.create-517"><a href="#CardLinkedOffer.create-517"><span class="linenos">517</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer.create-518"><a href="#CardLinkedOffer.create-518"><span class="linenos">518</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer.create-519"><a href="#CardLinkedOffer.create-519"><span class="linenos">519</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.create-520"><a href="#CardLinkedOffer.create-520"><span class="linenos">520</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer.create-521"><a href="#CardLinkedOffer.create-521"><span class="linenos">521</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.create-522"><a href="#CardLinkedOffer.create-522"><span class="linenos">522</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2220,12 +2226,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#CardLinkedOffer.byID"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.byID-522"><a href="#CardLinkedOffer.byID-522"><span class="linenos">522</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer.byID-523"><a href="#CardLinkedOffer.byID-523"><span class="linenos">523</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer.byID-524"><a href="#CardLinkedOffer.byID-524"><span class="linenos">524</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.byID-525"><a href="#CardLinkedOffer.byID-525"><span class="linenos">525</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer.byID-526"><a href="#CardLinkedOffer.byID-526"><span class="linenos">526</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.byID-527"><a href="#CardLinkedOffer.byID-527"><span class="linenos">527</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.byID-525"><a href="#CardLinkedOffer.byID-525"><span class="linenos">525</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer.byID-526"><a href="#CardLinkedOffer.byID-526"><span class="linenos">526</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer.byID-527"><a href="#CardLinkedOffer.byID-527"><span class="linenos">527</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.byID-528"><a href="#CardLinkedOffer.byID-528"><span class="linenos">528</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer.byID-529"><a href="#CardLinkedOffer.byID-529"><span class="linenos">529</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.byID-530"><a href="#CardLinkedOffer.byID-530"><span class="linenos">530</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2246,12 +2252,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#CardLinkedOffer.updateWith"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.updateWith-530"><a href="#CardLinkedOffer.updateWith-530"><span class="linenos">530</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer.updateWith-531"><a href="#CardLinkedOffer.updateWith-531"><span class="linenos">531</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="CardLinkedOffer.updateWith-532"><a href="#CardLinkedOffer.updateWith-532"><span class="linenos">532</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.updateWith-533"><a href="#CardLinkedOffer.updateWith-533"><span class="linenos">533</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer.updateWith-534"><a href="#CardLinkedOffer.updateWith-534"><span class="linenos">534</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.updateWith-535"><a href="#CardLinkedOffer.updateWith-535"><span class="linenos">535</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.updateWith-533"><a href="#CardLinkedOffer.updateWith-533"><span class="linenos">533</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer.updateWith-534"><a href="#CardLinkedOffer.updateWith-534"><span class="linenos">534</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="CardLinkedOffer.updateWith-535"><a href="#CardLinkedOffer.updateWith-535"><span class="linenos">535</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.updateWith-536"><a href="#CardLinkedOffer.updateWith-536"><span class="linenos">536</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer.updateWith-537"><a href="#CardLinkedOffer.updateWith-537"><span class="linenos">537</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.updateWith-538"><a href="#CardLinkedOffer.updateWith-538"><span class="linenos">538</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2272,12 +2278,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#CardLinkedOffer.list"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.list-538"><a href="#CardLinkedOffer.list-538"><span class="linenos">538</span></a>    <span class="nd">@classmethod</span>
-</span><span id="CardLinkedOffer.list-539"><a href="#CardLinkedOffer.list-539"><span class="linenos">539</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="CardLinkedOffer.list-540"><a href="#CardLinkedOffer.list-540"><span class="linenos">540</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.list-541"><a href="#CardLinkedOffer.list-541"><span class="linenos">541</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="CardLinkedOffer.list-542"><a href="#CardLinkedOffer.list-542"><span class="linenos">542</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CardLinkedOffer.list-543"><a href="#CardLinkedOffer.list-543"><span class="linenos">543</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CardLinkedOffer.list-541"><a href="#CardLinkedOffer.list-541"><span class="linenos">541</span></a>    <span class="nd">@classmethod</span>
+</span><span id="CardLinkedOffer.list-542"><a href="#CardLinkedOffer.list-542"><span class="linenos">542</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="CardLinkedOffer.list-543"><a href="#CardLinkedOffer.list-543"><span class="linenos">543</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.list-544"><a href="#CardLinkedOffer.list-544"><span class="linenos">544</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="CardLinkedOffer.list-545"><a href="#CardLinkedOffer.list-545"><span class="linenos">545</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CardLinkedOffer.list-546"><a href="#CardLinkedOffer.list-546"><span class="linenos">546</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2313,55 +2319,55 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation-546"><a href="#MerchantLocation-546"><span class="linenos">546</span></a><span class="k">class</span> <span class="nc">MerchantLocation</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
-</span><span id="MerchantLocation-547"><a href="#MerchantLocation-547"><span class="linenos">547</span></a>    <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-548"><a href="#MerchantLocation-548"><span class="linenos">548</span></a><span class="sd">    A merchant&#39;s business adddress, whether physical or on-line.</span>
-</span><span id="MerchantLocation-549"><a href="#MerchantLocation-549"><span class="linenos">549</span></a>
-</span><span id="MerchantLocation-550"><a href="#MerchantLocation-550"><span class="linenos">550</span></a><span class="sd">    See `coronado.address.Address`</span>
-</span><span id="MerchantLocation-551"><a href="#MerchantLocation-551"><span class="linenos">551</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation-549"><a href="#MerchantLocation-549"><span class="linenos">549</span></a><span class="k">class</span> <span class="nc">MerchantLocation</span><span class="p">(</span><span class="n">TripleObject</span><span class="p">):</span>
+</span><span id="MerchantLocation-550"><a href="#MerchantLocation-550"><span class="linenos">550</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-551"><a href="#MerchantLocation-551"><span class="linenos">551</span></a><span class="sd">    A merchant&#39;s business adddress, whether physical or on-line.</span>
 </span><span id="MerchantLocation-552"><a href="#MerchantLocation-552"><span class="linenos">552</span></a>
-</span><span id="MerchantLocation-553"><a href="#MerchantLocation-553"><span class="linenos">553</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="MerchantLocation-554"><a href="#MerchantLocation-554"><span class="linenos">554</span></a>        <span class="s1">&#39;address&#39;</span><span class="p">,</span>
-</span><span id="MerchantLocation-555"><a href="#MerchantLocation-555"><span class="linenos">555</span></a>        <span class="s1">&#39;isOnline&#39;</span><span class="p">,</span>
-</span><span id="MerchantLocation-556"><a href="#MerchantLocation-556"><span class="linenos">556</span></a>    <span class="p">]</span>
-</span><span id="MerchantLocation-557"><a href="#MerchantLocation-557"><span class="linenos">557</span></a>
-</span><span id="MerchantLocation-558"><a href="#MerchantLocation-558"><span class="linenos">558</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="MerchantLocation-559"><a href="#MerchantLocation-559"><span class="linenos">559</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-560"><a href="#MerchantLocation-560"><span class="linenos">560</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
-</span><span id="MerchantLocation-561"><a href="#MerchantLocation-561"><span class="linenos">561</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-562"><a href="#MerchantLocation-562"><span class="linenos">562</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-</span><span id="MerchantLocation-563"><a href="#MerchantLocation-563"><span class="linenos">563</span></a>
-</span><span id="MerchantLocation-564"><a href="#MerchantLocation-564"><span class="linenos">564</span></a>
-</span><span id="MerchantLocation-565"><a href="#MerchantLocation-565"><span class="linenos">565</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation-566"><a href="#MerchantLocation-566"><span class="linenos">566</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation-567"><a href="#MerchantLocation-567"><span class="linenos">567</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-568"><a href="#MerchantLocation-568"><span class="linenos">568</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation-569"><a href="#MerchantLocation-569"><span class="linenos">569</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-570"><a href="#MerchantLocation-570"><span class="linenos">570</span></a>        <span class="kc">None</span>
-</span><span id="MerchantLocation-571"><a href="#MerchantLocation-571"><span class="linenos">571</span></a>
-</span><span id="MerchantLocation-572"><a href="#MerchantLocation-572"><span class="linenos">572</span></a>
-</span><span id="MerchantLocation-573"><a href="#MerchantLocation-573"><span class="linenos">573</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation-574"><a href="#MerchantLocation-574"><span class="linenos">574</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation-575"><a href="#MerchantLocation-575"><span class="linenos">575</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-576"><a href="#MerchantLocation-576"><span class="linenos">576</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation-577"><a href="#MerchantLocation-577"><span class="linenos">577</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-578"><a href="#MerchantLocation-578"><span class="linenos">578</span></a>        <span class="kc">None</span>
-</span><span id="MerchantLocation-579"><a href="#MerchantLocation-579"><span class="linenos">579</span></a>
-</span><span id="MerchantLocation-580"><a href="#MerchantLocation-580"><span class="linenos">580</span></a>
-</span><span id="MerchantLocation-581"><a href="#MerchantLocation-581"><span class="linenos">581</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation-582"><a href="#MerchantLocation-582"><span class="linenos">582</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation-583"><a href="#MerchantLocation-583"><span class="linenos">583</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-584"><a href="#MerchantLocation-584"><span class="linenos">584</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation-585"><a href="#MerchantLocation-585"><span class="linenos">585</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-586"><a href="#MerchantLocation-586"><span class="linenos">586</span></a>        <span class="kc">None</span>
-</span><span id="MerchantLocation-587"><a href="#MerchantLocation-587"><span class="linenos">587</span></a>
-</span><span id="MerchantLocation-588"><a href="#MerchantLocation-588"><span class="linenos">588</span></a>
-</span><span id="MerchantLocation-589"><a href="#MerchantLocation-589"><span class="linenos">589</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation-590"><a href="#MerchantLocation-590"><span class="linenos">590</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="MerchantLocation-591"><a href="#MerchantLocation-591"><span class="linenos">591</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-592"><a href="#MerchantLocation-592"><span class="linenos">592</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation-593"><a href="#MerchantLocation-593"><span class="linenos">593</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation-594"><a href="#MerchantLocation-594"><span class="linenos">594</span></a>        <span class="kc">None</span>
+</span><span id="MerchantLocation-553"><a href="#MerchantLocation-553"><span class="linenos">553</span></a><span class="sd">    See `coronado.address.Address`</span>
+</span><span id="MerchantLocation-554"><a href="#MerchantLocation-554"><span class="linenos">554</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-555"><a href="#MerchantLocation-555"><span class="linenos">555</span></a>
+</span><span id="MerchantLocation-556"><a href="#MerchantLocation-556"><span class="linenos">556</span></a>    <span class="n">requiredAttributes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="MerchantLocation-557"><a href="#MerchantLocation-557"><span class="linenos">557</span></a>        <span class="s1">&#39;address&#39;</span><span class="p">,</span>
+</span><span id="MerchantLocation-558"><a href="#MerchantLocation-558"><span class="linenos">558</span></a>        <span class="s1">&#39;objID&#39;</span><span class="p">,</span>
+</span><span id="MerchantLocation-559"><a href="#MerchantLocation-559"><span class="linenos">559</span></a>    <span class="p">]</span>
+</span><span id="MerchantLocation-560"><a href="#MerchantLocation-560"><span class="linenos">560</span></a>
+</span><span id="MerchantLocation-561"><a href="#MerchantLocation-561"><span class="linenos">561</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="MerchantLocation-562"><a href="#MerchantLocation-562"><span class="linenos">562</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-563"><a href="#MerchantLocation-563"><span class="linenos">563</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
+</span><span id="MerchantLocation-564"><a href="#MerchantLocation-564"><span class="linenos">564</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-565"><a href="#MerchantLocation-565"><span class="linenos">565</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+</span><span id="MerchantLocation-566"><a href="#MerchantLocation-566"><span class="linenos">566</span></a>
+</span><span id="MerchantLocation-567"><a href="#MerchantLocation-567"><span class="linenos">567</span></a>
+</span><span id="MerchantLocation-568"><a href="#MerchantLocation-568"><span class="linenos">568</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation-569"><a href="#MerchantLocation-569"><span class="linenos">569</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation-570"><a href="#MerchantLocation-570"><span class="linenos">570</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-571"><a href="#MerchantLocation-571"><span class="linenos">571</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation-572"><a href="#MerchantLocation-572"><span class="linenos">572</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-573"><a href="#MerchantLocation-573"><span class="linenos">573</span></a>        <span class="kc">None</span>
+</span><span id="MerchantLocation-574"><a href="#MerchantLocation-574"><span class="linenos">574</span></a>
+</span><span id="MerchantLocation-575"><a href="#MerchantLocation-575"><span class="linenos">575</span></a>
+</span><span id="MerchantLocation-576"><a href="#MerchantLocation-576"><span class="linenos">576</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation-577"><a href="#MerchantLocation-577"><span class="linenos">577</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation-578"><a href="#MerchantLocation-578"><span class="linenos">578</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-579"><a href="#MerchantLocation-579"><span class="linenos">579</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation-580"><a href="#MerchantLocation-580"><span class="linenos">580</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-581"><a href="#MerchantLocation-581"><span class="linenos">581</span></a>        <span class="kc">None</span>
+</span><span id="MerchantLocation-582"><a href="#MerchantLocation-582"><span class="linenos">582</span></a>
+</span><span id="MerchantLocation-583"><a href="#MerchantLocation-583"><span class="linenos">583</span></a>
+</span><span id="MerchantLocation-584"><a href="#MerchantLocation-584"><span class="linenos">584</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation-585"><a href="#MerchantLocation-585"><span class="linenos">585</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation-586"><a href="#MerchantLocation-586"><span class="linenos">586</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-587"><a href="#MerchantLocation-587"><span class="linenos">587</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation-588"><a href="#MerchantLocation-588"><span class="linenos">588</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-589"><a href="#MerchantLocation-589"><span class="linenos">589</span></a>        <span class="kc">None</span>
+</span><span id="MerchantLocation-590"><a href="#MerchantLocation-590"><span class="linenos">590</span></a>
+</span><span id="MerchantLocation-591"><a href="#MerchantLocation-591"><span class="linenos">591</span></a>
+</span><span id="MerchantLocation-592"><a href="#MerchantLocation-592"><span class="linenos">592</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation-593"><a href="#MerchantLocation-593"><span class="linenos">593</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="MerchantLocation-594"><a href="#MerchantLocation-594"><span class="linenos">594</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-595"><a href="#MerchantLocation-595"><span class="linenos">595</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation-596"><a href="#MerchantLocation-596"><span class="linenos">596</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation-597"><a href="#MerchantLocation-597"><span class="linenos">597</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2381,11 +2387,11 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.__init__-558"><a href="#MerchantLocation.__init__-558"><span class="linenos">558</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
-</span><span id="MerchantLocation.__init__-559"><a href="#MerchantLocation.__init__-559"><span class="linenos">559</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.__init__-560"><a href="#MerchantLocation.__init__-560"><span class="linenos">560</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
-</span><span id="MerchantLocation.__init__-561"><a href="#MerchantLocation.__init__-561"><span class="linenos">561</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.__init__-562"><a href="#MerchantLocation.__init__-562"><span class="linenos">562</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.__init__-561"><a href="#MerchantLocation.__init__-561"><span class="linenos">561</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">BASE_CLOFFER_DETAILS_DICT</span><span class="p">):</span>
+</span><span id="MerchantLocation.__init__-562"><a href="#MerchantLocation.__init__-562"><span class="linenos">562</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.__init__-563"><a href="#MerchantLocation.__init__-563"><span class="linenos">563</span></a><span class="sd">        Create a new MerchantLocation instance.</span>
+</span><span id="MerchantLocation.__init__-564"><a href="#MerchantLocation.__init__-564"><span class="linenos">564</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.__init__-565"><a href="#MerchantLocation.__init__-565"><span class="linenos">565</span></a>        <span class="n">TripleObject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -2396,7 +2402,7 @@ in JSON or a <code>dict</code>.</p>
                             </div>
                             <div id="MerchantLocation.requiredAttributes" class="classattr">
                                 <div class="attr variable">
-            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;address&#39;, &#39;isOnline&#39;]</span>
+            <span class="name">requiredAttributes</span><span class="default_value"> = [&#39;address&#39;, &#39;objID&#39;]</span>
 
         
     </div>
@@ -2425,12 +2431,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation.create"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.create-565"><a href="#MerchantLocation.create-565"><span class="linenos">565</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation.create-566"><a href="#MerchantLocation.create-566"><span class="linenos">566</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation.create-567"><a href="#MerchantLocation.create-567"><span class="linenos">567</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.create-568"><a href="#MerchantLocation.create-568"><span class="linenos">568</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation.create-569"><a href="#MerchantLocation.create-569"><span class="linenos">569</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.create-570"><a href="#MerchantLocation.create-570"><span class="linenos">570</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.create-568"><a href="#MerchantLocation.create-568"><span class="linenos">568</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation.create-569"><a href="#MerchantLocation.create-569"><span class="linenos">569</span></a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation.create-570"><a href="#MerchantLocation.create-570"><span class="linenos">570</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.create-571"><a href="#MerchantLocation.create-571"><span class="linenos">571</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation.create-572"><a href="#MerchantLocation.create-572"><span class="linenos">572</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.create-573"><a href="#MerchantLocation.create-573"><span class="linenos">573</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2451,12 +2457,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation.byID"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.byID-573"><a href="#MerchantLocation.byID-573"><span class="linenos">573</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation.byID-574"><a href="#MerchantLocation.byID-574"><span class="linenos">574</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation.byID-575"><a href="#MerchantLocation.byID-575"><span class="linenos">575</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.byID-576"><a href="#MerchantLocation.byID-576"><span class="linenos">576</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation.byID-577"><a href="#MerchantLocation.byID-577"><span class="linenos">577</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.byID-578"><a href="#MerchantLocation.byID-578"><span class="linenos">578</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.byID-576"><a href="#MerchantLocation.byID-576"><span class="linenos">576</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation.byID-577"><a href="#MerchantLocation.byID-577"><span class="linenos">577</span></a>    <span class="k">def</span> <span class="nf">byID</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation.byID-578"><a href="#MerchantLocation.byID-578"><span class="linenos">578</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.byID-579"><a href="#MerchantLocation.byID-579"><span class="linenos">579</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation.byID-580"><a href="#MerchantLocation.byID-580"><span class="linenos">580</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.byID-581"><a href="#MerchantLocation.byID-581"><span class="linenos">581</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2477,12 +2483,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation.updateWith"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.updateWith-581"><a href="#MerchantLocation.updateWith-581"><span class="linenos">581</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation.updateWith-582"><a href="#MerchantLocation.updateWith-582"><span class="linenos">582</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
-</span><span id="MerchantLocation.updateWith-583"><a href="#MerchantLocation.updateWith-583"><span class="linenos">583</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.updateWith-584"><a href="#MerchantLocation.updateWith-584"><span class="linenos">584</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation.updateWith-585"><a href="#MerchantLocation.updateWith-585"><span class="linenos">585</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.updateWith-586"><a href="#MerchantLocation.updateWith-586"><span class="linenos">586</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.updateWith-584"><a href="#MerchantLocation.updateWith-584"><span class="linenos">584</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation.updateWith-585"><a href="#MerchantLocation.updateWith-585"><span class="linenos">585</span></a>    <span class="k">def</span> <span class="nf">updateWith</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">objID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+</span><span id="MerchantLocation.updateWith-586"><a href="#MerchantLocation.updateWith-586"><span class="linenos">586</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.updateWith-587"><a href="#MerchantLocation.updateWith-587"><span class="linenos">587</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation.updateWith-588"><a href="#MerchantLocation.updateWith-588"><span class="linenos">588</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.updateWith-589"><a href="#MerchantLocation.updateWith-589"><span class="linenos">589</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -2503,12 +2509,12 @@ in JSON or a <code>dict</code>.</p>
 
     </div>
     <a class="headerlink" href="#MerchantLocation.list"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.list-589"><a href="#MerchantLocation.list-589"><span class="linenos">589</span></a>    <span class="nd">@classmethod</span>
-</span><span id="MerchantLocation.list-590"><a href="#MerchantLocation.list-590"><span class="linenos">590</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-</span><span id="MerchantLocation.list-591"><a href="#MerchantLocation.list-591"><span class="linenos">591</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.list-592"><a href="#MerchantLocation.list-592"><span class="linenos">592</span></a><span class="sd">        **Disabled for this class.**</span>
-</span><span id="MerchantLocation.list-593"><a href="#MerchantLocation.list-593"><span class="linenos">593</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="MerchantLocation.list-594"><a href="#MerchantLocation.list-594"><span class="linenos">594</span></a>        <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MerchantLocation.list-592"><a href="#MerchantLocation.list-592"><span class="linenos">592</span></a>    <span class="nd">@classmethod</span>
+</span><span id="MerchantLocation.list-593"><a href="#MerchantLocation.list-593"><span class="linenos">593</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">paraMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span><span id="MerchantLocation.list-594"><a href="#MerchantLocation.list-594"><span class="linenos">594</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.list-595"><a href="#MerchantLocation.list-595"><span class="linenos">595</span></a><span class="sd">        **Disabled for this class.**</span>
+</span><span id="MerchantLocation.list-596"><a href="#MerchantLocation.list-596"><span class="linenos">596</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="MerchantLocation.list-597"><a href="#MerchantLocation.list-597"><span class="linenos">597</span></a>        <span class="kc">None</span>
 </span></pre></div>
 
 

@@ -25,16 +25,14 @@ KNOWN_ASSUMED_NAME = 'Kukla Enterprises, Inc.'
 # *** globals ***
 
 _address = Address({
-    # We made it a requirement but we'll toss it in the instances:
-    'complete_address': '',
+    'city': 'San Francisco',
     'countryCode': 'US',
+    'countrySubdivisionCode': 'CA',
     'latitude': 0,
-    'line1': '2801 Turk Boulevard',
-    'line2': 'Suite 202',
-    'locality': 'San Francisco',
     'longitude': 0,
     'postalCode': '94118',
     'province': 'CA',
+    'streetAddress': '2801 Turk Boulevard\\nSuite 202',
 })
 
 _config = auth.loadConfig()
