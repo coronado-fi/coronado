@@ -69,9 +69,7 @@ class OfferSearchResult(Offer):
         'externalID',
         'headline',
         'isActivated',
-# TODO:  Bug! -- 20220718
-#         'mode',
-#         'rewardType',
+        'offerMode',
         'score',
         'type',
     ]
@@ -282,12 +280,10 @@ def _assembleDetailsFrom(payload):
     if 'offer' not in d:
         raise CallError('offer attribute not found')
 
-    offer = CardLinkedOffer(d['offer'])
+    offer = CardholderOffer(d['offer'])
     offer.merchantCategoryCode = MCC(offer.merchantCategoryCode)
     # TODO: the category attribute is missing from the result - 20220718
     # offer.category = OfferCategory(offer.category)
-    # TODO: the rewardType attribute is missing from the result - 20220718
-    # offer.rewardType = OfferCategory(offer.rewardType)
     offer.tripleCategoryName = OfferCategory(offer.tripleCategoryName)
     offer.offerMode = OfferDeliveryMode(offer.offerMode)
     offer.type = OfferType(offer.type)
@@ -300,12 +296,12 @@ def _assembleDetailsFrom(payload):
     d['offer'] = offer
     d['merchant_locations'] = merchantLocations
 
-    offerDetails = CardLinkedOfferDetails(d)
+    offerDetails = CardholderOfferDetails(d)
 
     return offerDetails
 
 
-class CardLinkedOfferDetails(TripleObject):
+class CardholderOfferDetails(TripleObject):
     """
     Object representation of the offer details and associated merchant
     locations for an offer.
@@ -477,7 +473,7 @@ class CardLinkedOfferDetails(TripleObject):
 
 
 
-class CardLinkedOffer(Offer):
+class CardholderOffer(Offer):
     """
     CLOffer presents a detailed view of a card linked offer (CLO) with all the
     relevant details.
@@ -494,10 +490,13 @@ class CardLinkedOffer(Offer):
         'effectiveDate',
         'headline',
         'isActivated',
+        'merchantID',
+        'merchantName',
         'minimumSpend',
 # TODO:  internal ticket M-906
+#         'category',
 #         'mode',
-#         'rewardType',
+        'rewardType',
         'type',
     ]
 
@@ -551,7 +550,7 @@ class MerchantLocation(TripleObject):
 
     requiredAttributes = [
         'address',
-        'isOnline',
+        'objID',
     ]
 
     def __init__(self, obj = BASE_CLOFFER_DETAILS_DICT):

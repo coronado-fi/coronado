@@ -1,4 +1,4 @@
-% coronado(5) Version 1.2.0 | triple API Python wrapper
+% coronado(5) Version 1.2.1 | triple API Python wrapper
 
 
 

@@ -23,7 +23,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.2.0'
+__VERSION__ = '1.2.1'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -61,6 +61,18 @@ class TripleObject(object):
     object's internal attributes, not the snake_case initialization payload
     in JSON or a `dict`.
     """
+
+    # --- private ---
+
+    def _listProperties(self):
+        classAttributes = type(self).__dict__
+        properties = dict()
+
+        for k in classAttributes.keys():
+            if classAttributes[k].__class__ == property:
+                properties['%s' % k] = '@property'
+
+        return properties
 
 
     # +++ public +++
@@ -150,10 +162,15 @@ class TripleObject(object):
 
         Returns
         -------
-            A dictionary of objects and types
+            dict
+        A dictionary of objects and types
         """
-        keys = sorted(self.__dict__.keys())
-        result = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
+        keys = self.__dict__.keys()
+        d = dict([ (key, str(type(self.__dict__[key])).replace('class ', '').replace("'", "").replace('<','').replace('>', '')) for key in keys ])
+        for k, v in self._listProperties().items():
+            d[k] = v
+
+        result = dict([ (k, d[k]) for k in sorted(d.keys()) if k[0] != '_' ])
 
         return result
 

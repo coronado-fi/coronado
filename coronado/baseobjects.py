@@ -6,35 +6,19 @@ import json
 
 # If you copy/paste the JSON spec here, remember to escape the \n to prevent
 # JSON parser errros.
-BASE_ADDRESS_JSON = """{
-    "complete_address": "DEPRECATE AND ELIMINATE THIS FIELD",
-    "line_1": "7370 BAKER ST",
-    "line_2": "SUITE 100",
-    "locality": "PITTSBURGH",
-    "province": "PA",
-    "postal_code": "15206",
-    "country_code": "US",
-    "latitude": 40.440624,
-    "longitude": -79.995888
-}"""
-BASE_ADDRESS_DICT = json.loads(BASE_ADDRESS_JSON)
-
-
-# TODO:  Replaces BASE_ADDRESS_JSON and BASE_ADDRESS_DICT once the back-end
-#        implements this.
-#
 # Notes:
-#
+
+
 # * See ISO-3166-2 for country subdivision codes; can be 2 or more letters
 # * Street address became a multi-line field, free form
 # * The complete address is optional AND assembled by the implementing classes,
 #   not by the service
-BASE_ADDRESS_CLOO_JSON = """
+BASE_ADDRESS_JSON = """
 {
+    "city": "PITTSBURGH",
     "country_code": "US",
     "country_subdivision_code": "PA",
     "latitude": 40.440624,
-    "city": "PITTSBURGH",
     "longitude": -79.995888,
     "postal_code": "15206",
     "street_address": "7370 BAKER ST\\nSUITE 42"
@@ -43,12 +27,12 @@ BASE_ADDRESS_CLOO_JSON = """
 """
 Base Address object specification, from the triple API JSON payload.
 """
-BASE_ADDRESS_CLOO_DICT = json.loads(BASE_ADDRESS_CLOO_JSON)
+
 """
 Base Address object specification, a `dict` representation of the triple API
 JSON payload.
 """
-
+BASE_ADDRESS_DICT = json.loads(BASE_ADDRESS_JSON)
 
 
 BASE_CARD_ACCOUNT_JSON = """{
@@ -99,15 +83,13 @@ BASE_MERCHANT_JSON = """{
   "external_id": "string",
   "assumed_name": "string",
   "address": {
-    "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-    "line_1": "7370 BAKER ST STE 100",
-    "line_2": "string",
-    "locality": "PITTSBURGH",
-    "province": "PA",
-    "postal_code": "15206",
     "country_code": "US",
+    "country_subdivision_code": "PA",
     "latitude": 40.440624,
-    "longitude": -79.995888
+    "city": "PITTSBURGH",
+    "longitude": -79.995888,
+    "postal_code": "15206",
+    "street_address": "7370 BAKER ST\\nSUITE 42"
   },
   "merchant_category_code": {
     "code": "7998",
@@ -125,84 +107,56 @@ BASE_MERCHANT_LOCATION_JSON = """{
     "email": "string",
     "phone_number": "string",
     "address": {
-        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-        "line_1": "7370 BAKER ST STE 100",
-        "line_2": "string",
-        "locality": "PITTSBURGH",
-        "province": "PA",
-        "postal_code": "15206",
+        "city": "PITTSBURGH",
         "country_code": "US",
+        "country_subdivision_code": "PA",
         "latitude": 40.440624,
-        "longitude": -79.995888
+        "longitude": -79.995888,
+        "postal_code": "15206",
+        "street_address": "7370 BAKER ST\\nSUITE 42"
     }
 }"""
 BASE_MERCHANT_LOCATION_DICT = json.loads(BASE_MERCHANT_LOCATION_JSON)
 
 
-# Ontological mapping foundation
-
-# TODO:  Clarify with the KDR and implementation teams:
-#   "description": "string",
 BASE_OFFER_JSON = """
 {
-  "activation_required": true,
-  "category": "AUTOMOTIVE",
-  "category_tags": "string",
-  "currency_code": "USD",
-  "effective_date": "2021-12-01",
-  "expiration_date": "2021-12-31",
-  "headline": "string",
-  "id": "triple-abc-123",
-  "is_activated": false,
-  "max_redemptions": "1/3M",
-  "mode": "ONLINE",
-  "type": "CARD_LINKED"
-}
-"""
-BASE_OFFER_DICT = json.loads(BASE_OFFER_JSON)
-
-
-BASE_MERCHANT_OFFER_JSON = """
-{
-  "activation_required": true,
-  "category": "AUTOMOTIVE",
-  "category_tags": "string",
-  "currency_code": "USD",
-  "effective_date": "2021-12-01",
-  "expiration_date": "2021-12-31",
-  "headline": "string",
-  "id": "triple-abc-123",
-  "is_activated": false,
-  "max_redemptions": "1/3M",
-  "mode": "ONLINE",
-  "type": "CARD_LINKED",
-
-
   "activation_duration_in_days": 0,
+  "activation_required": true,
+  "category": "AUTOMOTIVE",
   "category_mccs": [
     {
       "code": "7998",
       "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
     }
   ],
+  "category_tags": "string",
+  "currency_code": "USD",
   "description": "string",
+  "effective_date": "2021-12-01",
   "excluded_dates": [
     "2021-12-25"
   ],
+  "expiration_date": "2021-12-31",
   "external_id": "string",
-  "logo_url": "string",
+  "headline": "string",
+  "id": "triple-abc-123",
+  "is_activated": false,
   "marketing_fee": 0,
   "marketing_fee_currency_code": "USD",
   "marketing_fee_type": "FIXED",
+  "max_redemptions": "1/3M",
   "maximum_reward_cumulative": 0,
   "maximum_reward_per_transaction": 0,
   "merchant_id": "triple-abc-123",
   "merchant_website": "string",
   "minimum_spend": 0,
+  "offer_mode": "ONLINE",
   "reward_rate": 0,
   "reward_type": "FIXED",
   "reward_value": 0,
   "terms_and_conditions": "string",
+  "type": "CARD_LINKED",
   "valid_day_parts": {
     "sunday": {
       "times": [
@@ -239,10 +193,11 @@ BASE_MERCHANT_OFFER_JSON = """
         "00:30-13:30"
       ]
     }
-  }
+  },
+  "logo_url": "string"
 }
 """
-BASE_MERCHANT_OFFER_DICT = json.loads(BASE_MERCHANT_OFFER_JSON)
+BASE_OFFER_DICT = json.loads(BASE_OFFER_JSON)
 
 
 BASE_OFFER_ACTIVATION_JSON = """{
@@ -272,25 +227,32 @@ BASE_CLOFFER_DETAILS_JSON = """
   "offer": {
     "id": "triple-abc-123",
     "activation_required": true,
-    "activation_duration_in_days": 0,
-    "currency_code": "USD",
     "category": "AUTOMOTIVE",
     "category_tags": "string",
+    "currency_code": "USD",
+    "description": "string",
+    "effective_date": "2021-12-01",
+    "expiration_date": "2021-12-31",
+    "headline": "string",
+    "is_activated": false,
+    "max_redemptions": "1/3M",
+    "offer_mode": "ONLINE",
+    "merchant_id": "triple-abc-4269",
+    "reward_rate": 0,
+    "reward_type": "FIXED",
+    "reward_value": 0,
+    "type": "CARD_LINKED",
+
+    "activation_duration_in_days": 0,
     "category_mccs": [
       {
         "code": "7998",
         "description": "Aquariums, Dolphinariums, Seaquariums, and Zoos"
       }
     ],
-    "description": "string",
-    "effective_date": "2021-12-01",
     "excluded_dates": [
       "2021-12-25"
     ],
-    "expiration_date": "2021-12-31",
-    "is_activated": false,
-    "headline": "string",
-    "max_redemptions": "1/3M",
     "maximum_reward_per_transaction": 0,
     "maximum_reward_cumulative": 0,
     "merchant_category_code": {
@@ -299,12 +261,9 @@ BASE_CLOFFER_DETAILS_JSON = """
     },
     "merchant_name": "string",
     "merchant_logo_url": "string",
+    "merchant_website": "string",
     "minimum_spend": 0,
-    "mode": "ONLINE",
-    "reward_rate": 0,
-    "reward_value": 0,
-    "reward_type": "CARD_LINKED",
-    "type": "CARD_LINKED",
+    "terms_and_conditions": "string",
     "valid_day_parts": {
       "sunday": {
         "times": [
@@ -341,9 +300,7 @@ BASE_CLOFFER_DETAILS_JSON = """
           "00:30-13:30"
         ]
       }
-    },
-    "terms_and_conditions": "string",
-    "merchant_website": "string"
+    }
   },
   "merchant_locations": [
     {
@@ -353,16 +310,14 @@ BASE_CLOFFER_DETAILS_JSON = """
       "email": "string",
       "phone_number": "string",
       "address": {
-        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-        "line_1": "7370 BAKER ST STE 100",
-        "line_2": "string",
-        "locality": "PITTSBURGH",
-        "province": "PA",
-        "postal_code": "15206",
-        "country_code": "US",
-        "latitude": 40.440624,
-        "longitude": -79.995888
-     }
+            "city": "PITTSBURGH",
+            "country_code": "US",
+            "country_subdivision_code": "PA",
+            "latitude": 40.440624,
+            "longitude": -79.995888,
+            "postal_code": "15206",
+            "street_address": "7370 BAKER ST\\nSUITE 42"
+      }
     }
   ]
 }
@@ -381,7 +336,7 @@ BASE_OFFER_SEARCH_RESULT_JSON = """{
     "id": "triple-abc-123",
     "is_activated": false,
     "max_redemptions": "1/3M",
-    "mode": "ONLINE",
+    "offer_mode": "ONLINE",
     "type": "CARD_LINKED",
 
     "external_id": "string",
@@ -431,16 +386,13 @@ BASE_PUBLISHER_JSON = """{
     "assumed_name": "string",
     "address":
     {
-        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-        "line_1": "7370 BAKER ST STE 100",
-        "line_2": "string",
-        "locality": "PITTSBURGH",
-        "province": "PA",
-        "postal_code": "15206",
+        "city": "PITTSBURGH",
         "country_code": "US",
+        "country_subdivision_code": "PA",
         "latitude": 40.440624,
-        "longitude": -79.995888
-
+        "longitude": -79.995888,
+        "postal_code": "15206",
+        "street_address": "7370 BAKER ST\\nSUITE 42"
     },
     "revenue_share": 1.125,
     "created_at": "2021-12-01T01:59:59.000Z",
@@ -490,15 +442,13 @@ BASE_TRANSACTION_JSON = """{
     "merchant_address":
     {
 
-        "complete_address": "7370 BAKER ST STE 100\\nPITTSBURGH, PA 15206",
-        "line_1": "7370 BAKER ST STE 100",
-        "line_2": "string",
-        "locality": "PITTSBURGH",
-        "province": "PA",
-        "postal_code": "15206",
+        "city": "PITTSBURGH",
         "country_code": "US",
+        "country_subdivision_code": "PA",
         "latitude": 40.440624,
-        "longitude": -79.995888
+        "longitude": -79.995888,
+        "postal_code": "15206",
+        "street_address": "7370 BAKER ST\\nSUITE 42"
 
     },
     "processor_mid": "9000012345",
