@@ -10,9 +10,7 @@ from coronado.offer import OfferType
 # import json
 # import uuid
 
-# import pytest
-
-# import coronado.auth as auth
+import coronado.auth as auth
 
 
 # *** globals ***
@@ -20,11 +18,11 @@ from coronado.offer import OfferType
 
 # *** globals ***
 
-# TODO: Pending Offer implementation
-# _config = auth.loadConfig()
-# _auth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'], scope = auth.Scope.PORTFOLIOS)
-# 
-# Offer.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+_config = auth.loadConfig()
+_auth = auth.Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'])
+
+# TODO: The servicePath isn't initialized!
+Offer.initialize(_config['serviceURL'], "", _auth)
 
 
 # +++ tests +++

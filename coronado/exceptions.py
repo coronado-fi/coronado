@@ -33,7 +33,7 @@ class AuthTokenAPIError(CoronadoError):
 class CallError(CoronadoError):
     """
     Raised when the caller passes an invalid `spec` to any wrapper method, the
-    `spec` size is too large, or the `servicePath` or `serviceURL` point to 
+    `spec` size is too large, or the `servicePath` or `serviceURL` point to
     a valid resource but have the wrong values.
     """
 
@@ -144,7 +144,7 @@ def errorFor(statusCode: int, details: str = None) -> object:
         details = json.dumps(d)
     except: # it's a free-form string
         pass
-        
+
     if issubclass(obj, CoronadoError):
         return obj(details)
     elif isinstance(obj, dict):

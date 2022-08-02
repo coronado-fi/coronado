@@ -103,3 +103,17 @@ def test_CardAccount_updateWith():
     payload['status'] = 'ENROLLED'
     CardAccount.updateWith(KNOWN_ACCT_ID, payload)
 
+
+def test_CardAccount_offerActivations():
+    with pytest.raises(CallError):
+        CardAccount.offerActivations()
+
+    with pytest.raises(CallError):
+        CardAccount.offerActivations(cardAccountID = '1339', cardAccountExternalID = '69')
+
+    x = CardAccount.offerActivations(cardAccountID = '1339')
+    assert x
+
+
+test_CardAccount_offerActivations()
+

@@ -29,7 +29,7 @@ SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
 class OfferSearchResult(Offer):
     """
     Offer search result.  Search results objects are only produced
-    when executing a call to the `forQuery()` method.  Each result represents 
+    when executing a call to the `forQuery()` method.  Each result represents
     an offer recommendation based on the caller's geolocation, transaction
     history, and offer interactions.
 
@@ -74,7 +74,7 @@ class OfferSearchResult(Offer):
         'type',
     ]
 
-    
+
     def __init__(self, obj = BASE_OFFER_SEARCH_RESULT_DICT):
         """
         Create a new OfferSearchResult instance.  Objects of this class should
@@ -126,7 +126,7 @@ class OfferSearchResult(Offer):
         The number of search results to return
 
             pageOffset
-        The offset from the first result (inclusive) where to start fetching 
+        The offset from the first result (inclusive) where to start fetching
         results for this query
 
             postalCode
@@ -185,7 +185,7 @@ class OfferSearchResult(Offer):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if 'spec' in args:
@@ -405,7 +405,7 @@ class CardholderOfferDetails(TripleObject):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if 'spec' in args:
@@ -480,7 +480,7 @@ class CardholderOffer(Offer):
 
     Offer objects represent offers from brands and retaliers linked to a payment
     provider like a debit or credit card.  The offer is redeemed by the consumer
-    when the linked payment card is used at a point-of-sale.  Offer instances 
+    when the linked payment card is used at a point-of-sale.  Offer instances
     connect on-line advertising campaings with concrete purchases.
     """
 

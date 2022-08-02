@@ -129,7 +129,7 @@ def test_CLOfferDetails_forID():
 
     with pytest.raises(UnexpectedError):
         CLOfferDetails.forID('0', spec = spec)
-        
+
     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
     with pytest.raises(UnprocessablePayload):
         CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
