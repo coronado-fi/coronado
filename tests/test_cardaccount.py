@@ -9,6 +9,7 @@ from coronado.cardaccount import CardAccountStatus
 from coronado.cardaccount import SERVICE_PATH
 from coronado.exceptions import CallError
 from coronado.exceptions import InvalidPayloadError
+from coronado.offer import OfferCategory
 
 import uuid
 
@@ -104,16 +105,25 @@ def test_CardAccount_updateWith():
     CardAccount.updateWith(KNOWN_ACCT_ID, payload)
 
 
+_account = CardAccount(KNOWN_ACCT_ID)
+
+@pytest.mark.skip('Pending underlying API implementation')
 def test_CardAccount_offerActivations():
-    with pytest.raises(CallError):
-        CardAccount.offerActivations()
-
-    with pytest.raises(CallError):
-        CardAccount.offerActivations(cardAccountID = '1339', cardAccountExternalID = '69')
-
-    x = CardAccount.offerActivations(cardAccountID = '1339')
+    x = _account.offerActivations()
     assert x
 
 
-test_CardAccount_offerActivations()
+@pytest.mark.skip('Pending underlying API implementation')
+def test_CardAccount_activateFor():
+    with pytest.raises(CallError):
+        _account.activateFor()
+
+    with pytest.raises(CallError):
+        _account.activateFor([ '4269', '6942', ], OfferCategory.AUTOMOTIVE)
+
+    x = _account.activateFor(None, OfferCategory.AUTOMOTIVE)
+    assert x
+
+
+# test_CardAccount_activateFor()
 

@@ -7,6 +7,7 @@ from coronado.baseobjects import BASE_CARD_ACCOUNT_DICT
 from coronado.exceptions import CallError
 from coronado.exceptions import errorFor
 
+import inspect
 import json
 
 import requests
@@ -42,6 +43,7 @@ class CardAccountStatus(TripleEnum):
 class CardAccount(TripleObject):
 
     requiredAttributes = ['objID', 'cardProgramID', 'externalID', 'status', 'createdAt', 'updatedAt', ]
+    allAttributes = TripleObject(BASE_CARD_ACCOUNT_DICT).listAttributes()
 
 
     def __init__(self, obj = BASE_CARD_ACCOUNT_DICT):
@@ -82,9 +84,7 @@ class CardAccount(TripleObject):
         return result
 
 
-    @classmethod
-    def offerActivations(klass, **args) -> list:
-    # def activations(cardAccountID: str, cardAccountExternalID: str = None, cardProgramExternalID = None, publisherID = None, includeExpired = False, page: int = 0):
+    def offerActivations(self, includeExpired: bool = False, page:int = 0) -> list:
         """
         Get the activated offers associated with a cardAccountID.
 
@@ -92,15 +92,6 @@ class CardAccount(TripleObject):
         ---------
             cardAccountID : str
         A triple-defined ID for the entity.
-
-            cardAccountExternalID : str
-        A partner-provided external ID that identifies the card account
-
-            cardProgramExternalID : str
-        A partner-provided external card program ID; optional
-
-            publisherID : str
-        A partner-provided external ID for a publisher
 
             includeExpired: bool
         When `True`, the results include activations up to 90 days old
@@ -110,15 +101,11 @@ class CardAccount(TripleObject):
         A page offset in the activations list; a page contains <= 1,000
         activations
 
-        `cardAccountExternalID`, `cardProgramExternalID`, and `publisherID` are
-        ignored if `cardAccountID` is present.  Providing both raises an error.
-        If `cardAccountExternalID` is present, program and publisher IDs are
-        optional.  All other arguments are optional.
-
         Returns
         -------
-        The offer activation details associated with the card account details in
-        the call.
+            aList : list
+        The offer activation details objects associated with the card account
+        details in the call.
 
         Raises
         ------
@@ -127,27 +114,19 @@ class CardAccount(TripleObject):
         possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
-        if not any(arg in args.keys() for arg in ('cardAccountID', 'cardAccountExternalID')):
-            raise CallError('Either cardAccountID or cardAccountExternalID must be included in offerActivations() calls')
-        if all(arg in args.keys() for arg in ('cardAccountID', 'cardAccountExternalID')):
-            raise CallError('Use either cardAccountID or cardAccountExternalID, not both')
+        spec = {
+            'include_expired': includeExpired,
+            'page': page,
+        }
+        frame = inspect.currentframe()
+        obj = frame.f_locals[frame.f_code.co_varnames[0]]
+        thisMethod = getattr(obj, frame.f_code.co_name)
 
-        if 'cardAccountID' in args:
-            spec = {
-                'card_account_id': args['cardAccountID'],
-            }
-        else:
-            spec = {
-                'card_account_external_id': args['cardAccountExternalID'],
-                'card_program_external_id': args.get('cardProgramExternalID', None),
-                'publisher_id': args.get('publisherID', None),
-            }
-
-        endpoint = '/'.join([ klass._serviceURL, 'partner/card-accounts.list-activated-offers', ])
-        response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
+        endpoint = '/'.join([ self.__class__._serviceURL, self.__class__._servicePath, self.objID, thisMethod.action, ])
+        response = requests.request('POST', endpoint, headers = self.__class__.headers, json = spec)
 
         if response.status_code == 200:
-            result = [ klass(offerActivation) for offerActivation in json.loads(response.content)['offerActivation_activations'] ]
+            result = [ self.__class__(offerActivation) for offerActivation in json.loads(response.content)['offerActivation_activations'] ]
         elif response.status_code == 404:
             result = None
         else:
@@ -156,9 +135,54 @@ class CardAccount(TripleObject):
         return result
 
 
-    @classmethod
-    def activateFor(**args) -> object:
+    def activateFor(self, offerIDs: list = None, offerCategory: object = None) -> object:
         """
+        Activate the offers listed or by category for the receiver.
+
+        Arguments
+        ---------
+            offerIDs: list
+        A list of offer ID strings to activate
+
+            offerCategory: OfferCategory
+        An `coronado.offer.OfferCategory` instance.
+
+        Only one of `offerIDs` list or `offerCategory` are required for
+        activation.  This call will raise an error if both are provided in the
+        same call.
+
+        Raises
+        ------
+            CoronadoError
+        A CoronadoError dependent on the specific error condition.  The full list of
+        possible errors, causes, and semantics is available in the
+        **`coronado.exceptions`** module.
         """
-        None
+        if offerIDs and offerCategory or not offerIDs and not offerCategory:
+            raise CallError('Provide a value for offerIDs or offerCategory, not both set or both None')
+
+        spec = {
+            'offer_category': offerCategory,
+            'offer_ids': offerIDs,
+        }
+
+        frame = inspect.currentframe()
+        obj = frame.f_locals[frame.f_code.co_varnames[0]]
+        thisMethod = getattr(obj, frame.f_code.co_name)
+
+        endpoint = '/'.join([ self.__class__._serviceURL, self.__class__._servicePath, self.objID, thisMethod.action, ])
+        response = requests.request('POST', endpoint, headers = self.__class__.headers, json = spec)
+
+        if response.status_code == 200:
+            result = TripleObject(response.content)
+        elif response.status_code == 404:
+            result = None
+        else:
+            raise errorFor(response.status_code, response.text)
+
+        return result
+
+
+CardAccount.activateFor.action = 'offers.activate'
+CardAccount.offerActivations.action = 'offers.list-activations'
 

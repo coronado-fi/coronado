@@ -23,7 +23,7 @@ import requests
 
 # *** constants ***
 
-__VERSION__ = '1.2.1'
+__VERSION__ = '1.2.2'
 
 API_URL = 'https://api.sandbox.tripleup.dev'
 CORONADO_USER_AGENT = 'python-coronado/%s' % __VERSION__
@@ -53,14 +53,25 @@ class TripleObject(object):
 
     requiredAttributes = None
     """
-    A list or tuple of attribute names that are required to be present in the
-    JSON or `dict` object during object construction.  See the `assertAll`()
-    method.
+    A list or tuple of the minimum attribute names that are required to be
+    present in the JSON or `dict` object during object construction.  See the
+    `assertAll()` method.
 
-    **NB:** The attribute names _must_ be in camelCase; these refer to the
+    **NB:** The attribute names *must* be in camelCase; these refer to the
     object's internal attributes, not the snake_case initialization payload
     in JSON or a `dict`.
     """
+
+    allAttributes = 'UNDEFINED - set allAttributes = ClassName(BASE_OBJ_SPEC)'
+    """
+    **All instance attributes.**
+
+    The number of all attributes >= number of
+    required attributes.  Some of the instance attributes are computed or
+    constructed during object creation and persistence, or during object
+    instantiation.
+    """
+
 
     # --- private ---
 
@@ -100,7 +111,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if isinstance(obj, str):
@@ -144,7 +155,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if self.__class__.requiredAttributes:
@@ -207,7 +218,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         return json.dumps(self.asSnakeCaseDictionary())
@@ -227,7 +238,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
 
         Typical implementation (from a TripleObject specialization that
@@ -333,7 +344,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if klass == TripleObject:
@@ -373,7 +384,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
@@ -385,7 +396,7 @@ class TripleObject(object):
             result = None
         else:
             raise errorFor(response.status_code, details = response.text)
-            
+
         return result
 
 
@@ -425,7 +436,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         endpoint = '/'.join([klass._serviceURL, '%s/%s' % (klass._servicePath, objID)]) # URL fix later
@@ -461,7 +472,7 @@ class TripleObject(object):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         params = None
