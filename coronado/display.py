@@ -13,6 +13,7 @@ from coronado.offer import OfferCategory
 from coronado.offer import OfferDeliveryMode
 from coronado.offer import OfferType
 
+import inspect
 import json
 
 import requests
@@ -20,8 +21,7 @@ import requests
 
 # +++ constants +++
 
-FETCH_RPC_SERVICE_PATH = 'partners/offer-display/details'
-SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
+SERVICE_PATH = 'partners/offer-display'
 
 
 # *** classes and objects ***
@@ -29,7 +29,7 @@ SEARCH_RPC_SERVICE_PATH = 'partner/offer-display/search-offers'
 class OfferSearchResult(Offer):
     """
     Offer search result.  Search results objects are only produced
-    when executing a call to the `forQuery()` method.  Each result represents 
+    when executing a call to the `forQuery()` method.  Each result represents
     an offer recommendation based on the caller's geolocation, transaction
     history, and offer interactions.
 
@@ -41,7 +41,11 @@ class OfferSearchResult(Offer):
 
     @classmethod
     def _queryWith(klass, spec):
-        endpoint = '/'.join([ klass._serviceURL, klass._servicePath, ])
+        frame = inspect.currentframe()
+        obj = frame.f_locals[frame.f_code.co_varnames[0]]
+        thisMethod = getattr(obj, frame.f_code.co_name)
+
+        endpoint = '/'.join([ klass._serviceURL, klass._servicePath, thisMethod.action, ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 200:
@@ -52,6 +56,9 @@ class OfferSearchResult(Offer):
             raise errorFor(response.status_code, response.text)
 
         return result
+
+    # _queryWith.action = 'search-offers'
+    _queryWith.setattr('action', 'search-offers')
 
 
     @classmethod
@@ -74,7 +81,7 @@ class OfferSearchResult(Offer):
         'type',
     ]
 
-    
+
     def __init__(self, obj = BASE_OFFER_SEARCH_RESULT_DICT):
         """
         Create a new OfferSearchResult instance.  Objects of this class should
@@ -126,7 +133,7 @@ class OfferSearchResult(Offer):
         The number of search results to return
 
             pageOffset
-        The offset from the first result (inclusive) where to start fetching 
+        The offset from the first result (inclusive) where to start fetching
         results for this query
 
             postalCode
@@ -185,7 +192,7 @@ class OfferSearchResult(Offer):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if 'spec' in args:
@@ -311,7 +318,11 @@ class CardholderOfferDetails(TripleObject):
 
     @classmethod
     def _forIDwithSpec(klass, objID: str, spec: dict, includeLocations: bool) -> object:
-        endpoint = '/'.join([ klass._serviceURL, 'partner/offer-display/details', objID, ])
+        frame = inspect.currentframe()
+        obj = frame.f_locals[frame.f_code.co_varnames[0]]
+        thisMethod = getattr(obj, frame.f_code.co_name)
+
+        endpoint = '/'.join([ klass._serviceURL, klass._servicePath, thisMethod.action, objID, ])
         response = requests.request('POST', endpoint, headers = klass.headers, json = spec)
 
         if response.status_code == 200:
@@ -322,6 +333,8 @@ class CardholderOfferDetails(TripleObject):
             raise errorFor(response.status_code, response.text)
 
         return result
+
+    _forIDwithSpec.action = 'details'
 
 
     # +++ public +++
@@ -405,7 +418,7 @@ class CardholderOfferDetails(TripleObject):
         ------
             CoronadoError
         A CoronadoError dependent on the specific error condition.  The full list of
-        possible errors, causes, and semantics is available in the 
+        possible errors, causes, and semantics is available in the
         **`coronado.exceptions`** module.
         """
         if 'spec' in args:
@@ -480,7 +493,7 @@ class CardholderOffer(Offer):
 
     Offer objects represent offers from brands and retaliers linked to a payment
     provider like a debit or credit card.  The offer is redeemed by the consumer
-    when the linked payment card is used at a point-of-sale.  Offer instances 
+    when the linked payment card is used at a point-of-sale.  Offer instances
     connect on-line advertising campaings with concrete purchases.
     """
 
@@ -590,4 +603,9 @@ class MerchantLocation(TripleObject):
         **Disabled for this class.**
         """
         None
+
+# CardholderOfferDetails._forIDwithSpec.action = 'details'
+# OfferSearchResult._queryWith.action = 'search-offers'
+# OfferSearchResult._queryWith.setattr('action', 'search-offers')
+
 

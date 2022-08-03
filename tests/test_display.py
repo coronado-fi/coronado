@@ -4,9 +4,8 @@
 from coronado.auth import Auth
 from coronado.display import CardholderOffer as CLOffer
 from coronado.display import CardholderOfferDetails as CLOfferDetails
-from coronado.display import FETCH_RPC_SERVICE_PATH
+from coronado.display import SERVICE_PATH
 from coronado.display import OfferSearchResult
-from coronado.display import SEARCH_RPC_SERVICE_PATH
 from coronado.exceptions import CallError
 from coronado.exceptions import UnexpectedError
 from coronado.exceptions import UnprocessablePayload
@@ -31,8 +30,8 @@ _config = auth.loadConfig()
 _auth = Auth(_config['tokenURL'], clientID = _config['clientID'], clientSecret = _config['secret'])
 
 
-OfferSearchResult.initialize(_config['serviceURL'], SEARCH_RPC_SERVICE_PATH, _auth)
-CLOfferDetails.initialize(_config['serviceURL'], FETCH_RPC_SERVICE_PATH, _auth)
+OfferSearchResult.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
+CLOfferDetails.initialize(_config['serviceURL'], SERVICE_PATH, _auth)
 
 
 # +++ tests +++
@@ -129,7 +128,7 @@ def test_CLOfferDetails_forID():
 
     with pytest.raises(UnexpectedError):
         CLOfferDetails.forID('0', spec = spec)
-        
+
     spec['card_account_identifier']['card_account_id'] = 'bOGuz'
     with pytest.raises(UnprocessablePayload):
         CLOfferDetails.forID(KNOWN_OFFER_ID, spec = spec)
